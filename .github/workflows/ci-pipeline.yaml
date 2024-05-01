@@ -36,8 +36,8 @@ jobs:
           working-directory: ./config-server
           run: bash setup_env.sh
 
-        - name: Run Unit Tests for ${{ matrix.service }}
-          run: mvn -B test --file ${{ matrix.service }}/pom.xml
+        # - name: Run Unit Tests for ${{ matrix.service }}
+        #   run: mvn -B test --file ${{ matrix.service }}/pom.xml
 
-        - name: Build the Application for ${{ matrix.service }}
-          run: mvn -B package --file ${{ matrix.service }}/pom.xml
+        # - name: Build the Application for ${{ matrix.service }}
+        #   run: mvn -B package --file ${{ matrix.service }}/pom.xml

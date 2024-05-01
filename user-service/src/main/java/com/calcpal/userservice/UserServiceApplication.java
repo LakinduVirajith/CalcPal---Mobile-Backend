@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Greeting Controller")
 public class UserServiceApplication {
 
+	@Value("${server.port}")
+	private int serverPort;
+
 	public static void main(String[] args) {
 		SpringApplication.run(UserServiceApplication.class, args);
 	}
@@ -22,7 +25,7 @@ public class UserServiceApplication {
 	@Operation(summary = "Check Application Status", description = "Check if the application is running.")
 	@GetMapping("/")
 	public String testMessage(){
-		return "Application running well on port " + "8081";
+		return "Application running well on port " + serverPort;
 	}
 
 }
