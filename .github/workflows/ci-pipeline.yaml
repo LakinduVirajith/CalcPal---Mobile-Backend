@@ -1,0 +1,43 @@
+name: Test and Build CalcPal Mobile Backend Application
+
+on: 
+  pull_request:
+    branches: [ development ]
+
+jobs:
+    ci-pipeline:
+      name: Test and Build CalcPal Mobile Backend Application
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          service:
+            - service-registry
+            - config-server
+            - api-gateway
+            - user-service  
+
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4
+
+        - name: Setup JDK 17
+          uses: actions/setup-java@v4
+          with:
+            distribution: 'temurin'
+            java-version: 17
+
+        - name: Set up Environment Variables
+          env:
+            JWT_SECRET: ${{ secrets.JWT_SECRET }}
+            MAIL_ADDRESS: ${{ secrets.MAIL_ADDRESS }}
+            MAIL_APP_PASSWORD: ${{ secrets.MAIL_APP_PASSWORD }}
+            MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+            MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+          working-directory: ./config-server
+          run: bash setup_env.sh
+
+        # - name: Run Unit Tests for ${{ matrix.service }}
+        #   run: mvn -B test --file ${{ matrix.service }}/pom.xml
+
+        # - name: Build the Application for ${{ matrix.service }}
+        #   run: mvn -B package --file ${{ matrix.service }}/pom.xml
