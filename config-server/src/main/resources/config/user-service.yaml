@@ -1,0 +1,78 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+#JWT
+application:
+  security:
+    jwt:
+      secret-key: secret-key
+      expiration: 7200000 #TWO HOURS
+      refresh-token:
+        expiration: 2419200000 #ONE MONTH
+
+#JAVA MAIL
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: email address
+    password: password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+#BASE URL
+base:
+  url: http://localhost:8081
+
+---
+#DEV PROFILE
+server:
+  port: 8081
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  data:
+    mongodb:
+      uri: mongodb-uri
+      database: CalcPal-Dev-DB
+
+---
+#QA PROFILE
+server:
+  port: 8081
+
+spring:
+  config:
+    activate:
+      on-profile: qa
+  data:
+    mongodb:
+      uri: mongodb-uri
+      database: CalcPal-Qa-DB
+
+---
+#PROD PROFILE
+server:
+  port: 8081
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  data:
+    mongodb:
+      uri: mongodb-uri
+      database: CalcPal-Prod-DB
