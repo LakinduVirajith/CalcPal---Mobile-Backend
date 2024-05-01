@@ -8,6 +8,9 @@ management:
     sampling:
       probability: 1.0
 
+server:
+  port: 8081
+
 #JWT
 application:
   security:
@@ -37,9 +40,6 @@ base:
 
 ---
 #DEV PROFILE
-server:
-  port: 8081
-
 spring:
   config:
     activate:
@@ -51,9 +51,6 @@ spring:
 
 ---
 #QA PROFILE
-server:
-  port: 8081
-
 spring:
   config:
     activate:
@@ -65,9 +62,6 @@ spring:
 
 ---
 #PROD PROFILE
-server:
-  port: 8081
-
 spring:
   config:
     activate:

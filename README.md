@@ -1,11 +1,5 @@
 # CalcPal---Mobile-Backend
 
-# Table of Contents
-- [Introduction](#introduction)
-- [Architectural Diagram](#architectural-diagram)
-
-# Introduction
-
 # Architectural Diagram
 
 ## Microservice-Architecture-Diagram
