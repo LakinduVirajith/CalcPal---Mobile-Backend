@@ -82,7 +82,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
         // NOT FOUND EXCEPTION HANDLE
         if (optionalVerbalQuestion.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no  questions found for the provided ID");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the provided ID");
         }
         VerbalQuestion question = optionalVerbalQuestion.get();
 
@@ -104,7 +104,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
         // NOT FOUND EXCEPTION HANDLE
         if (question.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no  questions found for the provided ID");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the provided ID");
         }
 
         questionBankRepository.deleteById(id);
