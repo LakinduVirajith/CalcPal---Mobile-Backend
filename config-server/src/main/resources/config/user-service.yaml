@@ -47,7 +47,7 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
-      database: CalcPal-Dev-DB
+      database: User-Dev-DB
 
 ---
 #QA PROFILE
@@ -61,7 +61,7 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
-      database: CalcPal-Qa-DB
+      database: User-Qa-DB
 
 ---
 #PROD PROFILE
@@ -75,4 +75,4 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
-      database: CalcPal-Prod-DB
+      database: User-Prod-DB
