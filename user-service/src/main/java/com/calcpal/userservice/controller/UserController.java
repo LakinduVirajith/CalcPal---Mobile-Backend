@@ -2,6 +2,7 @@ package com.calcpal.userservice.controller;
 
 import com.calcpal.userservice.common.AuthenticationRequest;
 import com.calcpal.userservice.dto.UserDTO;
+import com.calcpal.userservice.dto.UserUpdateDTO;
 import com.calcpal.userservice.exception.NotFoundException;
 import com.calcpal.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,20 +34,26 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "User Authentication", description = "Authenticate a user by providing valid credentials.")
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody AuthenticationRequest request) {
         return userService.login(request);
     }
 
     @GetMapping("/details")
     @Operation(summary = "Retrieve User Details", description = "Retrieve user details by providing email.")
-    public ResponseEntity<?> getUser(@RequestBody String email) {
-        return userService.getUser(email);
+    public ResponseEntity<?> getUser() throws NotFoundException {
+        return userService.getUser();
     }
 
     @PutMapping("/update")
     @Operation(summary = "Update User Details", description = "Update user details such as name and birthday.")
-    public ResponseEntity<?> updateDetails(@RequestBody String name, @RequestBody String birthDay) throws NotFoundException {
-        return userService.updateDetails(name, birthDay);
+    public ResponseEntity<?> updateDetails(@Valid @RequestBody UserUpdateDTO userUpdateDTO) throws NotFoundException {
+        return userService.updateDetails(userUpdateDTO);
+    }
+
+    @PutMapping("/update/iq")
+    @Operation(summary = "Update User IQ Score", description = "Update user IQ Score.")
+    public ResponseEntity<?> updateIQScore(@RequestBody String iqScore) throws NotFoundException {
+        return userService.updateIQScore(iqScore);
     }
 
     @PutMapping("/update/disorder")
