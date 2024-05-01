@@ -2,6 +2,7 @@ package com.calcapl.userservice.service;
 
 import com.calcapl.userservice.common.AuthenticationRequest;
 import com.calcapl.userservice.dto.UserDTO;
+import com.calcapl.userservice.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 
 public interface UserService {
@@ -13,14 +14,16 @@ public interface UserService {
 
     ResponseEntity<?> getUser(String email);
 
-    ResponseEntity<?> update(UserDTO userDTO);
+    ResponseEntity<?> updateDetails(String name, String birthDay) throws NotFoundException;
+
+    ResponseEntity<?> updateDisorderTypes(String disorderTypes) throws NotFoundException;
 
     ResponseEntity<?> resetPassword(AuthenticationRequest request);
 
     ResponseEntity<?> refreshToken(String refreshToken);
 
-    ResponseEntity<?> deactivate();
+    ResponseEntity<?> deactivate() throws NotFoundException;
 
-    ResponseEntity<?> logout();
+    ResponseEntity<?> logout() throws NotFoundException;
 
 }

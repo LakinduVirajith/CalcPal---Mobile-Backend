@@ -25,7 +25,7 @@ public class UserServiceApplication {
 	@Operation(summary = "Check Application Status", description = "Check if the application is running.")
 	@GetMapping("/")
 	public String testMessage(){
-		return "Application Running Well on Port " + serverPort;
+		return "Application running well on port " + serverPort;
 	}
 
 }

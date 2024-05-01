@@ -9,6 +9,7 @@ import com.calcapl.userservice.common.CommonFunctions;
 import com.calcapl.userservice.config.jwt.JwtService;
 import com.calcapl.userservice.dto.FullUserDTO;
 import com.calcapl.userservice.dto.UserDTO;
+import com.calcapl.userservice.exception.NotFoundException;
 import com.calcapl.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService{
     public ResponseEntity<?> userRegister(UserDTO userDTO) {
         Optional<User> emailCondition = userRepository.findByEmail(userDTO.getEmail());
         if(emailCondition.isPresent()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("email already exists");
         }
 
         // ASSIGN USER DATA TO THE USER OBJECT
@@ -69,10 +70,10 @@ public class UserServiceImpl implements UserService{
         if(status){
             userRepository.save(user);
         }else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Email service error orchard. try again");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("email service error orchard. try again");
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body("user registered successfully");
     }
 
     // METHOD TO CALCULATE AGE
@@ -88,20 +89,20 @@ public class UserServiceImpl implements UserService{
 
         // USER NOT FOUND EXCEPTION
         if(optionalUser.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
         User user = optionalUser.get();
 
         // CHECK ACTIVATION TOKEN EXPIRY
         LocalDateTime activationTokenExpiry = user.getActivationToken().getTokenExpiry();
         if (activationTokenExpiry.isBefore(LocalDateTime.now())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Activation token has expired");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("activation token has expired");
         }
 
         user.setIsActive(true);
         userRepository.save(user);
 
-        return ResponseEntity.ok().body("User activated successfully");
+        return ResponseEntity.ok().body("user activated successfully");
     }
 
     @Override
@@ -114,10 +115,10 @@ public class UserServiceImpl implements UserService{
             if(status){
                 userRepository.save(userCondition.get());
             }else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Email service error orchard. try again");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("email service error orchard. try again");
             }
 
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Your account is not activated. Please check your email to verify your account first.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("your account is not activated. Please check your email to verify your account first.");
         }
 
         // SPRING AUTHENTICATION MANAGER
@@ -139,7 +140,7 @@ public class UserServiceImpl implements UserService{
         String refreshToken = jwtService.generateRefreshToken(user);
 
         return ResponseEntity.ok().body(AuthenticationResponse.builder()
-                .message("User authenticated successfully")
+                .message("user authenticated successfully")
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build()
@@ -182,7 +183,7 @@ public class UserServiceImpl implements UserService{
 
         // USER NOT FOUND EXCEPTION
         if(optionalUser.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
         User user = optionalUser.get();
 
@@ -201,23 +202,39 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public ResponseEntity<?> update(UserDTO userDTO) {
+    public ResponseEntity<?> updateDetails(String name, String birthDay) throws NotFoundException {
         User user = commonFunctions.getUser();
         if(user == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
 
-        if(!userDTO.getName().isEmpty()){
-            user.setName(userDTO.getName());
+        if(!name.isEmpty()){
+            user.setName(name);
         }
-        if(!userDTO.getBirthDay().isEmpty()){
-            user.setBirthDay(userDTO.getBirthDay());
-            user.setAge(calculateAge(userDTO.getBirthDay()));
+        if(birthDay.isEmpty()){
+            user.setBirthDay(birthDay);
+            user.setAge(calculateAge(birthDay));
         }
 
         userRepository.save(user);
 
-        return ResponseEntity.ok().body("User updated successfully");
+        return ResponseEntity.ok().body("user details updated successfully");
+    }
+
+    @Override
+    public ResponseEntity<?> updateDisorderTypes(String disorderTypes) throws NotFoundException {
+        User user = commonFunctions.getUser();
+        if(user == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
+        }
+
+        if(!disorderTypes.isEmpty()){
+            user.setDisorderTypes(disorderTypes);
+        }
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok().body("user disorder types updated successfully");
     }
 
     @Override
@@ -226,7 +243,7 @@ public class UserServiceImpl implements UserService{
 
         // INVALID USER EXCEPTION
         if(userCondition.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Provided email address is invalid");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("provided email address is invalid");
         }
         User user = userCondition.get();
 
@@ -245,18 +262,18 @@ public class UserServiceImpl implements UserService{
 
         // INVALID TOKEN EXCEPTION
         if(userEmail.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The token you provided is invalid");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("the token you provided is invalid");
         }
 
         // INVALID ACCOUNT EXCEPTION
         Optional<User> optionalUser = userRepository.findByEmail(userEmail);
         if (optionalUser.isPresent() && !optionalUser.get().getIsActive()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your account is not activated yet");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("your account is not activated yet");
         }
 
         // INVALID USER EXCEPTION
         if(optionalUser.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
        User user = optionalUser.get();
 
@@ -269,7 +286,7 @@ public class UserServiceImpl implements UserService{
             String newRefreshToken = jwtService.generateRefreshToken(user);
 
             authResponse = AuthenticationResponse.builder()
-                    .message("Using refresh token user authenticated successfully")
+                    .message("using refresh token user authenticated successfully")
                     .accessToken(newAccessToken)
                     .refreshToken(newRefreshToken)
                     .build();
@@ -277,26 +294,26 @@ public class UserServiceImpl implements UserService{
 
         // SERVER ERROR EXCEPTION
         if(authResponse == null){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong with generating the token");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("something went wrong with generating the token");
         }
         return ResponseEntity.ok().body(authResponse);
     }
 
     @Override
-    public ResponseEntity<?> deactivate() {
+    public ResponseEntity<?> deactivate() throws NotFoundException {
         User user = commonFunctions.getUser();
         if(user == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
 
         user.setIsActive(false);
         userRepository.save(user);
 
-        return ResponseEntity.ok().body("User deactivated successfully");
+        return ResponseEntity.ok().body("user account deactivated successfully");
     }
 
     @Override
-    public ResponseEntity<?> logout() {
+    public ResponseEntity<?> logout() throws NotFoundException {
         String jwt = commonFunctions.getToken();
         Optional<User> optionalUser = userRepository.findByAuthenticationTokenAccessToken(jwt);
 
@@ -309,9 +326,9 @@ public class UserServiceImpl implements UserService{
             user.setAuthenticationToken(authenticationToken);
             userRepository.save(user);
         }else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid logout");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid logout");
         }
 
-        return ResponseEntity.ok().body("User logout successfully");
+        return ResponseEntity.ok().body("user logout successfully");
     }
 }

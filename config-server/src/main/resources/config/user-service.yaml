@@ -12,7 +12,7 @@ management:
 application:
   security:
     jwt:
-      secret-key: 88d0d6a25931c6e207a09c9ac23f3469db33f07be1d425c7bb0124c22d9efeae
+      secret-key: secret-key
       expiration: 7200000 #TWO HOURS
       refresh-token:
         expiration: 2419200000 #ONE MONTH
@@ -22,8 +22,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: rp.calcpal@gmail.com
-    password: ykug sgmx nnxn jnjh
+    username: email address
+    password: password
     properties:
       mail:
         smtp:
@@ -46,7 +46,7 @@ spring:
       on-profile: dev
   data:
     mongodb:
-      uri: mongodb+srv://lakindu:calc-lakindu@calcpal-cluster.8adffay.mongodb.net/
+      uri: mongodb-uri
       database: CalcPal-Dev-DB
 
 ---
@@ -60,7 +60,7 @@ spring:
       on-profile: qa
   data:
     mongodb:
-      uri: mongodb+srv://lakindu:calc-lakindu@calcpal-cluster.8adffay.mongodb.net/
+      uri: mongodb-uri
       database: CalcPal-Qa-DB
 
 ---
@@ -74,5 +74,5 @@ spring:
       on-profile: prod
   data:
     mongodb:
-      uri: mongodb+srv://lakindu:calc-lakindu@calcpal-cluster.8adffay.mongodb.net/
+      uri: mongodb-uri
       database: CalcPal-Prod-DB

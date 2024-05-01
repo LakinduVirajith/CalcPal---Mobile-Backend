@@ -2,8 +2,8 @@ package com.calcapl.userservice.common;
 
 import com.calcapl.userservice.collection.User;
 import com.calcapl.userservice.config.jwt.JwtService;
+import com.calcapl.userservice.exception.NotFoundException;
 import com.calcapl.userservice.repository.UserRepository;
-import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class CommonFunctions {
         if(!token.isEmpty()){
             return token;
         }else{
-            throw new NotFoundException("It looks like the token is missing");
+            throw new NotFoundException("looks like the token is missing");
         }
     }
 
@@ -41,7 +41,7 @@ public class CommonFunctions {
         if(user.isPresent()){
             return user.get();
         }else{
-            throw new NotFoundException("We couldn't find this account");
+            throw new NotFoundException("we couldn't find this account");
         }
     }
 }

@@ -2,6 +2,7 @@ package com.calcapl.userservice.controller;
 
 import com.calcapl.userservice.common.AuthenticationRequest;
 import com.calcapl.userservice.dto.UserDTO;
+import com.calcapl.userservice.exception.NotFoundException;
 import com.calcapl.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,15 +38,21 @@ public class UserController {
     }
 
     @GetMapping("/details")
-    @Operation(summary = "Retrieve user details", description = "Retrieve a user details by providing email of the user.")
+    @Operation(summary = "Retrieve User Details", description = "Retrieve user details by providing email.")
     public ResponseEntity<?> getUser(@RequestBody String email) {
         return userService.getUser(email);
     }
 
     @PutMapping("/update")
-    @Operation(summary = "Update user details", description = "Update a new user. Provide necessary details to create a user account.")
-    public ResponseEntity<?> update(@Valid @RequestBody UserDTO userDTO) {
-        return userService.update(userDTO);
+    @Operation(summary = "Update User Details", description = "Update user details such as name and birthday.")
+    public ResponseEntity<?> updateDetails(@RequestBody String name, @RequestBody String birthDay) throws NotFoundException {
+        return userService.updateDetails(name, birthDay);
+    }
+
+    @PutMapping("/update/disorder")
+    @Operation(summary = "Update User Disorder Type", description = "Update user disorder types.")
+    public ResponseEntity<?> updateDisorderTypes(@RequestBody String disorderTypes) throws NotFoundException {
+        return userService.updateDisorderTypes(disorderTypes);
     }
 
     @Operation(summary = "Reset Password", description = "User password reset by Providing necessary details.")
@@ -55,20 +62,20 @@ public class UserController {
     }
 
     @PostMapping("/refresh-token")
-    @Operation(summary = "Refresh Access Token", description = "Refresh the access token by providing a valid refresh token. This endpoint allows you to obtain a new access token using a valid refresh token, which helps in maintaining user authentication without requiring the user to log in again.")
+    @Operation(summary = "Refresh Access Token", description = "Refresh access token using a valid refresh token.")
     public ResponseEntity<?> refreshToken(@RequestBody String refreshToken) {
         return userService.refreshToken(refreshToken);
     }
 
     @PutMapping("/deactivate")
-    @Operation(summary = "Deactivate Account", description = "Deactivate a user account by providing the unique user ID.")
-    public ResponseEntity<?> userDeactivate() {
+    @Operation(summary = "Deactivate Account", description = "Deactivate user account.")
+    public ResponseEntity<?> userDeactivate() throws NotFoundException {
         return userService.deactivate();
     }
 
     @PutMapping("/logout")
     @Operation(summary = "Logout", description = "Invalidate the user's authentication token to log out.")
-    public ResponseEntity<?> logout() {
+    public ResponseEntity<?> logout() throws NotFoundException {
         return userService.logout();
     }
 }
