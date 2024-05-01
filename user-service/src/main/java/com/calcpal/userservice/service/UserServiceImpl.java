@@ -9,6 +9,7 @@ import com.calcpal.userservice.dto.FullUserDTO;
 import com.calcpal.userservice.dto.UserDTO;
 import com.calcpal.userservice.common.AuthenticationResponse;
 import com.calcpal.userservice.common.CommonFunctions;
+import com.calcpal.userservice.dto.UserUpdateDTO;
 import com.calcpal.userservice.exception.NotFoundException;
 import com.calcpal.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -178,14 +179,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public ResponseEntity<?> getUser(String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-
-        // USER NOT FOUND EXCEPTION
-        if(optionalUser.isEmpty()){
+    public ResponseEntity<?> getUser() throws NotFoundException {
+        User user = commonFunctions.getUser();
+        if(user == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
-        User user = optionalUser.get();
 
         // ASSIGN USER DETAILS
         FullUserDTO fullUserDTO = FullUserDTO.builder()
@@ -197,28 +195,47 @@ public class UserServiceImpl implements UserService{
         if(user.getDisorderTypes() != null){
             fullUserDTO.setDisorderTypes(user.getDisorderTypes());
         }
+        if(user.getIqScore() != null){
+            fullUserDTO.setIqScore(user.getIqScore());
+        }
 
         return ResponseEntity.ok().body(fullUserDTO);
     }
 
     @Override
-    public ResponseEntity<?> updateDetails(String name, String birthDay) throws NotFoundException {
+    public ResponseEntity<?> updateDetails(UserUpdateDTO userUpdateDTO) throws NotFoundException {
         User user = commonFunctions.getUser();
         if(user == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
 
-        if(!name.isEmpty()){
-            user.setName(name);
+        if(!userUpdateDTO.getName().isEmpty()){
+            user.setName(userUpdateDTO.getName());
         }
-        if(birthDay.isEmpty()){
-            user.setBirthDay(birthDay);
-            user.setAge(calculateAge(birthDay));
+        if(!userUpdateDTO.getBirthDay().isEmpty()){
+            user.setBirthDay(userUpdateDTO.getBirthDay());
+            user.setAge(calculateAge(userUpdateDTO.getBirthDay()));
         }
 
         userRepository.save(user);
 
         return ResponseEntity.ok().body("user details updated successfully");
+    }
+
+    @Override
+    public ResponseEntity<?> updateIQScore(String iqScore) throws NotFoundException {
+        User user = commonFunctions.getUser();
+        if(user == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
+        }
+
+        if(!iqScore.isEmpty()){
+            user.setIqScore(iqScore);
+        }
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok().body("user iq score updated successfully");
     }
 
     @Override

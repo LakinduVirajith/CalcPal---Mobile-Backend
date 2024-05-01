@@ -10,21 +10,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FullUserDTO {
+public class UserUpdateDTO {
 
     @NotNull
     private String name;
 
     @NotNull
-    private String email;
-
-    @NotNull
-    private int age;
-
-    @NotNull
     private String birthDay;
-
-    private String disorderTypes;
-
-    private String iqScore;
 }
