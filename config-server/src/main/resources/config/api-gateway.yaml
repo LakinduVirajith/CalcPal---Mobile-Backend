@@ -10,6 +10,14 @@ spring:
             uri: lb://user-service
             predicates:
               - Path=/api/v1/user/**
+          - id: verbal-diagnosis-service
+            uri: lb://user-service
+            predicates:
+              - Path=/api/v1/verbal/**
+          - id: lexical-diagnosis-service
+            uri: lb://user-service
+            predicates:
+              - Path=/api/v1/lexical/**
 
 eureka:
   client:

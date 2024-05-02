@@ -25,4 +25,6 @@ public class FullUserDTO {
     private String birthDay;
 
     private String disorderTypes;
+
+    private String iqScore;
 }

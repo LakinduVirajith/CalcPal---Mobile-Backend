@@ -39,6 +39,13 @@
 			<version>3.2.5</version>
 		</dependency>
 
+		<!-- Spring Validation -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+			<version>3.2.5</version>
+		</dependency>
+
 		<!--Spring Web-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -78,19 +85,13 @@
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 
+		<!--Spring Boot DevTools-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<version>3.2.5</version>
 			<scope>runtime</scope>
 			<optional>true</optional>
-		</dependency>
-
-		<!-- Spring Validation -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-validation</artifactId>
-			<version>3.2.5</version>
 		</dependency>
 
 		<!--Lombok-->

@@ -14,7 +14,9 @@ jobs:
           - service-registry
           - config-server
           - api-gateway
-          - user-service          
+          - user-service
+          - verbal-diagnosis-service
+          - lexical-diagnosis-service
 
     steps:
       - name: Checkout Repository
@@ -32,7 +34,6 @@ jobs:
           MAIL_ADDRESS: ${{ secrets.MAIL_ADDRESS }}
           MAIL_APP_PASSWORD: ${{ secrets.MAIL_APP_PASSWORD }}
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
-        working-directory: ./config-server
         run: bash setup_env.sh
 
       - name: Run Unit Tests for ${{ matrix.service }}

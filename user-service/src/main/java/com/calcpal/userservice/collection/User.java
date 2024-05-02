@@ -41,6 +41,8 @@ public class User implements UserDetails {
 
     private String disorderTypes;
 
+    private String iqScore;
+
     private ActivationToken activationToken;
 
     private AuthenticationToken authenticationToken;

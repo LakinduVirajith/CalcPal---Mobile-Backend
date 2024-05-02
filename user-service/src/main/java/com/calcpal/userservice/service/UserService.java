@@ -2,6 +2,7 @@ package com.calcpal.userservice.service;
 
 import com.calcpal.userservice.common.AuthenticationRequest;
 import com.calcpal.userservice.dto.UserDTO;
+import com.calcpal.userservice.dto.UserUpdateDTO;
 import com.calcpal.userservice.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 
@@ -12,9 +13,11 @@ public interface UserService {
 
     ResponseEntity<?> login(AuthenticationRequest request);
 
-    ResponseEntity<?> getUser(String email);
+    ResponseEntity<?> getUser() throws NotFoundException;
 
-    ResponseEntity<?> updateDetails(String name, String birthDay) throws NotFoundException;
+    ResponseEntity<?> updateDetails(UserUpdateDTO userUpdateDTO) throws NotFoundException;
+
+    ResponseEntity<?> updateIQScore(String iqScore) throws NotFoundException;
 
     ResponseEntity<?> updateDisorderTypes(String disorderTypes) throws NotFoundException;
 
