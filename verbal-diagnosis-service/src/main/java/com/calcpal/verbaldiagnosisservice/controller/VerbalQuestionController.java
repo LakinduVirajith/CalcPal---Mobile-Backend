@@ -38,13 +38,13 @@ public class VerbalQuestionController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update Verbal Question", description = "Update a verbal question in the question bank.")
-    public ResponseEntity<?> update(@PathVariable ObjectId id, @Valid @RequestBody VerbalQuestionDTO questionBankDTO) {
+    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody VerbalQuestionDTO questionBankDTO) {
         return questionBankService.update(id, questionBankDTO);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete Verbal Question", description = "Delete a verbal question from the question bank by its ID.")
-    public ResponseEntity<?> delete(@PathVariable ObjectId id) {
+    public ResponseEntity<?> delete(@PathVariable String id) {
         return questionBankService.delete(id);
     }
 }

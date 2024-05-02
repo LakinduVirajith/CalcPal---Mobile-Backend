@@ -22,7 +22,7 @@ import java.util.List;
 public class LexicalQuestion {
 
     @Id
-    private ObjectId id;
+    private String id;
 
     @NotNull
     private Long questionNumber;

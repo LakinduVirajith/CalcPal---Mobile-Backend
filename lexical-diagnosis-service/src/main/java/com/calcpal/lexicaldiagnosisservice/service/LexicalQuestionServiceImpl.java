@@ -78,7 +78,7 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
     }
 
     @Override
-    public ResponseEntity<?> update(ObjectId id, LexicalQuestionDTO questionDTO) {
+    public ResponseEntity<?> update(String id, LexicalQuestionDTO questionDTO) {
         Optional<LexicalQuestion> optionalVerbalQuestion = questionBankRepository.findById(id);
 
         // NOT FOUND EXCEPTION HANDLE
@@ -100,7 +100,7 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
     }
 
     @Override
-    public ResponseEntity<?> delete(ObjectId id) {
+    public ResponseEntity<?> delete(String id) {
         Optional<LexicalQuestion> question = questionBankRepository.findById(id);
 
         // NOT FOUND EXCEPTION HANDLE

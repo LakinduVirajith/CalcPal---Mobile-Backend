@@ -11,7 +11,7 @@ public interface LexicalQuestionService {
 
     ResponseEntity<?> getAll();
 
-    ResponseEntity<?> update(ObjectId id, LexicalQuestionDTO questionDTO);
+    ResponseEntity<?> update(String id, LexicalQuestionDTO questionDTO);
 
-    ResponseEntity<?> delete(ObjectId id);
+    ResponseEntity<?> delete(String id);
 }

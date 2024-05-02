@@ -26,7 +26,7 @@ public class DiagnosisResultController {
 
     @GetMapping("/")
     @Operation(summary = "Get Lexical Diagnosis Result by Email", description = "Retrieve a lexical diagnosis result from the database by email.")
-    public ResponseEntity<?> get(@RequestBody String email) {
+    public ResponseEntity<?> get(@RequestParam String email) {
         return diagnosisResultService.get(email);
     }
 

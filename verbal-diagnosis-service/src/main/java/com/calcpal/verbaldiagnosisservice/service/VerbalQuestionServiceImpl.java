@@ -77,7 +77,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
     }
 
     @Override
-    public ResponseEntity<?> update(ObjectId id, VerbalQuestionDTO questionBankDTO) {
+    public ResponseEntity<?> update(String id, VerbalQuestionDTO questionBankDTO) {
         Optional<VerbalQuestion> optionalVerbalQuestion = questionBankRepository.findById(id);
 
         // NOT FOUND EXCEPTION HANDLE
@@ -99,7 +99,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
     }
 
     @Override
-    public ResponseEntity<?> delete(ObjectId id) {
+    public ResponseEntity<?> delete(String id) {
         Optional<VerbalQuestion> question = questionBankRepository.findById(id);
 
         // NOT FOUND EXCEPTION HANDLE

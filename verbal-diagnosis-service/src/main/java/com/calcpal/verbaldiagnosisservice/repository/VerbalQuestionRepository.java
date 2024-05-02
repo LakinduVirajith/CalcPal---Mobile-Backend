@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VerbalQuestionRepository extends MongoRepository<VerbalQuestion, ObjectId> {
+public interface VerbalQuestionRepository extends MongoRepository<VerbalQuestion, String> {
     List<VerbalQuestion> findByQuestionNumber(Long id);
 }

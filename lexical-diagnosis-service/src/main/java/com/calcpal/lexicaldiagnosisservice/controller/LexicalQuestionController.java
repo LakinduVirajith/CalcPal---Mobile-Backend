@@ -38,13 +38,13 @@ public class LexicalQuestionController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update Lexical Question", description = "Update a lexical question in the question bank.")
-    public ResponseEntity<?> update(@PathVariable ObjectId id, @Valid @RequestBody LexicalQuestionDTO questionDTO) {
+    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody LexicalQuestionDTO questionDTO) {
         return questionBankService.update(id, questionDTO);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete Lexical Question", description = "Delete a lexical question from the question bank by its ID.")
-    public ResponseEntity<?> delete(@PathVariable ObjectId id) {
+    public ResponseEntity<?> delete(@PathVariable String id) {
         return questionBankService.delete(id);
     }
 }
