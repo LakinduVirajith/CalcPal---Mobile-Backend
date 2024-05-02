@@ -14,7 +14,9 @@ jobs:
             - service-registry
             - config-server
             - api-gateway
-            - user-service  
+            - user-service
+            - verbal-diagnosis-service
+            - lexical-diagnosis-service
 
       steps:
         - name: Checkout Repository
