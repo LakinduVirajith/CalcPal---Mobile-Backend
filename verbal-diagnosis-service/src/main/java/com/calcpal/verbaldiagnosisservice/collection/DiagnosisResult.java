@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("Verbal-Diagnosis-Result")
+@Document("Diagnosis-Result")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class VerbalDiagnosis {
+public class DiagnosisResult {
 
     @Id
     private String userEmail;

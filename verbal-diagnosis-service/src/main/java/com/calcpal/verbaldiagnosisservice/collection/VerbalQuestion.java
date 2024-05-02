@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document("Verbal-Question-Bank")
+@Document("Question-Bank")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @Builder
