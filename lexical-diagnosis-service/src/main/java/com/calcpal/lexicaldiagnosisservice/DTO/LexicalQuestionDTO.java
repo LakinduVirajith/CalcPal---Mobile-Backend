@@ -1,28 +1,19 @@
-package com.calcpal.verbaldiagnosisservice.collection;
+package com.calcpal.lexicaldiagnosisservice.DTO;
 
-import com.calcpal.verbaldiagnosisservice.enums.Language;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.calcpal.lexicaldiagnosisservice.enums.Language;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document("Question-Bank")
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VerbalQuestion {
-
-    @Id
-    private String id;
+public class LexicalQuestionDTO {
 
     @NotNull
     private Long questionNumber;

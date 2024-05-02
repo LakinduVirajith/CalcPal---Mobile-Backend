@@ -11,7 +11,7 @@ public interface VerbalQuestionService {
 
     ResponseEntity<?> getAll();
 
-    ResponseEntity<?> update(ObjectId id, VerbalQuestionDTO questionBankDTO);
+    ResponseEntity<?> update(String id, VerbalQuestionDTO questionBankDTO);
 
-    ResponseEntity<?> delete(ObjectId id);
+    ResponseEntity<?> delete(String id);
 }

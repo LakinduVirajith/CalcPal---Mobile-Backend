@@ -1,6 +1,6 @@
-package com.calcpal.verbaldiagnosisservice.collection;
+package com.calcpal.lexicaldiagnosisservice.collection;
 
-import com.calcpal.verbaldiagnosisservice.enums.Language;
+import com.calcpal.lexicaldiagnosisservice.enums.Language;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class VerbalQuestion {
+public class LexicalQuestion {
 
     @Id
     private String id;

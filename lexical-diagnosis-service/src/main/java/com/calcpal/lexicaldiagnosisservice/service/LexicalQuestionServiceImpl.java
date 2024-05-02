@@ -1,8 +1,8 @@
-package com.calcpal.verbaldiagnosisservice.service;
+package com.calcpal.lexicaldiagnosisservice.service;
 
-import com.calcpal.verbaldiagnosisservice.DTO.VerbalQuestionDTO;
-import com.calcpal.verbaldiagnosisservice.collection.VerbalQuestion;
-import com.calcpal.verbaldiagnosisservice.repository.VerbalQuestionRepository;
+import com.calcpal.lexicaldiagnosisservice.DTO.LexicalQuestionDTO;
+import com.calcpal.lexicaldiagnosisservice.collection.LexicalQuestion;
+import com.calcpal.lexicaldiagnosisservice.repository.LexicalQuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
@@ -15,17 +15,18 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class VerbalQuestionServiceImpl implements VerbalQuestionService {
+public class LexicalQuestionServiceImpl implements LexicalQuestionService{
 
-    private final VerbalQuestionRepository questionBankRepository;
+    private final LexicalQuestionRepository questionBankRepository;
+
     @Override
-    public ResponseEntity<?> add(VerbalQuestionDTO questionBankDTO) {
-        VerbalQuestion question =  VerbalQuestion.builder()
-                .questionNumber(questionBankDTO.getQuestionNumber())
-                .language(questionBankDTO.getLanguage())
-                .question(questionBankDTO.getQuestion())
-                .answers(questionBankDTO.getAnswers())
-                .correctAnswer(questionBankDTO.getCorrectAnswer())
+    public ResponseEntity<?> add(LexicalQuestionDTO questionDTO) {
+        LexicalQuestion question =  LexicalQuestion.builder()
+                .questionNumber(questionDTO.getQuestionNumber())
+                .language(questionDTO.getLanguage())
+                .question(questionDTO.getQuestion())
+                .answers(questionDTO.getAnswers())
+                .correctAnswer(questionDTO.getCorrectAnswer())
                 .build();
 
         questionBankRepository.save(question);
@@ -35,7 +36,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
     @Override
     public ResponseEntity<?> getRandom(Long id) {
-        List<VerbalQuestion> questions = questionBankRepository.findByQuestionNumber(id);
+        List<LexicalQuestion> questions = questionBankRepository.findByQuestionNumber(id);
 
         // NOT FOUND EXCEPTION HANDLE
         if (questions.isEmpty()) {
@@ -43,10 +44,10 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
         }
 
         // RANDOMLY SELECT ONE QUESTION FORM THE FETCHED LIST
-        VerbalQuestion randomQuestion = getRandomQuestion(questions);
+        LexicalQuestion randomQuestion = getRandomQuestion(questions);
 
         // MAPPING QUESTION DATA
-        VerbalQuestionDTO question = VerbalQuestionDTO.builder()
+        LexicalQuestionDTO question = LexicalQuestionDTO.builder()
                 .questionNumber(randomQuestion.getQuestionNumber())
                 .language(randomQuestion.getLanguage())
                 .question(randomQuestion.getQuestion())
@@ -58,7 +59,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
     }
 
     // METHOD TO GET A RANDOM QUESTION FROM A LIST QUESTIONS
-    private VerbalQuestion getRandomQuestion(List<VerbalQuestion> questions) {
+    private LexicalQuestion getRandomQuestion(List<LexicalQuestion> questions) {
         Random random = new Random();
         int randomIndex = random.nextInt(questions.size());
         return questions.get(randomIndex);
@@ -66,7 +67,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
     @Override
     public ResponseEntity<?> getAll() {
-        List<VerbalQuestion> questions = questionBankRepository.findAll();
+        List<LexicalQuestion> questions = questionBankRepository.findAll();
 
         // NOT FOUND EXCEPTION HANDLE
         if (questions.isEmpty()) {
@@ -77,21 +78,21 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
     }
 
     @Override
-    public ResponseEntity<?> update(String id, VerbalQuestionDTO questionBankDTO) {
-        Optional<VerbalQuestion> optionalVerbalQuestion = questionBankRepository.findById(id);
+    public ResponseEntity<?> update(String id, LexicalQuestionDTO questionDTO) {
+        Optional<LexicalQuestion> optionalVerbalQuestion = questionBankRepository.findById(id);
 
         // NOT FOUND EXCEPTION HANDLE
         if (optionalVerbalQuestion.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the provided ID");
         }
-        VerbalQuestion question = optionalVerbalQuestion.get();
+        LexicalQuestion question = optionalVerbalQuestion.get();
 
         // MAPPING QUESTION DATA
-        question.setQuestionNumber(questionBankDTO.getQuestionNumber());
-        question.setLanguage(questionBankDTO.getLanguage());
-        question.setQuestion(questionBankDTO.getQuestion());
-        question.setAnswers(questionBankDTO.getAnswers());
-        question.setCorrectAnswer(questionBankDTO.getCorrectAnswer());
+        question.setQuestionNumber(questionDTO.getQuestionNumber());
+        question.setLanguage(questionDTO.getLanguage());
+        question.setQuestion(questionDTO.getQuestion());
+        question.setAnswers(questionDTO.getAnswers());
+        question.setCorrectAnswer(questionDTO.getCorrectAnswer());
 
         questionBankRepository.save(question);
 
@@ -100,7 +101,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
     @Override
     public ResponseEntity<?> delete(String id) {
-        Optional<VerbalQuestion> question = questionBankRepository.findById(id);
+        Optional<LexicalQuestion> question = questionBankRepository.findById(id);
 
         // NOT FOUND EXCEPTION HANDLE
         if (question.isEmpty()) {

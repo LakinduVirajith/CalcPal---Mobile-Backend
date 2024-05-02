@@ -11,7 +11,7 @@ management:
 ---
 #DEV PROFILE
 server:
-  port: 8081
+  port: 8083
 
 spring:
   config:
@@ -20,12 +20,12 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
-      database: User-Dev-DB
+      database: Lexical-Diagnosis-Dev-DB
 
 ---
 #QA PROFILE
 server:
-  port: 8081
+  port: 8083
 
 spring:
   config:
@@ -34,12 +34,12 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
-      database: User-Qa-DB
+      database: Lexical-Diagnosis-Qa-DB
 
 ---
 #PROD PROFILE
 server:
-  port: 8081
+  port: 8083
 
 spring:
   config:
@@ -48,4 +48,4 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
-      database: User-Prod-DB
+      database: Lexical-Diagnosis-Prod-DB

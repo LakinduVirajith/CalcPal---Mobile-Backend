@@ -14,10 +14,10 @@ public class EmailServiceImpl implements EmailService{
 
     private final JavaMailSender mailSender;
 
-    @Value("${spring.mail.username}")
+    @Value("${mail.username}")
     private String fromMail;
 
-    @Value(("${base.url}"))
+    @Value(("${mail.base.url}"))
     private String baseUrl;
 
     @Override

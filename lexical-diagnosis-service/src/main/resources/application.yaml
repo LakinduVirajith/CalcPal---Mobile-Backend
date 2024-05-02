@@ -1,8 +1,7 @@
 spring:
   application:
-    name: verbal-diagnosis-service
+    name: lexical-diagnosis-service
   profiles:
     active: dev
   config:
     import: "optional:configserver:http://localhost:8070"
-

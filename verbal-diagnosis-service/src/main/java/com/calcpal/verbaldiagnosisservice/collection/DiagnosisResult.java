@@ -1,41 +1,46 @@
 package com.calcpal.verbaldiagnosisservice.collection;
 
-import com.calcpal.verbaldiagnosisservice.enums.Language;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-
-@Document("Question-Bank")
+@Document("Diagnosis-Result")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class VerbalQuestion {
+public class DiagnosisResult {
 
     @Id
-    private String id;
+    private String userEmail;
 
     @NotNull
-    private Long questionNumber;
+    private Long timeSeconds;
 
     @NotNull
-    private Language language;
+    private Boolean q1;
 
     @NotNull
-    private String question;
+    private Boolean q2;
 
     @NotNull
-    private List<String> answers;
+    private Boolean q3;
 
     @NotNull
-    private String correctAnswer;
+    private Boolean q4;
+
+    @NotNull
+    private Boolean q5;
+
+    @NotNull
+    private String totalScore;
+
+    private Boolean label;
+
 }

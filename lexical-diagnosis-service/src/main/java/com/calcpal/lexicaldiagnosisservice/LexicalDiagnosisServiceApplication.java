@@ -1,4 +1,4 @@
-package com.calcpal.verbaldiagnosisservice;
+package com.calcpal.lexicaldiagnosisservice;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableDiscoveryClient
 @RestController
 @Tag(name = "Greeting Controller")
-public class VerbalDiagnosisServiceApplication {
+public class LexicalDiagnosisServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(VerbalDiagnosisServiceApplication.class, args);
+		SpringApplication.run(LexicalDiagnosisServiceApplication.class, args);
 	}
 
 	@Operation(summary = "Check Application Status", description = "Check if the application is running.")
 	@GetMapping("/")
 	public String testMessage(){
-		return "verbal diagnosis microservice application is running smoothly";
+		return "lexical diagnosis microservice application is running smoothly";
 	}
 
 }
