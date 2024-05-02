@@ -25,8 +25,5 @@ public class LexicalQuestionDTO {
     private String question;
 
     @NotNull
-    private List<String> answers;
-
-    @NotNull
-    private String correctAnswer;
+    private String answers;
 }

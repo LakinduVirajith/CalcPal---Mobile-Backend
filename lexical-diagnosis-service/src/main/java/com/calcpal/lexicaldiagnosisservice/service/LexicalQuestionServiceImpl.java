@@ -4,7 +4,6 @@ import com.calcpal.lexicaldiagnosisservice.DTO.LexicalQuestionDTO;
 import com.calcpal.lexicaldiagnosisservice.collection.LexicalQuestion;
 import com.calcpal.lexicaldiagnosisservice.repository.LexicalQuestionRepository;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
                 .language(questionDTO.getLanguage())
                 .question(questionDTO.getQuestion())
                 .answers(questionDTO.getAnswers())
-                .correctAnswer(questionDTO.getCorrectAnswer())
                 .build();
 
         questionBankRepository.save(question);
@@ -52,7 +50,6 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
                 .language(randomQuestion.getLanguage())
                 .question(randomQuestion.getQuestion())
                 .answers(randomQuestion.getAnswers())
-                .correctAnswer(randomQuestion.getCorrectAnswer())
                 .build();
 
         return ResponseEntity.ok().body(question);
@@ -92,7 +89,6 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
         question.setLanguage(questionDTO.getLanguage());
         question.setQuestion(questionDTO.getQuestion());
         question.setAnswers(questionDTO.getAnswers());
-        question.setCorrectAnswer(questionDTO.getCorrectAnswer());
 
         questionBankRepository.save(question);
 
