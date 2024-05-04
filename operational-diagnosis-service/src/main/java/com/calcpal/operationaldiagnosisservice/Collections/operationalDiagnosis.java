@@ -42,4 +42,5 @@ public class operationalDiagnosis {
     private String score;
 
     private Boolean diagnosis;
+
 }

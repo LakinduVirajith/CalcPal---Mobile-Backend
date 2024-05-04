@@ -1,6 +1,7 @@
 package com.calcpal.operationaldiagnosisservice.Services;
 
 import com.calcpal.operationaldiagnosisservice.Collections.operationalDiagnosis;
+import com.calcpal.operationaldiagnosisservice.DTO.DiagnosisDTO;
 import com.calcpal.operationaldiagnosisservice.Repositary.operationalDiagnosisRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class operationalDiagnosisServiceImpl implements operationalDiagnosisServ
 
     @Override
     public ResponseEntity<?> add(operationalDiagnosis OperationalDiagnosis) {
-        Optional<operationalDiagnosis> diagnosis = OperationalDiagnosisRepositary.findById(operationalDiagnosis.getUserEmail());
+        Optional<operationalDiagnosis> diagnosis = OperationalDiagnosisRepositary.findById(OperationalDiagnosis.getUserEmail());
 
         if(diagnosis.isPresent()){
             update(diagnosis.get());
@@ -56,49 +57,43 @@ public class operationalDiagnosisServiceImpl implements operationalDiagnosisServ
 
     @Override
     public ResponseEntity<?> update(operationalDiagnosis OperationalDiagnosis) {
-        Optional<operationalDiagnosis> OperationalDiagnosisObj = operationalDiagnosisRepo.findById(operationalDiagnosis.getUserEmail());
+        Optional<operationalDiagnosis> OperationalDiagnosisObj = OperationalDiagnosisRepositary.findById(OperationalDiagnosis.getUserEmail());
 
-        // NOT FOUND EXCEPTION HANDLE
         if (OperationalDiagnosisObj.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Operational diagnosis found for this student");
         }
         operationalDiagnosis diagnosis = OperationalDiagnosisObj.get();
 
-        // MAPPING QUESTION DATA
-        diagnosis.setTimeSeconds(lexicalDiagnosis.getTimeSeconds());
-        diagnosis.setQ1(lexicalDiagnosis.getQ1());
-        diagnosis.setQ2(lexicalDiagnosis.getQ2());
-        diagnosis.setQ3(lexicalDiagnosis.getQ3());
-        diagnosis.setQ4(lexicalDiagnosis.getQ4());
-        diagnosis.setQ5(lexicalDiagnosis.getQ5());
-        diagnosis.setTotalScore(lexicalDiagnosis.getTotalScore());
+        diagnosis.setQuizTimeTaken(OperationalDiagnosis.getQuizTimeTaken());
+        diagnosis.setQ1(OperationalDiagnosis.getQ1());
+        diagnosis.setQ2(OperationalDiagnosis.getQ2());
+        diagnosis.setQ3(OperationalDiagnosis.getQ3());
+        diagnosis.setQ4(OperationalDiagnosis.getQ4());
+        diagnosis.setQ5(OperationalDiagnosis.getQ5());
+        diagnosis.setScore(OperationalDiagnosis.getScore());
 
-        if(diagnosis.getLabel() != null){
-            diagnosis.setLabel(operationalDiagnosis.getLabel());
+        if(diagnosis.getDiagnosis() != null){
+            diagnosis.setDiagnosis(OperationalDiagnosis.getDiagnosis());
         }
-        operationalDiagnosisRepo.save(diagnosis);
+        OperationalDiagnosisRepositary.save(diagnosis);
 
         return ResponseEntity.ok().body("diagnosis data updated successfully");
     }
 
     @Override
-    public ResponseEntity<?> updateLabel(DiagnosisLabelDTO diagnosisLabelDTO) {
-        Optional<DiagnosisResult> optionalVerbalDiagnosis = diagnosisResultRepository.findById(diagnosisLabelDTO.getUserEmail());
+    public ResponseEntity<?> updateLabel(DiagnosisDTO diagnosisLabelDTO) {
+        Optional<operationalDiagnosis> optionalOperationalDiagnosis = OperationalDiagnosisRepositary.findById(diagnosisLabelDTO.getUserEmail());
 
-        // NOT FOUND EXCEPTION HANDLE
-        if (optionalVerbalDiagnosis.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis found for the provided user");
+        if (optionalOperationalDiagnosis.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Operational diagnosis found for the provided user");
         }
-        DiagnosisResult diagnosis = optionalVerbalDiagnosis.get();
+        operationalDiagnosis diagnosis = optionalOperationalDiagnosis.get();
 
-        // MAPPING QUESTION DATA AND SAVE
-        diagnosis.setLabel(diagnosisLabelDTO.getLabel());
-        diagnosisResultRepository.save(diagnosis);
+        diagnosis.setDiagnosis(diagnosisLabelDTO.getLabel());
+        OperationalDiagnosisRepositary.save(diagnosis);
 
-        return ResponseEntity.ok().body("diagnosis label updated successfully");
+        return ResponseEntity.ok().body("Operational Diagnosis updated successfully");
     }
-
-
 
 }
 

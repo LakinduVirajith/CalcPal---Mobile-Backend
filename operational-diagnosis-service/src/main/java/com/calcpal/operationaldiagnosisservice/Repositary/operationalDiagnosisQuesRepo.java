@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface operationalDiagnosisQuesRepo extends MongoRepository<operationalDiagnosisQues, String> {
-    List<operationalDiagnosis> findByQuestionNumber(Long id);
+    List<operationalDiagnosisQues> findByQuestionNumber(Long id);
 }
