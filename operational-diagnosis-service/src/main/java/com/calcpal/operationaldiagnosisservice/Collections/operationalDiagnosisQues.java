@@ -1,4 +1,4 @@
-package com.calcpal.operationaldiagnosisservice.collections;
+package com.calcpal.operationaldiagnosisservice.Collections;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
