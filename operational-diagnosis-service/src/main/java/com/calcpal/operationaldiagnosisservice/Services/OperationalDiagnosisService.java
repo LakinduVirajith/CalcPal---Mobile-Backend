@@ -1,17 +1,17 @@
 package com.calcpal.operationaldiagnosisservice.Services;
 
 import com.calcpal.operationaldiagnosisservice.DTO.DiagnosisDTO;
-import com.calcpal.operationaldiagnosisservice.Collections.operationalDiagnosis;
+import com.calcpal.operationaldiagnosisservice.Collections.OperationalDiagnosis;
 import org.springframework.http.ResponseEntity;
 
-public interface operationalDiagnosisService {
-    ResponseEntity<?> add(operationalDiagnosis OperationalDiagnosis);
+public interface OperationalDiagnosisService {
+    ResponseEntity<?> add(OperationalDiagnosis OperationalDiagnosis);
 
     ResponseEntity<?> get(String email);
 
     ResponseEntity<?> getAll();
 
-    ResponseEntity<?> update(operationalDiagnosis OperationalDiagnosis);
+    ResponseEntity<?> update(OperationalDiagnosis OperationalDiagnosis);
 
     ResponseEntity<?> updateLabel(DiagnosisDTO diagnosisLabelDTO);
 }

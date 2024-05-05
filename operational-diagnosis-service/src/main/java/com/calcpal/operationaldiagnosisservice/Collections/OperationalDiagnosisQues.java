@@ -1,18 +1,18 @@
 package com.calcpal.operationaldiagnosisservice.Collections;
 
+import com.calcpal.operationaldiagnosisservice.enums.Language;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Language;
 
 @Document("Question-Bank")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @Builder
-public class operationalDiagnosisQues {
+public class OperationalDiagnosisQues {
 
     @Id
     private String id;
@@ -34,17 +34,4 @@ public class operationalDiagnosisQues {
 
     @NotNull
     private String incorrectAnswer2;
-
-    public operationalDiagnosisQues() {
-    }
-
-    public operationalDiagnosisQues(String id, Long questionNumber, Language language, String question, String correctAnswer, String incorrectAnswer1, String incorrectAnswer2) {
-        this.id = id;
-        this.questionNumber = questionNumber;
-        this.language = language;
-        this.question = question;
-        this.correctAnswer = correctAnswer;
-        this.incorrectAnswer1 = incorrectAnswer1;
-        this.incorrectAnswer2 = incorrectAnswer2;
-    }
 }
