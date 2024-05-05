@@ -41,6 +41,6 @@ public class DiagnosisResultPractognostic {
     @NotNull
     private String totalScore;
 
-    private String label;
+    private Boolean label;
 
 }
