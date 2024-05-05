@@ -1,7 +1,7 @@
 package com.calcpal.operationaldiagnosisservice.Controllers;
 
 import com.calcpal.operationaldiagnosisservice.DTO.QuestionDTO;
-import com.calcpal.operationaldiagnosisservice.Services.operationalDiagnosisQuesService;
+import com.calcpal.operationaldiagnosisservice.Services.OperationalDiagnosisQuesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/operational/questionbank")
 @Tag(name = "Operational Diagnostic Question Bank Controllers")
 @RequiredArgsConstructor
-public class operationalDiagnosisQuesController {
+public class OperationalDiagnosisQuesController {
 
-    private final operationalDiagnosisQuesService questionBankService;
+    private final OperationalDiagnosisQuesService questionBankService;
 
     @PostMapping("/")
     @Operation(summary = "Add an Operational Diagnostic Question", description = "Add a new Operational diagnostic question to the question bank.")

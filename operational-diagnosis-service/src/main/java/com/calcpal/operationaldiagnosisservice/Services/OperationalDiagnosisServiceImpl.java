@@ -1,8 +1,8 @@
 package com.calcpal.operationaldiagnosisservice.Services;
 
-import com.calcpal.operationaldiagnosisservice.Collections.operationalDiagnosis;
+import com.calcpal.operationaldiagnosisservice.Collections.OperationalDiagnosis;
 import com.calcpal.operationaldiagnosisservice.DTO.DiagnosisDTO;
-import com.calcpal.operationaldiagnosisservice.Repositary.operationalDiagnosisRepo;
+import com.calcpal.operationaldiagnosisservice.Repositary.OperationalDiagnosisRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,18 +13,18 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class operationalDiagnosisServiceImpl implements operationalDiagnosisService {
+public class OperationalDiagnosisServiceImpl implements OperationalDiagnosisService {
 
-    private final operationalDiagnosisRepo OperationalDiagnosisRepositary;
+    private final OperationalDiagnosisRepo diagnosisRepo;
 
     @Override
-    public ResponseEntity<?> add(operationalDiagnosis OperationalDiagnosis) {
-        Optional<operationalDiagnosis> diagnosis = OperationalDiagnosisRepositary.findById(OperationalDiagnosis.getUserEmail());
+    public ResponseEntity<?> add(OperationalDiagnosis OperationalDiagnosis) {
+        Optional<com.calcpal.operationaldiagnosisservice.Collections.OperationalDiagnosis> diagnosis = diagnosisRepo.findById(OperationalDiagnosis.getUserEmail());
 
         if(diagnosis.isPresent()){
             update(diagnosis.get());
         }else{
-            OperationalDiagnosisRepositary.save(OperationalDiagnosis);
+            diagnosisRepo.save(OperationalDiagnosis);
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Operational diagnosis result inserted successfully");
@@ -32,8 +32,8 @@ public class operationalDiagnosisServiceImpl implements operationalDiagnosisServ
 
     @Override
     public ResponseEntity<?> get(String email) {
-        Optional<operationalDiagnosis> OperationalDiagnosis = OperationalDiagnosisRepositary.findById(email);
-        operationalDiagnosis diagnosis;
+        Optional<OperationalDiagnosis> OperationalDiagnosis = diagnosisRepo.findById(email);
+        com.calcpal.operationaldiagnosisservice.Collections.OperationalDiagnosis diagnosis;
 
         if(OperationalDiagnosis.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Operational diagnosis found for this student");
@@ -46,7 +46,7 @@ public class operationalDiagnosisServiceImpl implements operationalDiagnosisServ
 
     @Override
     public ResponseEntity<?> getAll() {
-        List<operationalDiagnosis> operationalDiagnosedList = OperationalDiagnosisRepositary.findAll();
+        List<OperationalDiagnosis> operationalDiagnosedList = diagnosisRepo.findAll();
 
         if (operationalDiagnosedList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Operational diagnosis are currently available");
@@ -56,13 +56,13 @@ public class operationalDiagnosisServiceImpl implements operationalDiagnosisServ
     }
 
     @Override
-    public ResponseEntity<?> update(operationalDiagnosis OperationalDiagnosis) {
-        Optional<operationalDiagnosis> OperationalDiagnosisObj = OperationalDiagnosisRepositary.findById(OperationalDiagnosis.getUserEmail());
+    public ResponseEntity<?> update(OperationalDiagnosis OperationalDiagnosis) {
+        Optional<com.calcpal.operationaldiagnosisservice.Collections.OperationalDiagnosis> OperationalDiagnosisObj = diagnosisRepo.findById(OperationalDiagnosis.getUserEmail());
 
         if (OperationalDiagnosisObj.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Operational diagnosis found for this student");
         }
-        operationalDiagnosis diagnosis = OperationalDiagnosisObj.get();
+        com.calcpal.operationaldiagnosisservice.Collections.OperationalDiagnosis diagnosis = OperationalDiagnosisObj.get();
 
         diagnosis.setQuizTimeTaken(OperationalDiagnosis.getQuizTimeTaken());
         diagnosis.setQ1(OperationalDiagnosis.getQ1());
@@ -75,22 +75,22 @@ public class operationalDiagnosisServiceImpl implements operationalDiagnosisServ
         if(diagnosis.getDiagnosis() != null){
             diagnosis.setDiagnosis(OperationalDiagnosis.getDiagnosis());
         }
-        OperationalDiagnosisRepositary.save(diagnosis);
+        diagnosisRepo.save(diagnosis);
 
         return ResponseEntity.ok().body("diagnosis data updated successfully");
     }
 
     @Override
     public ResponseEntity<?> updateLabel(DiagnosisDTO diagnosisLabelDTO) {
-        Optional<operationalDiagnosis> optionalOperationalDiagnosis = OperationalDiagnosisRepositary.findById(diagnosisLabelDTO.getUserEmail());
+        Optional<OperationalDiagnosis> optionalOperationalDiagnosis = diagnosisRepo.findById(diagnosisLabelDTO.getUserEmail());
 
         if (optionalOperationalDiagnosis.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Operational diagnosis found for the provided user");
         }
-        operationalDiagnosis diagnosis = optionalOperationalDiagnosis.get();
+        OperationalDiagnosis diagnosis = optionalOperationalDiagnosis.get();
 
         diagnosis.setDiagnosis(diagnosisLabelDTO.getLabel());
-        OperationalDiagnosisRepositary.save(diagnosis);
+        diagnosisRepo.save(diagnosis);
 
         return ResponseEntity.ok().body("Operational Diagnosis updated successfully");
     }

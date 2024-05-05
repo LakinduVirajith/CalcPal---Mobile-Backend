@@ -11,7 +11,7 @@ management:
 ---
 #DEV PROFILE
 server:
-  port: 8084
+  port: 8086
 
 spring:
   config:
@@ -19,13 +19,13 @@ spring:
       on-profile: dev
   data:
     mongodb:
-      uri: ${MONGODB_URI}
-      database: Operational-Diagnosis-Dev-DB
+      uri: mongodb+srv://lakindu:calc-lakindu@calcpal-cluster.8adffay.mongodb.net/
+      database: Sequential-Diagnosis-Dev-DB
 
 ---
 #QA PROFILE
 server:
-  port: 8084
+  port: 8086
 
 spring:
   config:
@@ -34,12 +34,12 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
-      database: Operational-Diagnosis-Qa-DB
+      database: Sequential-Diagnosis-Qa-DB
 
 ---
 #PROD PROFILE
 server:
-  port: 8084
+  port: 8086
 
 spring:
   config:
@@ -48,4 +48,4 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
-      database: Operational-Diagnosis-Prod-DB
+      database: Sequential-Diagnosis-Prod-DB
