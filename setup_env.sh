@@ -7,4 +7,10 @@ sed -i "s|\${MAIL_APP_PASSWORD}|$MAIL_APP_PASSWORD|g" user-service/src/main/reso
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/user-service.yaml
 
 # REPLACE PLACEHOLDERS IN VERBAL DIAGNOSIS YAML
-sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/user-service.yaml
+sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/verbal-diagnosis-service.yaml
+
+# REPLACE PLACEHOLDERS IN LEXICAL DIAGNOSIS YAML
+sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/lexical-diagnosis-service.yaml
+
+# REPLACE PLACEHOLDERS IN OPERATIONAL DIAGNOSIS YAML
+sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/operational-diagnosis-service.yaml

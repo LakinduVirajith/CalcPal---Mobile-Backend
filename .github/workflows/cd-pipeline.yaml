@@ -1,8 +1,8 @@
 name: Build and Deploy CalcPal Mobile Backend Application
 
-on: 
+on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   cd-pipeline:
@@ -17,6 +17,7 @@ jobs:
           - user-service
           - verbal-diagnosis-service
           - lexical-diagnosis-service
+          - operational-diagnosis-service
 
     steps:
       - name: Checkout Repository
@@ -25,7 +26,7 @@ jobs:
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: "temurin"
           java-version: 17
 
       - name: Set up Environment Variables

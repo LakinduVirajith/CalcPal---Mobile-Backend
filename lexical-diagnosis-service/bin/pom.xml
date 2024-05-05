@@ -9,16 +9,15 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.calcpal</groupId>
-	<artifactId>operational-diagnosis-service</artifactId>
+	<artifactId>lexical-diagnosis-service</artifactId>
 	<version>1.0.0</version>
-	<name>operational-diagnosis-service</name>
-	<description>Microservice for diagnosis of Operational Dyscalculia</description>
+	<name>lexical-diagnosis-service</name>
+	<description>verbal diagnosis microservice of calcpal mobile backend application</description>
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2023.0.1</spring-cloud.version>
 	</properties>
 	<dependencies>
-
 		<!--Actuator-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -124,13 +123,7 @@
 			<artifactId>reactor-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>2.14.2</version>
-		</dependency>
 	</dependencies>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -148,6 +141,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
