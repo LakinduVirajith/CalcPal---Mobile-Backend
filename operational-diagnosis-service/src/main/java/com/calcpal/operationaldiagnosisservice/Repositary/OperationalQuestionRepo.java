@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OperationalDiagnosisQuesRepo extends MongoRepository<OperationalDiagnosisQues, String> {
+public interface OperationalQuestionRepo extends MongoRepository<OperationalDiagnosisQues, String> {
     List<OperationalDiagnosisQues> findByQuestionNumber(Long id);
 }
