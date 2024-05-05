@@ -11,13 +11,17 @@ spring:
             predicates:
               - Path=/api/v1/user/**
           - id: verbal-diagnosis-service
-            uri: lb://verbal-service
+            uri: lb://verbal-diagnosis-service
             predicates:
               - Path=/api/v1/verbal/**
           - id: lexical-diagnosis-service
-            uri: lb://lexical-service
+            uri: lb://lexical-diagnosis-service
             predicates:
               - Path=/api/v1/lexical/**
+          - id: operational-diagnosis-service
+            uri: lb://operational-diagnosis-service
+            predicates:
+              - Path=/api/v1/operational/**
           - id: sequential-diagnosis-service
             uri: lb://sequential-service
             predicates:

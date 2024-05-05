@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class operationalDiagnosis {
+public class OperationalDiagnosis {
 
     @Id
     private String userEmail;

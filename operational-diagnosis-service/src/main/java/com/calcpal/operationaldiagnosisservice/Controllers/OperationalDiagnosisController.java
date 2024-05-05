@@ -1,8 +1,8 @@
 package com.calcpal.operationaldiagnosisservice.Controllers;
 
-import com.calcpal.operationaldiagnosisservice.Collections.operationalDiagnosis;
+import com.calcpal.operationaldiagnosisservice.Collections.OperationalDiagnosis;
 import com.calcpal.operationaldiagnosisservice.DTO.DiagnosisDTO;
-import com.calcpal.operationaldiagnosisservice.Services.operationalDiagnosisService;
+import com.calcpal.operationaldiagnosisservice.Services.OperationalDiagnosisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/operational/diagnosis")
 @Tag(name = "Operational Diagnosis Result Controllers")
 @RequiredArgsConstructor
-public class operationalDiagnosisController {
+public class OperationalDiagnosisController {
 
-    private final operationalDiagnosisService diagnosisResultService;
+    private final OperationalDiagnosisService diagnosisResultService;
 
     @PostMapping("/")
     @Operation(summary = "Add new Operational Diagnosis Result", description = "Add a new diagnosis of Operational Dyscalculia to the database.")
-    public ResponseEntity<?> add(@Valid @RequestBody operationalDiagnosis Diagnosis) {
+    public ResponseEntity<?> add(@Valid @RequestBody OperationalDiagnosis Diagnosis) {
         return diagnosisResultService.add(Diagnosis);
     }
 
@@ -38,7 +38,7 @@ public class operationalDiagnosisController {
 
     @PutMapping("/")
     @Operation(summary = "Update Operational Diagnosis Result", description = "Update an Operational diagnosis result in the database.")
-    public ResponseEntity<?> update(@Valid @RequestBody operationalDiagnosis Diagnosis) {
+    public ResponseEntity<?> update(@Valid @RequestBody OperationalDiagnosis Diagnosis) {
         return diagnosisResultService.update(Diagnosis);
     }
 
