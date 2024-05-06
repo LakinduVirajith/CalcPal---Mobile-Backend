@@ -22,6 +22,18 @@ spring:
             uri: lb://operational-diagnosis-service
             predicates:
               - Path=/api/v1/operational/**
+          - id: ideognostic-diagnosis-service
+            uri: lb://ideognostic-diagnosis-service
+            predicates:
+              - Path=/api/v1/ideognostic/**
+          - id: sequential-diagnosis-service
+            uri: lb://sequential-service
+            predicates:
+              - Path=/api/v1/sequential/**
+          - id: visual-diagnosis-service
+            uri: lb://visual-service
+            predicates:
+              - Path=/api/v1/visual/**
           - id: practognostic-diagnosis-service
             uri: lb://practognostic-diagnosis-service
             predicates:
