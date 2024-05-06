@@ -26,6 +26,10 @@ spring:
             uri: lb://sequential-service
             predicates:
               - Path=/api/v1/sequential/**
+          - id: graphical-diagnosis-service
+            uri: lb://graphical-service
+            predicates:
+              - Path=/api/v1/graphical/**
 
 eureka:
   client:
