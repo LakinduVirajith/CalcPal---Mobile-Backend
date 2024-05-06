@@ -1,0 +1,51 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+---
+#DEV PROFILE
+server:
+  port: 8086
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  data:
+    mongodb:
+      uri: mongodb+srv://lakindu:calc-lakindu@calcpal-cluster.8adffay.mongodb.net/
+      database: Sequential-Diagnosis-Dev-DB
+
+---
+#QA PROFILE
+server:
+  port: 8086
+
+spring:
+  config:
+    activate:
+      on-profile: qa
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      database: Sequential-Diagnosis-Qa-DB
+
+---
+#PROD PROFILE
+server:
+  port: 8086
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      database: Sequential-Diagnosis-Prod-DB

@@ -26,6 +26,10 @@ spring:
             uri: lb://ideognostic-diagnosis-service
             predicates:
               - Path=/api/v1/ideognostic/**
+          - id: sequential-diagnosis-service
+            uri: lb://sequential-service
+            predicates:
+              - Path=/api/v1/sequential/**
 
 eureka:
   client:
