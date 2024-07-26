@@ -18,6 +18,10 @@ jobs:
           - verbal-diagnosis-service
           - lexical-diagnosis-service
           - operational-diagnosis-service
+          - sequential-diagnosis-service
+          - visual-diagnosis-service
+          - practognostic-diagnosis-service
+          - graphical-diagnosis-service
 
     steps:
       - name: Checkout Repository

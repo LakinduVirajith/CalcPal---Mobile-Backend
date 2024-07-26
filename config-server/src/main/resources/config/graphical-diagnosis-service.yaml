@@ -11,7 +11,7 @@ management:
 ---
 #DEV PROFILE
 server:
-  port: 8087
+  port: 8089
 
 spring:
   config:
@@ -20,12 +20,12 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
-      database:  Visual-Diagnosis-Dev-DB
+      database: Graphical-Diagnosis-Dev-DB
 
 ---
 #QA PROFILE
 server:
-  port: 8087
+  port: 8089
 
 spring:
   config:
@@ -34,12 +34,12 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
-      database: Visual-Diagnosis-Qa-DB
+      database: Graphical-Diagnosis-Qa-DB
 
 ---
 #PROD PROFILE
 server:
-  port: 8087
+  port: 8089
 
 spring:
   config:
@@ -48,4 +48,4 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
-      database: Visual-Diagnosis-Prod-DB
+      database: Graphical-Diagnosis-Prod-DB
