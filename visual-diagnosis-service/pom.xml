@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.calcpal</groupId>
 	<artifactId>visual-diagnosis-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>visual-diagnosis-service</name>
 	<description>Microservice for diagnosis of Visual Spatial Dyscalculia</description>
 	<properties>
