@@ -32,13 +32,13 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
 
     @Override
     public ResponseEntity<?> get(String email) {
-        Optional<DiagnosisResult> optionalVerbalDiagnosis = diagnosisResultRepository.findById(email);
+        Optional<DiagnosisResult> optionalLexicalDiagnosis = diagnosisResultRepository.findById(email);
 
         // NOT FOUND EXCEPTION HANDLE
-        if(optionalVerbalDiagnosis.isEmpty()){
+        if(optionalLexicalDiagnosis.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis found for the given user");
         }
-        DiagnosisResult diagnosis = optionalVerbalDiagnosis.get();
+        DiagnosisResult diagnosis = optionalLexicalDiagnosis.get();
 
         return ResponseEntity.ok().body(diagnosis);
     }
@@ -57,13 +57,13 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
 
     @Override
     public ResponseEntity<?> update(DiagnosisResult lexicalDiagnosis) {
-        Optional<DiagnosisResult> optionalVerbalDiagnosis = diagnosisResultRepository.findById(lexicalDiagnosis.getUserEmail());
+        Optional<DiagnosisResult> optionalLexicalDiagnosis = diagnosisResultRepository.findById(lexicalDiagnosis.getUserEmail());
 
         // NOT FOUND EXCEPTION HANDLE
-        if (optionalVerbalDiagnosis.isEmpty()) {
+        if (optionalLexicalDiagnosis.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis found for the provided user");
         }
-        DiagnosisResult diagnosis = optionalVerbalDiagnosis.get();
+        DiagnosisResult diagnosis = optionalLexicalDiagnosis.get();
 
         // MAPPING QUESTION DATA
         diagnosis.setTimeSeconds(lexicalDiagnosis.getTimeSeconds());
@@ -84,13 +84,13 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
 
     @Override
     public ResponseEntity<?> updateLabel(DiagnosisLabelDTO diagnosisLabelDTO) {
-        Optional<DiagnosisResult> optionalVerbalDiagnosis = diagnosisResultRepository.findById(diagnosisLabelDTO.getUserEmail());
+        Optional<DiagnosisResult> optionalLexicalDiagnosis = diagnosisResultRepository.findById(diagnosisLabelDTO.getUserEmail());
 
         // NOT FOUND EXCEPTION HANDLE
-        if (optionalVerbalDiagnosis.isEmpty()) {
+        if (optionalLexicalDiagnosis.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis found for the provided user");
         }
-        DiagnosisResult diagnosis = optionalVerbalDiagnosis.get();
+        DiagnosisResult diagnosis = optionalLexicalDiagnosis.get();
 
         // MAPPING QUESTION DATA AND SAVE
         diagnosis.setLabel(diagnosisLabelDTO.getLabel());

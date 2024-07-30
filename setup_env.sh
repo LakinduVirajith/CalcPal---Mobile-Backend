@@ -14,3 +14,18 @@ sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/confi
 
 # REPLACE PLACEHOLDERS IN OPERATIONAL DIAGNOSIS YAML
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/operational-diagnosis-service.yaml
+
+# REPLACE PLACEHOLDERS IN IDEOGNOSTIC DIAGNOSIS YAML
+sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/ideognostic-diagnosis-service.yaml
+
+# REPLACE PLACEHOLDERS IN SEQUENTIAL DIAGNOSIS YAML
+sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/sequential-diagnosis-service.yaml
+
+# REPLACE PLACEHOLDERS IN VISUAL DIAGNOSIS YAML
+sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/visual-diagnosis-service.yaml
+
+# REPLACE PLACEHOLDERS IN PRACTOGNOSTIC DIAGNOSIS YAML
+sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/practognostic-diagnosis-service.yaml
+
+# REPLACE PLACEHOLDERS IN GRAPHICAL DIAGNOSIS YAML
+sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/graphical-diagnosis-service.yaml

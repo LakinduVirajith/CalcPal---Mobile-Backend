@@ -76,13 +76,13 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
 
     @Override
     public ResponseEntity<?> update(String id, LexicalQuestionDTO questionDTO) {
-        Optional<LexicalQuestion> optionalVerbalQuestion = questionBankRepository.findById(id);
+        Optional<LexicalQuestion> optionalLexicalQuestion = questionBankRepository.findById(id);
 
         // NOT FOUND EXCEPTION HANDLE
-        if (optionalVerbalQuestion.isEmpty()) {
+        if (optionalLexicalQuestion.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the provided ID");
         }
-        LexicalQuestion question = optionalVerbalQuestion.get();
+        LexicalQuestion question = optionalLexicalQuestion.get();
 
         // MAPPING QUESTION DATA
         question.setQuestionNumber(questionDTO.getQuestionNumber());
