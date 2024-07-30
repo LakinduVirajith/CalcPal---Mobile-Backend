@@ -1,6 +1,5 @@
 package com.calcpal.visualdiagnosisservice.collection;
 
-;
 import com.calcpal.visualdiagnosisservice.enums.Language;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;

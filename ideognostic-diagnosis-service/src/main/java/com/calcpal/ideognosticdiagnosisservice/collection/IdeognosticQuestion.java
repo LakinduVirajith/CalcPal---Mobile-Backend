@@ -34,6 +34,5 @@ public class IdeognosticQuestion {
     @NotNull
     private String correctAnswer;
 
-    private MultipartFile image;
-
+//    private MultipartFile image;
 }
