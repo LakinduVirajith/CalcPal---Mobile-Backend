@@ -1,6 +1,5 @@
 package com.calcpal.lexicaldiagnosisservice.collection;
 
-import com.calcpal.lexicaldiagnosisservice.enums.Language;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Document("Question-Bank")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -25,11 +26,8 @@ public class LexicalQuestion {
     private Long questionNumber;
 
     @NotNull
-    private Language language;
-
-    @NotNull
     private String question;
 
     @NotNull
-    private String answers;
+    private List<String> answers;
 }

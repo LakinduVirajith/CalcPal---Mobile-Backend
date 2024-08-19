@@ -31,8 +31,8 @@ public class LexicalQuestionController {
 
     @GetMapping("/all")
     @Operation(summary = "Get All Lexical Questions", description = "Retrieve all lexical questions from the question bank.")
-    public ResponseEntity<?> getAll() {
-        return questionBankService.getAll();
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return questionBankService.getAll(page, size);
     }
 
     @PutMapping("/{id}")
