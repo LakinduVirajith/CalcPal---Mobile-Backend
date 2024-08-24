@@ -1,4 +1,4 @@
-package com.calcpal.userservice.dto;
+package com.calcpal.userservice.collection;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -6,21 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class PasswordResetOTP {
 
     @NotNull
-    private String name;
+    private int OTP;
 
     @NotNull
-    private String email;
-
-    @NotNull
-    private String birthday;
-
-    @NotNull
-    private String password;
+    private LocalDateTime OTPExpiry;
 }

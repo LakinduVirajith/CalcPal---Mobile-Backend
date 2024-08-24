@@ -34,7 +34,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
         questionBankRepository.save(question);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("question inserted successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Question Inserted Successfully");
     }
 
     @Override
@@ -48,7 +48,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
         // NOT FOUND EXCEPTION HANDLE
         if (filteredQuestions.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the given question number");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found for the given question number");
         }
 
         // RANDOMLY SELECT ONE QUESTION FORM THE FETCHED LIST
@@ -80,7 +80,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
         // NOT FOUND EXCEPTION HANDLE
         if (pagedQuestions.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions are currently available in the collection");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions are currently available in the collection");
         }
 
         return ResponseEntity.ok().body(pagedQuestions.getContent());
@@ -92,7 +92,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
         // NOT FOUND EXCEPTION HANDLE
         if (optionalVerbalQuestion.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the provided ID");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found for the provided ID");
         }
         VerbalQuestion question = optionalVerbalQuestion.get();
 
@@ -105,7 +105,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
         questionBankRepository.save(question);
 
-        return ResponseEntity.ok().body("questions updated successfully");
+        return ResponseEntity.ok().body("Questions updated successfully");
     }
 
     @Override
@@ -114,11 +114,11 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
         // NOT FOUND EXCEPTION HANDLE
         if (question.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the provided ID");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found for the provided ID");
         }
 
         questionBankRepository.deleteById(id);
 
-        return ResponseEntity.ok().body("questions deleted successfully");
+        return ResponseEntity.ok().body("Questions deleted successfully");
     }
 }
