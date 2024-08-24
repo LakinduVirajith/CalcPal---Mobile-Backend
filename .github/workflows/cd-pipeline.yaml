@@ -17,6 +17,7 @@ jobs:
           - user-service
           - verbal-diagnosis-service
           - lexical-diagnosis-service
+          - ideognostic-diagnosis-service
           - operational-diagnosis-service
           - sequential-diagnosis-service
           - visual-diagnosis-service
