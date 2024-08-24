@@ -27,7 +27,7 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
             diagnosisResultRepository.save(verbalDiagnosis);
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("diagnosis result inserted successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Diagnosis result inserted successfully");
     }
 
     @Override
@@ -36,7 +36,7 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
 
         // NOT FOUND EXCEPTION HANDLE
         if(optionalVerbalDiagnosis.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis found for the given user");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the given user");
         }
         DiagnosisResult diagnosis = optionalVerbalDiagnosis.get();
 
@@ -49,7 +49,7 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
 
         // NOT FOUND EXCEPTION HANDLE
         if (diagnosisList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis are currently available in the collection");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis are currently available in the collection");
         }
 
         return ResponseEntity.ok().body(diagnosisList);
@@ -61,7 +61,7 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
 
         // NOT FOUND EXCEPTION HANDLE
         if (optionalVerbalDiagnosis.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis found for the provided user");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the provided user");
         }
         DiagnosisResult diagnosis = optionalVerbalDiagnosis.get();
 
@@ -79,7 +79,7 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
         }
         diagnosisResultRepository.save(diagnosis);
 
-        return ResponseEntity.ok().body("diagnosis data updated successfully");
+        return ResponseEntity.ok().body("Diagnosis data updated successfully");
     }
 
     @Override
@@ -88,7 +88,7 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
 
         // NOT FOUND EXCEPTION HANDLE
         if (optionalVerbalDiagnosis.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis found for the provided user");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the provided user");
         }
         DiagnosisResult diagnosis = optionalVerbalDiagnosis.get();
 
@@ -96,6 +96,6 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
         diagnosis.setLabel(diagnosisLabelDTO.getLabel());
         diagnosisResultRepository.save(diagnosis);
 
-        return ResponseEntity.ok().body("diagnosis label updated successfully");
+        return ResponseEntity.ok().body("Diagnosis label updated successfully");
     }
 }

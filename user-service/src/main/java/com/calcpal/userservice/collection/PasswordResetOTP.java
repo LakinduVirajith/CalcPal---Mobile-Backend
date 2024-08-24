@@ -1,4 +1,4 @@
-package com.calcpal.lexicaldiagnosisservice.DTO;
+package com.calcpal.userservice.collection;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -6,20 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LexicalQuestionDTO {
+public class PasswordResetOTP {
 
     @NotNull
-    private Long questionNumber;
+    private int OTP;
 
     @NotNull
-    private String question;
-
-    @NotNull
-    private List<String> answers;
+    private LocalDateTime OTPExpiry;
 }

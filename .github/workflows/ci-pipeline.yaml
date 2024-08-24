@@ -18,6 +18,7 @@ jobs:
           - verbal-diagnosis-service
           - lexical-diagnosis-service
           - operational-diagnosis-service
+          - ideognostic-diagnosis-service
           - sequential-diagnosis-service
           - visual-diagnosis-service
           - practognostic-diagnosis-service

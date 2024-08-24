@@ -2,9 +2,7 @@ package com.calcpal.graphicaldiagnosisservice.controller;
 
 
 import com.calcpal.graphicaldiagnosisservice.DTO.GraphicalDiagnosisLabelDTO;
-import com.calcpal.graphicaldiagnosisservice.DTO.GraphicalQuestionDTO;
 import com.calcpal.graphicaldiagnosisservice.collection.DiagnosisResultGraphical;
-import com.calcpal.graphicaldiagnosisservice.collection.GraphicalQuestion;
 import com.calcpal.graphicaldiagnosisservice.service.GraphicalDiagnosisResultService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
