@@ -3,12 +3,6 @@ eureka:
     serviceUrl:
       defaultZone: http://service-registry:8761/eureka/
 
-zipkin:
-  base-url: http://zipkin:9411
-  sleuth:
-    sampler:
-      probability: 1.0
-
 management:
   tracing:
     sampling:
