@@ -225,13 +225,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public ResponseEntity<?> updateIQScore(String iqScore) throws NotFoundException {
+    public ResponseEntity<?> updateIQScore(Integer iqScore) throws NotFoundException {
         User user = commonFunctions.getUser();
         if(user == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found");
         }
 
-        if(!iqScore.isEmpty()){
+        if(iqScore != null){
             user.setIqScore(iqScore);
         }
 

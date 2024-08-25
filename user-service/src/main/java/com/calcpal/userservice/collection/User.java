@@ -32,7 +32,7 @@ public class User implements UserDetails {
     private String email;
 
     @NotNull
-    private int age;
+    private Integer age;
 
     @NotNull
     private String birthday;
@@ -42,7 +42,7 @@ public class User implements UserDetails {
 
     private List<String> disorderTypes;
 
-    private String iqScore;
+    private Integer iqScore;
 
     private ActivationToken activationToken;
 
