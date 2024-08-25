@@ -124,16 +124,23 @@ public class UserServiceImpl implements UserService{
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Your account is not activated. Please check your email to verify your account first.");
         }
 
-        // SPRING AUTHENTICATION MANAGER
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
-
         // ASSIGN USER DATA
         User user = new User();
         if(userCondition.isPresent()){
             user = userCondition.get();
         }
+
+        // VERIFY THE PASSWORD
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password. Please try again.");
+        }
+
+        // SPRING AUTHENTICATION MANAGER
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+
+        
 
         // GENERATE AND SAVE ACCESS TOKEN
         String jwtToken = jwtService.generateToken(user);
