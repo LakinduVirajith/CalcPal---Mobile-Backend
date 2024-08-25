@@ -21,12 +21,12 @@ public class FullUserDTO {
     private String email;
 
     @NotNull
-    private int age;
+    private Integer age;
 
     @NotNull
     private String birthDay;
 
     private List<String> disorderTypes;
 
-    private String iqScore;
+    private Integer iqScore;
 }

@@ -17,7 +17,7 @@ public interface UserService {
 
     ResponseEntity<?> updateDetails(UserUpdateDTO userUpdateDTO) throws NotFoundException;
 
-    ResponseEntity<?> updateIQScore(String iqScore) throws NotFoundException;
+    ResponseEntity<?> updateIQScore(Integer iqScore) throws NotFoundException;
 
     ResponseEntity<?> updateDisorderTypes(String disorderType) throws NotFoundException;
 
