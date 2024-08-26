@@ -19,15 +19,33 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
 
     @Override
     public ResponseEntity<?> add(DiagnosisResult verbalDiagnosis) {
-        Optional<DiagnosisResult> diagnosis = diagnosisResultRepository.findById(verbalDiagnosis.getUserEmail());
+        Optional<DiagnosisResult> optionalDiagnosis = diagnosisResultRepository.findById(verbalDiagnosis.getUserEmail());
 
-        if(diagnosis.isPresent()){
-            update(diagnosis.get());
+        if(optionalDiagnosis.isPresent()){
+            DiagnosisResult diagnosisResult = mappingDiagnosisResult(verbalDiagnosis, optionalDiagnosis.get());
+            diagnosisResultRepository.save(diagnosisResult);
+            return ResponseEntity.ok().body("Diagnosis data updated successfully");
         }else{
             diagnosisResultRepository.save(verbalDiagnosis);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Diagnosis result inserted successfully");
+        }
+    }
+
+    private static DiagnosisResult mappingDiagnosisResult(DiagnosisResult diagnosisResult, DiagnosisResult existingResult) {
+        // MAPPING QUESTION DATA
+        existingResult.setTimeSeconds(diagnosisResult.getTimeSeconds());
+        existingResult.setQ1(diagnosisResult.getQ1());
+        existingResult.setQ2(diagnosisResult.getQ2());
+        existingResult.setQ3(diagnosisResult.getQ3());
+        existingResult.setQ4(diagnosisResult.getQ4());
+        existingResult.setQ5(diagnosisResult.getQ5());
+        existingResult.setTotalScore(diagnosisResult.getTotalScore());
+
+        if(existingResult.getLabel() != null){
+            existingResult.setLabel(diagnosisResult.getLabel());
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Diagnosis result inserted successfully");
+        return diagnosisResult;
     }
 
     @Override
@@ -63,21 +81,9 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
         if (optionalVerbalDiagnosis.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the provided user");
         }
-        DiagnosisResult diagnosis = optionalVerbalDiagnosis.get();
 
-        // MAPPING QUESTION DATA
-        diagnosis.setTimeSeconds(verbalDiagnosis.getTimeSeconds());
-        diagnosis.setQ1(verbalDiagnosis.getQ1());
-        diagnosis.setQ2(verbalDiagnosis.getQ2());
-        diagnosis.setQ3(verbalDiagnosis.getQ3());
-        diagnosis.setQ4(verbalDiagnosis.getQ4());
-        diagnosis.setQ5(verbalDiagnosis.getQ5());
-        diagnosis.setTotalScore(verbalDiagnosis.getTotalScore());
-
-        if(diagnosis.getLabel() != null){
-            diagnosis.setLabel(verbalDiagnosis.getLabel());
-        }
-        diagnosisResultRepository.save(diagnosis);
+        DiagnosisResult diagnosisResult = mappingDiagnosisResult(verbalDiagnosis, optionalVerbalDiagnosis.get());
+        diagnosisResultRepository.save(diagnosisResult);
 
         return ResponseEntity.ok().body("Diagnosis data updated successfully");
     }
