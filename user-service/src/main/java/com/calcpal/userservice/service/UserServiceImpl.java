@@ -249,39 +249,54 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResponseEntity<?> updateDisorderTypes(String disorderType) throws NotFoundException {
+        // RETRIEVE THE CURRENT USER
         User user = commonFunctions.getUser();
+
+        // CHECK IF THE USER IS NULL AND HANDLE IT
         if(user == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found. Please log in and try again.");
         }
 
-        if (disorderType != null && !disorderType.isEmpty()) {
-            // VALIDATE THE DISORDER TYPE AGAINST ENUM VALUES
-            DisorderType validatedDisorderType = null;
-            for (DisorderType type : DisorderType.values()) {
-                if (type.name().equals(disorderType)) {
-                    validatedDisorderType = type;
-                    break;
-                }
-            }
+        // INITIALIZE THE USER'S EXISTING DISORDER TYPES LIST IF IT'S NULL
+        if (user.getDisorderTypes() == null) {
+            user.setDisorderTypes(new ArrayList<>());
+        }
 
-            if (validatedDisorderType == null) {
-                // INVALID DISORDER TYPE
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The disorder type provided is not valid.");
-            }
-
-            // INITIALIZE THE USER'S EXISTING DISORDER TYPES LIST IF IT'S NULL
-            if (user.getDisorderTypes() == null) {
-                user.setDisorderTypes(new ArrayList<>());
-            }
-
-            // ADD THE DISORDER TYPE TO THE LIST ONLY IF IT DOESN'T ALREADY EXIST
-            if (!user.getDisorderTypes().contains(disorderType)) {
-                user.getDisorderTypes().add(disorderType);
+        // CHECK IF THE DISORDER TYPE INDICATES REMOVAL (E.G., "noVerbal")
+        if (disorderType.contains("no")) {
+            String disorder = disorderType.replaceFirst("no", "");
+        
+            // REMOVE THE DISORDER TYPE IF IT EXISTS IN THE LIST
+            boolean remove = user.getDisorderTypes().remove(disorder.toLowerCase());
+            if (remove) {
+                userRepository.save(user);
+                return ResponseEntity.ok().body("Disorder type has been removed successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The disorder type to remove does not exist.");
             }
         }
 
-        userRepository.save(user);
-        return ResponseEntity.ok().body("Disorder types have been updated successfully.");
+        // ATTEMPT TO VALIDATE THE DISORDER TYPE AGAINST ENUM VALUES
+        DisorderType validatedDisorderType = null;
+        for (DisorderType type : DisorderType.values()) {
+            if (type.name().equalsIgnoreCase(disorderType)) {
+                validatedDisorderType = type;
+                break;
+            }
+        }
+        
+        // IF THE DISORDER TYPE IS INVALID, RETURN A BAD REQUEST RESPONSE
+        if (validatedDisorderType == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The disorder type provided is not valid.");
+        }
+
+        // ADD THE DISORDER TYPE TO THE LIST ONLY IF IT DOESN'T ALREADY EXIST
+        if (!user.getDisorderTypes().contains(disorderType)) {
+            user.getDisorderTypes().add(disorderType.toLowerCase());
+            userRepository.save(user);
+        }
+        
+        return ResponseEntity.ok().body("Disorder type has been added successfully.");
     }
 
     @Override
