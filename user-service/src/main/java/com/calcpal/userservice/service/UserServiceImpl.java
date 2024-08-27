@@ -199,7 +199,7 @@ public class UserServiceImpl implements UserService{
                 .name(user.getName())
                 .email(user.getEmail())
                 .age(user.getAge())
-                .birthDay(user.getBirthday())
+                .birthday(user.getBirthday())
                 .build();
         if(user.getDisorderTypes() != null){
             fullUserDTO.setDisorderTypes(user.getDisorderTypes());
@@ -215,20 +215,20 @@ public class UserServiceImpl implements UserService{
     public ResponseEntity<?> updateDetails(UserUpdateDTO userUpdateDTO) throws NotFoundException {
         User user = commonFunctions.getUser();
         if(user == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found. Please make sure you are logged in.");
         }
 
         if(!userUpdateDTO.getName().isEmpty()){
             user.setName(userUpdateDTO.getName());
         }
-        if(!userUpdateDTO.getBirthDay().isEmpty()){
-            user.setBirthday(userUpdateDTO.getBirthDay());
-            user.setAge(calculateAge(userUpdateDTO.getBirthDay()));
+        if(!userUpdateDTO.getBirthday().isEmpty()){
+            user.setBirthday(userUpdateDTO.getBirthday());
+            user.setAge(calculateAge(userUpdateDTO.getBirthday()));
         }
 
         userRepository.save(user);
 
-        return ResponseEntity.ok().body("User details updated successfully");
+        return ResponseEntity.ok().body("Your details have been updated successfully.");
     }
 
     @Override

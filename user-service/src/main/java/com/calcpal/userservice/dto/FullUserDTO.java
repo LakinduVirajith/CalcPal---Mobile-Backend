@@ -24,7 +24,7 @@ public class FullUserDTO {
     private Integer age;
 
     @NotNull
-    private String birthDay;
+    private String birthday;
 
     private List<String> disorderTypes;
 
