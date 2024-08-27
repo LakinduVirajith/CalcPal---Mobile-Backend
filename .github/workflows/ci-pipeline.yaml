@@ -19,6 +19,7 @@ jobs:
           - lexical-diagnosis-service
           - ideognostic-diagnosis-service
           - operational-diagnosis-service
+          - ideognostic-diagnosis-service
           - sequential-diagnosis-service
           - visual-diagnosis-service
           - practognostic-diagnosis-service

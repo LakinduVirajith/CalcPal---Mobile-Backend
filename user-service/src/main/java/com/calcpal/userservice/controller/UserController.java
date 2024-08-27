@@ -52,7 +52,7 @@ public class UserController {
 
     @PutMapping("/update/iq")
     @Operation(summary = "Update User IQ Score", description = "Update user IQ Score.")
-    public ResponseEntity<?> updateIQScore(@RequestBody String iqScore) throws NotFoundException {
+    public ResponseEntity<?> updateIQScore(@RequestBody Integer iqScore) throws NotFoundException {
         return userService.updateIQScore(iqScore);
     }
 

@@ -23,6 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
@@ -73,10 +74,10 @@ public class UserServiceImpl implements UserService{
         if(status){
             userRepository.save(user);
         }else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Email service error orchard. try again");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending activation email. Please try again later.");
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful! Please verify your email before logging in.");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Sign-up successful! Please check your email to verify your account before logging in.");
     }
 
     // METHOD TO CALCULATE AGE
@@ -118,10 +119,20 @@ public class UserServiceImpl implements UserService{
             if(status){
                 userRepository.save(userCondition.get());
             }else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Email service error orchard. try again");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending activation email. Please try again later.");
             }
 
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Your account is not activated. Please check your email to verify your account first.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Your account is not activated. Please check your email and verify your account.");
+        }
+
+        // ASSIGN USER DATA
+        User user = userCondition.orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, "No user found with the provided email address."
+        ));
+
+        // VERIFY THE PASSWORD
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password. Please check and try again.");
         }
 
         // SPRING AUTHENTICATION MANAGER
@@ -129,11 +140,7 @@ public class UserServiceImpl implements UserService{
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
-        // ASSIGN USER DATA
-        User user = new User();
-        if(userCondition.isPresent()){
-            user = userCondition.get();
-        }
+        
 
         // GENERATE AND SAVE ACCESS TOKEN
         String jwtToken = jwtService.generateToken(user);
@@ -143,7 +150,7 @@ public class UserServiceImpl implements UserService{
         String refreshToken = jwtService.generateRefreshToken(user);
 
         return ResponseEntity.ok().body(AuthenticationResponse.builder()
-                .message("User authenticated successfully")
+                .message("Login successful! Welcome back.")
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build()
@@ -184,7 +191,7 @@ public class UserServiceImpl implements UserService{
     public ResponseEntity<?> getUser() throws NotFoundException {
         User user = commonFunctions.getUser();
         if(user == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found. Please check the provided information.");
         }
 
         // ASSIGN USER DETAILS
@@ -225,13 +232,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public ResponseEntity<?> updateIQScore(String iqScore) throws NotFoundException {
+    public ResponseEntity<?> updateIQScore(Integer iqScore) throws NotFoundException {
         User user = commonFunctions.getUser();
         if(user == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found");
         }
 
-        if(!iqScore.isEmpty()){
+        if(iqScore != null){
             user.setIqScore(iqScore);
         }
 
@@ -244,7 +251,7 @@ public class UserServiceImpl implements UserService{
     public ResponseEntity<?> updateDisorderTypes(String disorderType) throws NotFoundException {
         User user = commonFunctions.getUser();
         if(user == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found. Please log in and try again.");
         }
 
         if (disorderType != null && !disorderType.isEmpty()) {
@@ -259,7 +266,7 @@ public class UserServiceImpl implements UserService{
 
             if (validatedDisorderType == null) {
                 // INVALID DISORDER TYPE
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid disorder type");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The disorder type provided is not valid.");
             }
 
             // INITIALIZE THE USER'S EXISTING DISORDER TYPES LIST IF IT'S NULL
@@ -274,7 +281,7 @@ public class UserServiceImpl implements UserService{
         }
 
         userRepository.save(user);
-        return ResponseEntity.ok().body("Disorder types updated successfully");
+        return ResponseEntity.ok().body("Disorder types have been updated successfully.");
     }
 
     @Override
@@ -283,7 +290,7 @@ public class UserServiceImpl implements UserService{
 
         // CHECK IF USER EXISTS
         if(userCondition.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid user email account");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No account found with the provided email.");
         }
         User user = userCondition.get();
 
@@ -292,9 +299,9 @@ public class UserServiceImpl implements UserService{
 
         if(status){
             userRepository.save(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Password reset email sent successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body("A password reset email has been sent. Please check your inbox for further instructions.");
         }else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Email service error. Please try again.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while sending the reset email. Please try again.");
         }
     }
 
@@ -323,22 +330,22 @@ public class UserServiceImpl implements UserService{
 
         // CHECK IF USER EXISTS
         if(userCondition.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid user email account");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No account found with the provided email.");
         }
         User user = userCondition.get();
 
         // CHECK OTP EXPIRY
         LocalDateTime OTPExpiry = user.getPasswordResetOTP().getOTPExpiry();
         if (OTPExpiry.isBefore(LocalDateTime.now())) {
-            return ResponseEntity.status(HttpStatus.GONE).body("OTP has expired. Please request a new one.");
+            return ResponseEntity.status(HttpStatus.GONE).body("The OTP has expired. Please request a new one.");
         }
 
         // CHECK OTP VALIDITY
         if(otp != user.getPasswordResetOTP().getOTP()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid OTP. Please try again.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The OTP provided is incorrect. Please try again.");
         }
 
-        return ResponseEntity.ok().body("User OTP validated successfully");
+        return ResponseEntity.ok().body("OTP validated successfully.");
     }
 
     @Override
@@ -347,7 +354,7 @@ public class UserServiceImpl implements UserService{
 
         // INVALID USER EXCEPTION
         if(userCondition.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid user email account");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No account found with the provided email.");
         }
         User user = userCondition.get();
 
@@ -358,7 +365,7 @@ public class UserServiceImpl implements UserService{
         user.setPassword(encodedPassword);
         userRepository.save(user);
 
-        return ResponseEntity.ok().body("Password reset successfully");
+        return ResponseEntity.ok().body("Your password has been reset successfully.");
     }
 
     @Override
@@ -368,18 +375,18 @@ public class UserServiceImpl implements UserService{
 
         // INVALID TOKEN EXCEPTION
         if(userEmail == null || userEmail.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The provided refresh token is invalid or expired.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Refresh token is invalid or expired. Please log in again.");
         }
 
         // INVALID ACCOUNT EXCEPTION
         Optional<User> optionalUser = userRepository.findByEmail(userEmail);
         if (optionalUser.isPresent() && !optionalUser.get().getIsActive()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Your account is not activated. Please activate your account before requesting a new token.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Your account is not activated. Please activate your account to proceed.");
         }
 
         // INVALID USER EXCEPTION
         if(optionalUser.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found for the provided email address.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found. Please check your email or register a new account.");
         }
        User user = optionalUser.get();
 
@@ -391,15 +398,15 @@ public class UserServiceImpl implements UserService{
             String newRefreshToken = jwtService.generateRefreshToken(user);
 
             AuthenticationResponse authResponse = AuthenticationResponse.builder()
-                    .message("Authentication was successful using the refresh token.")
+                    .message("Authentication successful. New tokens have been issued.")
                     .accessToken(newAccessToken)
                     .refreshToken(newRefreshToken)
                     .build();
 
-            return ResponseEntity.ok().body(authResponse);
+            return ResponseEntity.status(HttpStatus.CREATED).body(authResponse);
         }else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("The provided refresh token is invalid or expired. Please request a new refresh token.");
+                    .body("Refresh token is invalid or expired. Please log in again.");
         }
     }
 
@@ -433,6 +440,6 @@ public class UserServiceImpl implements UserService{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid logout request");
         }
 
-        return ResponseEntity.ok().body("Logout successful. You have been logged out.");
+        return ResponseEntity.ok().body("You've been successfully logged out. See you next time!");
     }
 }
