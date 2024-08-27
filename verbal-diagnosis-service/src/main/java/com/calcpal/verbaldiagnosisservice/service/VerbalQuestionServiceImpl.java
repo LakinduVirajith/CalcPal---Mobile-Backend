@@ -34,7 +34,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
         questionBankRepository.save(question);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Question Inserted Successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Question has been successfully added");
     }
 
     @Override
@@ -48,7 +48,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
         // NOT FOUND EXCEPTION HANDLE
         if (filteredQuestions.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found for the given question number");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found on the server for the provided question number.");
         }
 
         // RANDOMLY SELECT ONE QUESTION FORM THE FETCHED LIST

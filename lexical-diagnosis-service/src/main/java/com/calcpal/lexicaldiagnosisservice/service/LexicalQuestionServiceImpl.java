@@ -32,7 +32,7 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
 
         questionBankRepository.save(question);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Question inserted successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Question has been successfully added");
     }
 
     @Override
@@ -41,7 +41,7 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
 
         // NOT FOUND EXCEPTION HANDLE
         if (questions.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found for the given question number");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found on the server for the provided question number.");
         }
 
         // RANDOMLY SELECT ONE QUESTION FORM THE FETCHED LIST
@@ -80,7 +80,7 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
     @Override
     public ResponseEntity<?> update(String id, LexicalQuestionDTO questionDTO) {
         Optional<LexicalQuestion> optionalLexicalQuestion = questionBankRepository.findById(id);
-
+        
         // NOT FOUND EXCEPTION HANDLE
         if (optionalLexicalQuestion.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found for the provided ID");
