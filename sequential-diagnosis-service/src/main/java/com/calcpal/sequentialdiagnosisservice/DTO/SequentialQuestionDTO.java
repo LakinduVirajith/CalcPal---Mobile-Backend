@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -23,5 +25,9 @@ public class SequentialQuestionDTO {
     private String question;
 
     @NotNull
-    private String answers;
+    private List<String> answers;
+
+    @NotNull
+    private String correctAnswer;
+
 }

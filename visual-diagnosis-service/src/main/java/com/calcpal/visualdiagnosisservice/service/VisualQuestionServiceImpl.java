@@ -25,6 +25,7 @@ public class VisualQuestionServiceImpl implements VisualQuestionService {
                 .language(questionDTO.getLanguage())
                 .question(questionDTO.getQuestion())
                 .answers(questionDTO.getAnswers())
+                .correctAnswer(questionDTO.getCorrectAnswer())
                 .build();
 
         questionBankRepository.save(question);
@@ -50,6 +51,7 @@ public class VisualQuestionServiceImpl implements VisualQuestionService {
                 .language(randomQuestion.getLanguage())
                 .question(randomQuestion.getQuestion())
                 .answers(randomQuestion.getAnswers())
+                .correctAnswer(randomQuestion.getCorrectAnswer())
                 .build();
 
         return ResponseEntity.ok().body(question);
@@ -89,6 +91,7 @@ public class VisualQuestionServiceImpl implements VisualQuestionService {
         question.setLanguage(questionDTO.getLanguage());
         question.setQuestion(questionDTO.getQuestion());
         question.setAnswers(questionDTO.getAnswers());
+        question.setCorrectAnswer(questionDTO.getCorrectAnswer());
 
         questionBankRepository.save(question);
 
