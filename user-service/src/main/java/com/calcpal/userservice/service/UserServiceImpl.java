@@ -272,7 +272,7 @@ public class UserServiceImpl implements UserService{
                 userRepository.save(user);
                 return ResponseEntity.ok().body("Disorder type has been removed successfully.");
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The disorder type to remove does not exist.");
+                return ResponseEntity.ok().body("The disorder type to remove does not exist.");
             }
         }
 
@@ -294,9 +294,10 @@ public class UserServiceImpl implements UserService{
         if (!user.getDisorderTypes().contains(disorderType)) {
             user.getDisorderTypes().add(disorderType.toLowerCase());
             userRepository.save(user);
+            return ResponseEntity.ok().body("Disorder type has been added successfully.");
+        }else{
+            return ResponseEntity.ok().body("The disorder type is already exist.");   
         }
-        
-        return ResponseEntity.ok().body("Disorder type has been added successfully.");
     }
 
     @Override
