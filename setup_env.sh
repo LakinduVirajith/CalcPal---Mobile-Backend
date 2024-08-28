@@ -4,13 +4,7 @@
 sed -i "s|\${JWT_SECRET}|$JWT_SECRET|g" user-service/src/main/resources/application.yaml
 sed -i "s|\${MAIL_ADDRESS}|$MAIL_ADDRESS|g" user-service/src/main/resources/application.yaml
 sed -i "s|\${MAIL_APP_PASSWORD}|$MAIL_APP_PASSWORD|g" user-service/src/main/resources/application.yaml
-
-sed -i "s|\${SERVER_FIRST_OCTET}|$SERVER_FIRST_OCTET|g" user-service/src/main/resources/application.yaml
-sed -i "s|\${SERVER_SECOND_OCTET}|$SERVER_SECOND_OCTET|g" user-service/src/main/resources/application.yaml
-sed -i "s|\${SERVER_THIRD_OCTET}|$SERVER_THIRD_OCTET|g" user-service/src/main/resources/application.yaml
-sed -i "s|\${SERVER_FOURTH_OCTET}|$SERVER_FOURTH_OCTET|g" user-service/src/main/resources/application.yaml
-sed -i "s|\${SERVICE_PORT}|$SERVICE_PORT|g" user-service/src/main/resources/application.yaml
-
+sed -i "s|\${SERVER_IP}|$SERVER_IP|g" user-service/src/main/resources/application.yaml
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/user-service.yaml
 
 # REPLACE PLACEHOLDERS IN VERBAL DIAGNOSIS YAML

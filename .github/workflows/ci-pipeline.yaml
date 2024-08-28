@@ -42,6 +42,7 @@ jobs:
           MAIL_APP_PASSWORD: ${{ secrets.MAIL_APP_PASSWORD }}
           MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
           MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
         run: bash setup_env.sh
 
       - name: Run Unit Tests for ${{ matrix.service }}
