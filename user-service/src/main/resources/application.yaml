@@ -20,4 +20,4 @@ mail:
   username: ${MAIL_ADDRESS}
   password: ${MAIL_APP_PASSWORD}
   base:
-    url: ${SERVER_IP}
+    url: http://${SERVER_FIRST_OCTET}.${SERVER_SECOND_OCTET}.${SERVER_THIRD_OCTET}.${SERVER_FOURTH_OCTET}:${SERVICE_PORT}
