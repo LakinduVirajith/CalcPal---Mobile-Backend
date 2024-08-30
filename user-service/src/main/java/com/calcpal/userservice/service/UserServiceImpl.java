@@ -113,22 +113,22 @@ public class UserServiceImpl implements UserService{
     public ResponseEntity<?> login(AuthenticationRequest request) {
         Optional<User> userCondition = userRepository.findByEmail(request.getEmail());
 
+        // ASSIGN USER DATA
+        User user = userCondition.orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, "No user found with the provided email address."
+        ));
+
         // CHECK ACCOUNT STATUS
-        if(userCondition.isPresent() && !userCondition.get().getIsActive()){
-            boolean status = sendActivationMail(userCondition.get());
+        if(!user.getIsActive()){
+            boolean status = sendActivationMail(user);
             if(status){
-                userRepository.save(userCondition.get());
+                userRepository.save(user);
             }else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending activation email. Please try again later.");
             }
 
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Your account is not activated. Please check your email and verify your account.");
         }
-
-        // ASSIGN USER DATA
-        User user = userCondition.orElseThrow(() -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND, "No user found with the provided email address."
-        ));
 
         // VERIFY THE PASSWORD
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
