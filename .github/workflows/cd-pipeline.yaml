@@ -1,11 +1,8 @@
 name: Build and Deploy CalcPal Mobile Backend Application
 
 on:
-  pull_request:
-    branches: [main]
-  
   push:
-    branches: [development]
+    branches: [main, development]
 
 jobs:
   cd-pipeline:
