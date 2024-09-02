@@ -28,7 +28,7 @@ public class LexicalActivityServiceImpl implements LexicalActivityService{
     public ResponseEntity<?> add(LexicalActivityDTO activityDTO) {
         // VALIDATE THE LANGUAGE AGAINST ENUM VALUES
         if (!isValidLanguage(activityDTO.getLanguage())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The language provided is not valid.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + activityDTO.getLanguage());
         }
 
         // BUILD A VERBAL ACTIVITY OBJECT AND SAVE IT
@@ -40,10 +40,35 @@ public class LexicalActivityServiceImpl implements LexicalActivityService{
     }
 
     @Override
+    public ResponseEntity<?> addAll(List<LexicalActivityDTO> activityDTOList) {
+        // CHECK IF THE LIST HAS MORE THAN 10 ITEMS
+        if (activityDTOList.size() > 10) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Cannot add more than 10 activities at once.");
+        }
+
+        // VALIDATE EACH ACTIVITY-DTO AND BUILD LEXICAL ACTIVITY OBJECTS
+        List<LexicalActivity> activities = activityDTOList.stream()
+                .map(dto -> {
+                    if (!isValidLanguage(dto.getLanguage())) {
+                        throw new IllegalArgumentException("Invalid language: " + dto.getLanguage());
+                    }
+                    return buildLexicalActivity(dto);
+                })
+                .collect(Collectors.toList());
+
+        // SAVE ALL THE ACTIVITIES TO THE REPOSITORY
+        activityBankRepository.saveAll(activities);
+
+        // RETURN SUCCESS RESPONSE
+        return ResponseEntity.status(HttpStatus.CREATED).body("All activities have been successfully added.");
+    }
+
+    @Override
     public ResponseEntity<?> getRandom(Long id, String language) {
         // VALIDATE THE LANGUAGE AGAINST ENUM VALUES
         if (!isValidLanguage(language)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The language provided is not valid.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + language);
         }
 
         // FETCH QUESTIONS BY QUESTION NUMBER AND FILTER BY LANGUAGE
@@ -84,7 +109,7 @@ public class LexicalActivityServiceImpl implements LexicalActivityService{
     public ResponseEntity<?> update(String id, LexicalActivityDTO activityDTO) {
         // VALIDATE THE LANGUAGE AGAINST ENUM VALUES
         if (!isValidLanguage(activityDTO.getLanguage())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The language provided is not valid.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + activityDTO.getLanguage());
         }
 
         // FETCH EXISTING ACTIVITY BY ID
@@ -99,7 +124,7 @@ public class LexicalActivityServiceImpl implements LexicalActivityService{
         activityBankRepository.save(activity);
 
         // RETURN SUCCESS RESPONSE
-        return ResponseEntity.ok().body("Activity updated successfully");
+        return ResponseEntity.ok().body("Activity have been successfully updated");
     }
 
     @Override
@@ -113,7 +138,7 @@ public class LexicalActivityServiceImpl implements LexicalActivityService{
         activityBankRepository.deleteById(id);
 
         // RETURN SUCCESS RESPONSE
-        return ResponseEntity.ok().body("Activity deleted successfully");
+        return ResponseEntity.ok().body("Activity have been successfully deleted");
     }
 
     // VALIDATE LANGUAGE AGAINST ENUM VALUES

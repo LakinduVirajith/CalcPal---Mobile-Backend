@@ -9,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/verbal/activity")
+@RequestMapping("/api/v1/lexical/activity")
 @Tag(name = "Lexical Activity Controllers")
 @RequiredArgsConstructor
 public class LexicalActivityController {
@@ -21,6 +23,12 @@ public class LexicalActivityController {
     @Operation(summary = "Add Lexical Activity", description = "Add a new lexical activity to the activity bank.")
     public ResponseEntity<?> add(@Valid @RequestBody LexicalActivityDTO activityDTO) {
         return activityBankService.add(activityDTO);
+    }
+
+    @PostMapping("/all")
+    @Operation(summary = "Add Lexical Activities", description = "Add a new lexical activities to the activity bank.")
+    public ResponseEntity<?> addAll(@Valid @RequestBody List<LexicalActivityDTO> activityDTOList) {
+        return activityBankService.addAll(activityDTOList);
     }
 
     @GetMapping("/{id}")
