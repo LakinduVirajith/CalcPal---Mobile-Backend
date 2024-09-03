@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="config-server" />
+        <module name="verbal-diagnosis-service" />
+        <module name="ideognostic-diagnosis-service" />
+        <module name="api-gateway" />
+        <module name="practognostic-diagnosis-service" />
+        <module name="lexical-diagnosis-service" />
+        <module name="sequential-diagnosis-service" />
+        <module name="visual-diagnosis-service" />
+        <module name="operational-diagnosis-service" />
+        <module name="user-service" />
+        <module name="graphical-diagnosis-service" />
+        <module name="service-registry" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="CalcPal---Mobile-Backend2" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api-gateway" options="-parameters" />
+      <module name="config-server" options="-parameters" />
+      <module name="graphical-diagnosis-service" options="-parameters" />
+      <module name="ideognostic-diagnosis-service" options="-parameters" />
+      <module name="lexical-diagnosis-service" options="-parameters" />
+      <module name="operational-diagnosis-service" options="-parameters" />
+      <module name="practognostic-diagnosis-service" options="-parameters" />
+      <module name="sequential-diagnosis-service" options="-parameters" />
+      <module name="service-registry" options="-parameters" />
+      <module name="user-service" options="-parameters" />
+      <module name="verbal-diagnosis-service" options="-parameters" />
+      <module name="visual-diagnosis-service" options="-parameters" />
+    </option>
+  </component>
+</project>

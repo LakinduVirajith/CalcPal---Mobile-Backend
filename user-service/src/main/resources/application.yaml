@@ -4,7 +4,7 @@ spring:
   profiles:
     active: dev
   config:
-    import: "optional:configserver:http://localhost:8070"
+    import: "optional:configserver:http://config-server:8070"
 
 #JWT
 application:
@@ -20,4 +20,4 @@ mail:
   username: ${MAIL_ADDRESS}
   password: ${MAIL_APP_PASSWORD}
   base:
-    url: http://localhost:8081
+    url: ${SERVER_IP}

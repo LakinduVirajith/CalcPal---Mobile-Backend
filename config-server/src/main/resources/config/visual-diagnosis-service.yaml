@@ -1,0 +1,51 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://service-registry:8761/eureka/
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+---
+#DEV PROFILE
+server:
+  port: 8087
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      database:  Visual-Diagnosis-Dev-DB
+
+---
+#QA PROFILE
+server:
+  port: 8087
+
+spring:
+  config:
+    activate:
+      on-profile: qa
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      database: Visual-Diagnosis-Qa-DB
+
+---
+#PROD PROFILE
+server:
+  port: 8087
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      database: Visual-Diagnosis-Prod-DB

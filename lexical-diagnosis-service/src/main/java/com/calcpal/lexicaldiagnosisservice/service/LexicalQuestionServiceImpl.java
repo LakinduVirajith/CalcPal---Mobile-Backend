@@ -4,6 +4,10 @@ import com.calcpal.lexicaldiagnosisservice.DTO.LexicalQuestionDTO;
 import com.calcpal.lexicaldiagnosisservice.collection.LexicalQuestion;
 import com.calcpal.lexicaldiagnosisservice.repository.LexicalQuestionRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,14 +26,13 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
     public ResponseEntity<?> add(LexicalQuestionDTO questionDTO) {
         LexicalQuestion question =  LexicalQuestion.builder()
                 .questionNumber(questionDTO.getQuestionNumber())
-                .language(questionDTO.getLanguage())
                 .question(questionDTO.getQuestion())
                 .answers(questionDTO.getAnswers())
                 .build();
 
         questionBankRepository.save(question);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("question inserted successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Question has been successfully added");
     }
 
     @Override
@@ -38,7 +41,7 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
 
         // NOT FOUND EXCEPTION HANDLE
         if (questions.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the given question number");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found on the server for the provided question number.");
         }
 
         // RANDOMLY SELECT ONE QUESTION FORM THE FETCHED LIST
@@ -47,7 +50,6 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
         // MAPPING QUESTION DATA
         LexicalQuestionDTO question = LexicalQuestionDTO.builder()
                 .questionNumber(randomQuestion.getQuestionNumber())
-                .language(randomQuestion.getLanguage())
                 .question(randomQuestion.getQuestion())
                 .answers(randomQuestion.getAnswers())
                 .build();
@@ -63,36 +65,36 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
     }
 
     @Override
-    public ResponseEntity<?> getAll() {
-        List<LexicalQuestion> questions = questionBankRepository.findAll();
+    public ResponseEntity<?> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<LexicalQuestion> pagedQuestions = questionBankRepository.findAll(pageable);
 
         // NOT FOUND EXCEPTION HANDLE
-        if (questions.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions are currently available in the collection");
+        if (pagedQuestions.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions are currently available in the collection");
         }
 
-        return ResponseEntity.ok().body(questions);
+        return ResponseEntity.ok().body(pagedQuestions.getContent());
     }
 
     @Override
     public ResponseEntity<?> update(String id, LexicalQuestionDTO questionDTO) {
-        Optional<LexicalQuestion> optionalVerbalQuestion = questionBankRepository.findById(id);
-
+        Optional<LexicalQuestion> optionalLexicalQuestion = questionBankRepository.findById(id);
+        
         // NOT FOUND EXCEPTION HANDLE
-        if (optionalVerbalQuestion.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the provided ID");
+        if (optionalLexicalQuestion.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found for the provided ID");
         }
-        LexicalQuestion question = optionalVerbalQuestion.get();
+        LexicalQuestion question = optionalLexicalQuestion.get();
 
         // MAPPING QUESTION DATA
         question.setQuestionNumber(questionDTO.getQuestionNumber());
-        question.setLanguage(questionDTO.getLanguage());
         question.setQuestion(questionDTO.getQuestion());
         question.setAnswers(questionDTO.getAnswers());
 
         questionBankRepository.save(question);
 
-        return ResponseEntity.ok().body("questions updated successfully");
+        return ResponseEntity.ok().body("Questions updated successfully");
     }
 
     @Override
@@ -101,11 +103,11 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
 
         // NOT FOUND EXCEPTION HANDLE
         if (question.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the provided ID");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found for the provided ID");
         }
 
         questionBankRepository.deleteById(id);
 
-        return ResponseEntity.ok().body("questions deleted successfully");
+        return ResponseEntity.ok().body("Questions deleted successfully");
     }
 }

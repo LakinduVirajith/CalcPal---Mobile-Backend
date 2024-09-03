@@ -1,7 +1,7 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://service-registry:8761/eureka/
 
 management:
   tracing:
@@ -19,7 +19,7 @@ spring:
       on-profile: dev
   data:
     mongodb:
-      uri: mongodb+srv://lakindu:calc-lakindu@calcpal-cluster.8adffay.mongodb.net/
+      uri: ${MONGODB_URI}
       database: Sequential-Diagnosis-Dev-DB
 
 ---

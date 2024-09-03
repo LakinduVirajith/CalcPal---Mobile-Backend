@@ -20,10 +20,10 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/register")
-    @Operation(summary = "User Registration", description = "Register a new user. Provide necessary details to create a user account.")
-    public ResponseEntity<?> userRegister(@Valid @RequestBody UserDTO userDTO) {
-        return userService.userRegister(userDTO);
+    @PostMapping("/sign-up")
+    @Operation(summary = "User sign up", description = "Sign up a new user. Provide necessary details to create a user account.")
+    public ResponseEntity<?> userSignUp(@Valid @RequestBody UserDTO userDTO) {
+        return userService.userSignUp(userDTO);
     }
 
     @GetMapping("/activate")
@@ -52,17 +52,29 @@ public class UserController {
 
     @PutMapping("/update/iq")
     @Operation(summary = "Update User IQ Score", description = "Update user IQ Score.")
-    public ResponseEntity<?> updateIQScore(@RequestBody String iqScore) throws NotFoundException {
+    public ResponseEntity<?> updateIQScore(@RequestBody Integer iqScore) throws NotFoundException {
         return userService.updateIQScore(iqScore);
     }
 
     @PutMapping("/update/disorder")
     @Operation(summary = "Update User Disorder Type", description = "Update user disorder types.")
-    public ResponseEntity<?> updateDisorderTypes(@RequestBody String disorderTypes) throws NotFoundException {
-        return userService.updateDisorderTypes(disorderTypes);
+    public ResponseEntity<?> updateDisorderTypes(@RequestParam("disorder") String disorderType) throws NotFoundException {
+        return userService.updateDisorderTypes(disorderType);
     }
 
-    @Operation(summary = "Reset Password", description = "User password reset by Providing necessary details.")
+    @Operation(summary = "Send Password Reset OTP", description = "Generates and sends a one-time password (OTP) to the user's email address.")
+    @PostMapping("/reset-password-otp")
+    public ResponseEntity<?> resetPasswordOTP(@RequestParam("email") String email) {
+        return userService.resetPasswordOTP(email);
+    }
+
+    @Operation(summary = "Validate Password Reset OTP", description = "Validates the provided OTP code against the user's email address.")
+    @PostMapping("/reset-password-validation")
+    public ResponseEntity<?> resetPasswordValidation(@RequestParam("email") String email, @RequestParam("otp") int otp) {
+        return userService.resetPasswordValidation(email, otp);
+    }
+
+    @Operation(summary = "Reset Password", description = "Completes the password reset process by accepting a new password from the user.")
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody AuthenticationRequest request) {
         return userService.resetPassword(request);
