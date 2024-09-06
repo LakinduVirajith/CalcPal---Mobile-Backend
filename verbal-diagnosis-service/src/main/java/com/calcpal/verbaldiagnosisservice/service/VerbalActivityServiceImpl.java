@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -36,6 +37,31 @@ public class VerbalActivityServiceImpl implements VerbalActivityService{
 
         // RETURN SUCCESS RESPONSE
         return ResponseEntity.status(HttpStatus.CREATED).body("Activity has been successfully added");
+    }
+
+    @Override
+    public ResponseEntity<?> addAll(List<VerbalActivityDTO> dtoList) {
+        // CHECK IF THE LIST HAS MORE THAN 10 ITEMS
+        if (dtoList.size() > 10) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Cannot add more than 10 activities at once.");
+        }
+
+        // VALIDATE EACH ACTIVITY-DTO AND BUILD LEXICAL ACTIVITY OBJECTS
+        List<VerbalActivity> activities = dtoList.stream()
+                .map(dto -> {
+                    if (!isValidLanguage(dto.getLanguage())) {
+                        throw new IllegalArgumentException("Invalid language: " + dto.getLanguage());
+                    }
+                    return buildVerbalActivity(dto);
+                })
+                .collect(Collectors.toList());
+
+        // SAVE ALL THE ACTIVITIES TO THE REPOSITORY
+        activityBankRepository.saveAll(activities);
+
+        // RETURN SUCCESS RESPONSE
+        return ResponseEntity.status(HttpStatus.CREATED).body("All activities have been successfully added.");
     }
 
     @Override
@@ -127,15 +153,16 @@ public class VerbalActivityServiceImpl implements VerbalActivityService{
 
     // BUILD A VERBAL ACTIVITY OBJECT FROM DTO
     private VerbalActivity buildVerbalActivity(VerbalActivityDTO dto) {
-        return VerbalActivity.builder()
+        VerbalActivity activity = VerbalActivity.builder()
                 .activityNumber(dto.getActivityNumber())
                 .language(dto.getLanguage())
                 .question(dto.getQuestion())
                 .answer(dto.getAnswer())
                 .answers(dto.getAnswers())
-                .correctAnswerAudioText(dto.getCorrectAnswerAudioText())
-                .wrongAnswerAudioText(dto.getWrongAnswerAudioText())
                 .build();
+
+        encodeToBase64BasedOnLanguage(dto, activity);
+        return activity;
     }
 
     // UPDATE EXISTING VERBAL ACTIVITY FROM DTO
@@ -145,8 +172,8 @@ public class VerbalActivityServiceImpl implements VerbalActivityService{
         activity.setQuestion(dto.getQuestion());
         activity.setAnswer(dto.getAnswer());
         activity.setAnswers(dto.getAnswers());
-        activity.setCorrectAnswerAudioText(dto.getCorrectAnswerAudioText());
-        activity.setWrongAnswerAudioText(dto.getWrongAnswerAudioText());
+
+        encodeToBase64BasedOnLanguage(dto, activity);
     }
 
     // MAP VERBAL ACTIVITY TO DTO
@@ -166,5 +193,19 @@ public class VerbalActivityServiceImpl implements VerbalActivityService{
     private VerbalActivity getRandomActivity(List<VerbalActivity> activities) {
         Random random = new Random();
         return activities.get(random.nextInt(activities.size()));
+    }
+
+    private void encodeToBase64BasedOnLanguage(VerbalActivityDTO dto, VerbalActivity activity) {
+        if(!dto.getLanguage().name().equals(Language.English.name())){
+            activity.setCorrectAnswerAudioText(encodeToBase64(dto.getCorrectAnswerAudioText()));
+            activity.setWrongAnswerAudioText(encodeToBase64(dto.getWrongAnswerAudioText()));
+        }else{
+            activity.setCorrectAnswerAudioText(dto.getCorrectAnswerAudioText());
+            activity.setWrongAnswerAudioText(dto.getWrongAnswerAudioText());
+        }
+    }
+
+    private String encodeToBase64(String value) {
+        return Base64.getEncoder().encodeToString(value.getBytes());
     }
 }

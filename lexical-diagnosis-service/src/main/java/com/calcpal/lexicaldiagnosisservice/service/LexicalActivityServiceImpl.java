@@ -160,7 +160,6 @@ public class LexicalActivityServiceImpl implements LexicalActivityService{
                 .build();
 
         encodeToBase64BasedOnLanguage(dto, activity);
-
         return activity;
     }
 

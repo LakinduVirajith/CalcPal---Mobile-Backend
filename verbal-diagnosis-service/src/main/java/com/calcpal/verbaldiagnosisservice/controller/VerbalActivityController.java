@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/verbal/activity")
 @Tag(name = "Verbal Activity Controllers")
@@ -21,6 +23,12 @@ public class VerbalActivityController {
     @Operation(summary = "Add Verbal Activity", description = "Add a new verbal activity to the activity bank.")
     public ResponseEntity<?> add(@Valid @RequestBody VerbalActivityDTO activityDTO) {
         return activityBankService.add(activityDTO);
+    }
+
+    @PostMapping("/all")
+    @Operation(summary = "Add Verbal Activities", description = "Add a new verbal activities to the activity bank.")
+    public ResponseEntity<?> addAll(@Valid @RequestBody List<VerbalActivityDTO> dtoList) {
+        return activityBankService.addAll(dtoList);
     }
 
     @GetMapping("/{id}")
