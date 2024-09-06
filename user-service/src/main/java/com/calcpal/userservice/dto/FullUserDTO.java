@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Builder
 @Data
 @AllArgsConstructor
@@ -21,12 +19,12 @@ public class FullUserDTO {
     private String email;
 
     @NotNull
-    private Integer age;
+    private int age;
 
     @NotNull
-    private String birthday;
+    private String birthDay;
 
-    private List<String> disorderTypes;
+    private String disorderTypes;
 
-    private Integer iqScore;
+    private String iqScore;
 }

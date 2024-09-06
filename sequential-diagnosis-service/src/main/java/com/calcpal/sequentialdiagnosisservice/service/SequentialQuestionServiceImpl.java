@@ -24,8 +24,7 @@ public class SequentialQuestionServiceImpl implements SequentialQuestionService{
                 .questionNumber(questionDTO.getQuestionNumber())
                 .language(questionDTO.getLanguage())
                 .question(questionDTO.getQuestion())
-                .answers(questionDTO.getAnswers())
-                .correctAnswer(questionDTO.getCorrectAnswer())
+                .answer(questionDTO.getAnswers())
                 .build();
 
         quectionBankRepository.save(question);
@@ -47,8 +46,7 @@ public class SequentialQuestionServiceImpl implements SequentialQuestionService{
                 .questionNumber(randomQuestion.getQuestionNumber())
                 .language(randomQuestion.getLanguage())
                 .question(randomQuestion.getQuestion())
-                .answers(randomQuestion.getAnswers())
-                .correctAnswer(randomQuestion.getCorrectAnswer())
+                .answers(randomQuestion.getAnswer())
                 .build();
 
         return ResponseEntity.ok().body(question);
@@ -81,8 +79,7 @@ public class SequentialQuestionServiceImpl implements SequentialQuestionService{
         question.setQuestionNumber(questionDTO.getQuestionNumber());
         question.setLanguage(questionDTO.getLanguage());
         question.setQuestion(questionDTO.getQuestion());
-        question.setAnswers(questionDTO.getAnswers());
-        question.setCorrectAnswer(questionDTO.getCorrectAnswer());
+        question.setAnswer(questionDTO.getAnswers());
 
         quectionBankRepository.save(question);
 

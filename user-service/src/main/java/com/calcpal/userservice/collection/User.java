@@ -13,7 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
 @Document("User")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -32,23 +31,21 @@ public class User implements UserDetails {
     private String email;
 
     @NotNull
-    private Integer age;
+    private int age;
 
     @NotNull
-    private String birthday;
+    private String birthDay;
 
     @NotNull
     private String password;
 
-    private List<String> disorderTypes;
+    private String disorderTypes;
 
-    private Integer iqScore;
+    private String iqScore;
 
     private ActivationToken activationToken;
 
     private AuthenticationToken authenticationToken;
-
-    private PasswordResetOTP passwordResetOTP;
 
     @NotNull
     private Boolean isActive;

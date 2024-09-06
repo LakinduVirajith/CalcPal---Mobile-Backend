@@ -19,33 +19,15 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
 
     @Override
     public ResponseEntity<?> add(DiagnosisResult verbalDiagnosis) {
-        Optional<DiagnosisResult> optionalDiagnosis = diagnosisResultRepository.findById(verbalDiagnosis.getUserEmail());
+        Optional<DiagnosisResult> diagnosis = diagnosisResultRepository.findById(verbalDiagnosis.getUserEmail());
 
-        if(optionalDiagnosis.isPresent()){
-            DiagnosisResult diagnosisResult = mappingDiagnosisResult(verbalDiagnosis, optionalDiagnosis.get());
-            diagnosisResultRepository.save(diagnosisResult);
-            return ResponseEntity.ok().body("Diagnosis data updated successfully");
+        if(diagnosis.isPresent()){
+            update(diagnosis.get());
         }else{
             diagnosisResultRepository.save(verbalDiagnosis);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Diagnosis result inserted successfully");
-        }
-    }
-
-    private static DiagnosisResult mappingDiagnosisResult(DiagnosisResult diagnosisResult, DiagnosisResult existingResult) {
-        // MAPPING QUESTION DATA
-        existingResult.setTimeSeconds(diagnosisResult.getTimeSeconds());
-        existingResult.setQ1(diagnosisResult.getQ1());
-        existingResult.setQ2(diagnosisResult.getQ2());
-        existingResult.setQ3(diagnosisResult.getQ3());
-        existingResult.setQ4(diagnosisResult.getQ4());
-        existingResult.setQ5(diagnosisResult.getQ5());
-        existingResult.setTotalScore(diagnosisResult.getTotalScore());
-
-        if(existingResult.getLabel() != null){
-            existingResult.setLabel(diagnosisResult.getLabel());
         }
 
-        return diagnosisResult;
+        return ResponseEntity.status(HttpStatus.CREATED).body("diagnosis result inserted successfully");
     }
 
     @Override
@@ -54,7 +36,7 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
 
         // NOT FOUND EXCEPTION HANDLE
         if(optionalVerbalDiagnosis.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the given user");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis found for the given user");
         }
         DiagnosisResult diagnosis = optionalVerbalDiagnosis.get();
 
@@ -67,7 +49,7 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
 
         // NOT FOUND EXCEPTION HANDLE
         if (diagnosisList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis are currently available in the collection");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis are currently available in the collection");
         }
 
         return ResponseEntity.ok().body(diagnosisList);
@@ -79,13 +61,25 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
 
         // NOT FOUND EXCEPTION HANDLE
         if (optionalVerbalDiagnosis.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the provided user");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis found for the provided user");
         }
+        DiagnosisResult diagnosis = optionalVerbalDiagnosis.get();
 
-        DiagnosisResult diagnosisResult = mappingDiagnosisResult(verbalDiagnosis, optionalVerbalDiagnosis.get());
-        diagnosisResultRepository.save(diagnosisResult);
+        // MAPPING QUESTION DATA
+        diagnosis.setTimeSeconds(verbalDiagnosis.getTimeSeconds());
+        diagnosis.setQ1(verbalDiagnosis.getQ1());
+        diagnosis.setQ2(verbalDiagnosis.getQ2());
+        diagnosis.setQ3(verbalDiagnosis.getQ3());
+        diagnosis.setQ4(verbalDiagnosis.getQ4());
+        diagnosis.setQ5(verbalDiagnosis.getQ5());
+        diagnosis.setTotalScore(verbalDiagnosis.getTotalScore());
 
-        return ResponseEntity.ok().body("Diagnosis data updated successfully");
+        if(diagnosis.getLabel() != null){
+            diagnosis.setLabel(verbalDiagnosis.getLabel());
+        }
+        diagnosisResultRepository.save(diagnosis);
+
+        return ResponseEntity.ok().body("diagnosis data updated successfully");
     }
 
     @Override
@@ -94,7 +88,7 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
 
         // NOT FOUND EXCEPTION HANDLE
         if (optionalVerbalDiagnosis.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the provided user");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis found for the provided user");
         }
         DiagnosisResult diagnosis = optionalVerbalDiagnosis.get();
 
@@ -102,6 +96,6 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
         diagnosis.setLabel(diagnosisLabelDTO.getLabel());
         diagnosisResultRepository.save(diagnosis);
 
-        return ResponseEntity.ok().body("Diagnosis label updated successfully");
+        return ResponseEntity.ok().body("diagnosis label updated successfully");
     }
 }

@@ -2,7 +2,6 @@ package com.calcpal.userservice.service;
 
 import com.calcpal.userservice.collection.ActivationToken;
 import com.calcpal.userservice.collection.AuthenticationToken;
-import com.calcpal.userservice.collection.PasswordResetOTP;
 import com.calcpal.userservice.collection.User;
 import com.calcpal.userservice.common.AuthenticationRequest;
 import com.calcpal.userservice.config.jwt.JwtService;
@@ -11,7 +10,6 @@ import com.calcpal.userservice.dto.UserDTO;
 import com.calcpal.userservice.common.AuthenticationResponse;
 import com.calcpal.userservice.common.CommonFunctions;
 import com.calcpal.userservice.dto.UserUpdateDTO;
-import com.calcpal.userservice.enums.DisorderType;
 import com.calcpal.userservice.exception.NotFoundException;
 import com.calcpal.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +21,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.*;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -49,18 +46,18 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public ResponseEntity<?> userSignUp(UserDTO userDTO) {
+    public ResponseEntity<?> userRegister(UserDTO userDTO) {
         Optional<User> emailCondition = userRepository.findByEmail(userDTO.getEmail());
         if(emailCondition.isPresent()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already in use. Please log in or use a different email.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("email already exists");
         }
 
         // ASSIGN USER DATA TO THE USER OBJECT
         User user = User.builder()
                 .name(userDTO.getName())
                 .email(userDTO.getEmail())
-                .age(calculateAge(userDTO.getBirthday()))
-                .birthday(userDTO.getBirthday())
+                .age(calculateAge(userDTO.getBirthDay()))
+                .birthDay(userDTO.getBirthDay())
                 .isActive(false)
                 .build();
 
@@ -69,15 +66,15 @@ public class UserServiceImpl implements UserService{
         user.setPassword(encodedPassword);
 
         // CALLING EMAIL SERVICE
-        boolean status = sendActivationMail(user);
+        boolean status = sendActivationMain(user);
 
         if(status){
             userRepository.save(user);
         }else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending activation email. Please try again later.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("email service error orchard. try again");
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Sign-up successful! Please check your email to verify your account before logging in.");
+        return ResponseEntity.status(HttpStatus.CREATED).body("user registered successfully");
     }
 
     // METHOD TO CALCULATE AGE
@@ -93,46 +90,36 @@ public class UserServiceImpl implements UserService{
 
         // USER NOT FOUND EXCEPTION
         if(optionalUser.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
         User user = optionalUser.get();
 
         // CHECK ACTIVATION TOKEN EXPIRY
         LocalDateTime activationTokenExpiry = user.getActivationToken().getTokenExpiry();
         if (activationTokenExpiry.isBefore(LocalDateTime.now())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Activation token has expired");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("activation token has expired");
         }
 
         user.setIsActive(true);
         userRepository.save(user);
 
-        return ResponseEntity.ok().body("User activated successfully");
+        return ResponseEntity.ok().body("user activated successfully");
     }
 
     @Override
     public ResponseEntity<?> login(AuthenticationRequest request) {
         Optional<User> userCondition = userRepository.findByEmail(request.getEmail());
 
-        // ASSIGN USER DATA
-        User user = userCondition.orElseThrow(() -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND, "No user found with the provided email address."
-        ));
-
         // CHECK ACCOUNT STATUS
-        if(!user.getIsActive()){
-            boolean status = sendActivationMail(user);
+        if(userCondition.isPresent() && !userCondition.get().getIsActive()){
+            boolean status = sendActivationMain(userCondition.get());
             if(status){
-                userRepository.save(user);
+                userRepository.save(userCondition.get());
             }else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending activation email. Please try again later.");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("email service error orchard. try again");
             }
 
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Your account is not activated. Please check your email and verify your account.");
-        }
-
-        // VERIFY THE PASSWORD
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password. Please check and try again.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("your account is not activated. Please check your email to verify your account first.");
         }
 
         // SPRING AUTHENTICATION MANAGER
@@ -140,7 +127,11 @@ public class UserServiceImpl implements UserService{
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
-        
+        // ASSIGN USER DATA
+        User user = new User();
+        if(userCondition.isPresent()){
+            user = userCondition.get();
+        }
 
         // GENERATE AND SAVE ACCESS TOKEN
         String jwtToken = jwtService.generateToken(user);
@@ -150,7 +141,7 @@ public class UserServiceImpl implements UserService{
         String refreshToken = jwtService.generateRefreshToken(user);
 
         return ResponseEntity.ok().body(AuthenticationResponse.builder()
-                .message("Login successful! Welcome back.")
+                .message("user authenticated successfully")
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build()
@@ -158,11 +149,11 @@ public class UserServiceImpl implements UserService{
     }
 
     // METHOD TO GENERATE ACTIVATION TOKEN AND SEND ACTIVATION MAIL
-    private boolean sendActivationMail(User user) {
+    private boolean sendActivationMain(User user) {
         // GENERATE ACTIVATION TOKEN
         String token = UUID.randomUUID().toString().substring(0, 32);
 
-        // ACTIVATION LINK VALID FOR 10 MINTS
+        // Activation link valid for 10 mints
         LocalDateTime tokenExpiry = LocalDateTime.now().plusMinutes(10);
         ActivationToken activationToken = ActivationToken.builder()
                 .token(token)
@@ -191,7 +182,7 @@ public class UserServiceImpl implements UserService{
     public ResponseEntity<?> getUser() throws NotFoundException {
         User user = commonFunctions.getUser();
         if(user == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found. Please check the provided information.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
 
         // ASSIGN USER DETAILS
@@ -199,7 +190,7 @@ public class UserServiceImpl implements UserService{
                 .name(user.getName())
                 .email(user.getEmail())
                 .age(user.getAge())
-                .birthday(user.getBirthday())
+                .birthDay(user.getBirthDay())
                 .build();
         if(user.getDisorderTypes() != null){
             fullUserDTO.setDisorderTypes(user.getDisorderTypes());
@@ -215,153 +206,52 @@ public class UserServiceImpl implements UserService{
     public ResponseEntity<?> updateDetails(UserUpdateDTO userUpdateDTO) throws NotFoundException {
         User user = commonFunctions.getUser();
         if(user == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found. Please make sure you are logged in.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
 
         if(!userUpdateDTO.getName().isEmpty()){
             user.setName(userUpdateDTO.getName());
         }
-        if(!userUpdateDTO.getBirthday().isEmpty()){
-            user.setBirthday(userUpdateDTO.getBirthday());
-            user.setAge(calculateAge(userUpdateDTO.getBirthday()));
+        if(!userUpdateDTO.getBirthDay().isEmpty()){
+            user.setBirthDay(userUpdateDTO.getBirthDay());
+            user.setAge(calculateAge(userUpdateDTO.getBirthDay()));
         }
 
         userRepository.save(user);
 
-        return ResponseEntity.ok().body("Your details have been updated successfully.");
+        return ResponseEntity.ok().body("user details updated successfully");
     }
 
     @Override
-    public ResponseEntity<?> updateIQScore(Integer iqScore) throws NotFoundException {
+    public ResponseEntity<?> updateIQScore(String iqScore) throws NotFoundException {
         User user = commonFunctions.getUser();
         if(user == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
 
-        if(iqScore != null){
+        if(!iqScore.isEmpty()){
             user.setIqScore(iqScore);
         }
 
         userRepository.save(user);
 
-        return ResponseEntity.ok().body("User IQ score updated successfully");
+        return ResponseEntity.ok().body("user iq score updated successfully");
     }
 
     @Override
-    public ResponseEntity<?> updateDisorderTypes(String disorderType) throws NotFoundException {
-        // RETRIEVE THE CURRENT USER
+    public ResponseEntity<?> updateDisorderTypes(String disorderTypes) throws NotFoundException {
         User user = commonFunctions.getUser();
-
-        // CHECK IF THE USER IS NULL AND HANDLE IT
         if(user == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found. Please log in and try again.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
 
-        // INITIALIZE THE USER'S EXISTING DISORDER TYPES LIST IF IT'S NULL
-        if (user.getDisorderTypes() == null) {
-            user.setDisorderTypes(new ArrayList<>());
+        if(!disorderTypes.isEmpty()){
+            user.setDisorderTypes(disorderTypes);
         }
 
-        // CHECK IF THE DISORDER TYPE INDICATES REMOVAL (E.G., "noVerbal")
-        if (disorderType.contains("no")) {
-            String disorder = disorderType.replaceFirst("no", "");
-        
-            // REMOVE THE DISORDER TYPE IF IT EXISTS IN THE LIST
-            boolean remove = user.getDisorderTypes().remove(disorder.toLowerCase());
-            if (remove) {
-                userRepository.save(user);
-                return ResponseEntity.ok().body("Disorder type has been removed successfully.");
-            } else {
-                return ResponseEntity.ok().body("The disorder type to remove does not exist.");
-            }
-        }
+        userRepository.save(user);
 
-        // ATTEMPT TO VALIDATE THE DISORDER TYPE AGAINST ENUM VALUES
-        DisorderType validatedDisorderType = null;
-        for (DisorderType type : DisorderType.values()) {
-            if (type.name().equalsIgnoreCase(disorderType)) {
-                validatedDisorderType = type;
-                break;
-            }
-        }
-        
-        // IF THE DISORDER TYPE IS INVALID, RETURN A BAD REQUEST RESPONSE
-        if (validatedDisorderType == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The disorder type provided is not valid.");
-        }
-
-        // ADD THE DISORDER TYPE TO THE LIST ONLY IF IT DOESN'T ALREADY EXIST
-        if (!user.getDisorderTypes().contains(disorderType)) {
-            user.getDisorderTypes().add(disorderType.toLowerCase());
-            userRepository.save(user);
-            return ResponseEntity.ok().body("Disorder type has been added successfully.");
-        }else{
-            return ResponseEntity.ok().body("The disorder type is already exist.");   
-        }
-    }
-
-    @Override
-    public ResponseEntity<?> resetPasswordOTP(String email) {
-        Optional<User> userCondition = userRepository.findByEmail(email);
-
-        // CHECK IF USER EXISTS
-        if(userCondition.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No account found with the provided email.");
-        }
-        User user = userCondition.get();
-
-        // CALL EMAIL SERVICE TO SEND RESET PASSWORD OTP
-        boolean status = sendResetPasswordMail(user);
-
-        if(status){
-            userRepository.save(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body("A password reset email has been sent. Please check your inbox for further instructions.");
-        }else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while sending the reset email. Please try again.");
-        }
-    }
-
-    // METHOD TO GENERATE RESET PASSWORD CODE AND SEND ACTIVATION MAIL
-    private boolean sendResetPasswordMail(User user) {
-        // GENERATE PASSWORD RESET OTP
-        SecureRandom secureRandom = new SecureRandom();
-        int OTP = secureRandom.nextInt(9000) + 1000;
-
-        // OTP VALID FOR 4 MINTS
-        LocalDateTime OTPExpiry = LocalDateTime.now().plusMinutes(4);
-        PasswordResetOTP passwordResetOTP = PasswordResetOTP.builder()
-                .OTP(OTP)
-                .OTPExpiry(OTPExpiry)
-                .build();
-
-        user.setPasswordResetOTP(passwordResetOTP);
-
-        // CALLING EMAIL SERVICE
-        return emailService.sendResetPasswordMail(user);
-    }
-
-    @Override
-    public ResponseEntity<?> resetPasswordValidation(String email, int otp) {
-        Optional<User> userCondition = userRepository.findByEmail(email);
-
-        // CHECK IF USER EXISTS
-        if(userCondition.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No account found with the provided email.");
-        }
-        User user = userCondition.get();
-
-        // CHECK OTP EXPIRY
-        LocalDateTime OTPExpiry = user.getPasswordResetOTP().getOTPExpiry();
-        if (OTPExpiry.isBefore(LocalDateTime.now())) {
-            return ResponseEntity.status(HttpStatus.GONE).body("The OTP has expired. Please request a new one.");
-        }
-
-        // CHECK OTP VALIDITY
-        if(otp != user.getPasswordResetOTP().getOTP()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The OTP provided is incorrect. Please try again.");
-        }
-
-        return ResponseEntity.ok().body("OTP validated successfully.");
+        return ResponseEntity.ok().body("user disorder types updated successfully");
     }
 
     @Override
@@ -370,18 +260,16 @@ public class UserServiceImpl implements UserService{
 
         // INVALID USER EXCEPTION
         if(userCondition.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No account found with the provided email.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("provided email address is invalid");
         }
         User user = userCondition.get();
 
-        // ENCODE THE NEW PASSWORD
+        // ENCODE PASSWORD USING PASSWORD-ENCODER
         String encodedPassword = passwordEncoder.encode(request.getPassword());
-
-        // UPDATE USER PASSWORD
         user.setPassword(encodedPassword);
         userRepository.save(user);
 
-        return ResponseEntity.ok().body("Your password has been reset successfully.");
+        return ResponseEntity.ok().body("password reset successfully");
     }
 
     @Override
@@ -390,53 +278,55 @@ public class UserServiceImpl implements UserService{
         userEmail = jwtService.extractUsername(refreshToken);
 
         // INVALID TOKEN EXCEPTION
-        if(userEmail == null || userEmail.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Refresh token is invalid or expired. Please log in again.");
+        if(userEmail.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("the token you provided is invalid");
         }
 
         // INVALID ACCOUNT EXCEPTION
         Optional<User> optionalUser = userRepository.findByEmail(userEmail);
         if (optionalUser.isPresent() && !optionalUser.get().getIsActive()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Your account is not activated. Please activate your account to proceed.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("your account is not activated yet");
         }
 
         // INVALID USER EXCEPTION
         if(optionalUser.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found. Please check your email or register a new account.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
        User user = optionalUser.get();
 
         // GENERATE TOKEN
+        AuthenticationResponse authResponse = null;
         if (jwtService.isTokenValid(refreshToken, user)) {
             String newAccessToken = jwtService.generateToken(user);
             saveToken(user, newAccessToken);
 
             String newRefreshToken = jwtService.generateRefreshToken(user);
 
-            AuthenticationResponse authResponse = AuthenticationResponse.builder()
-                    .message("Authentication successful. New tokens have been issued.")
+            authResponse = AuthenticationResponse.builder()
+                    .message("using refresh token user authenticated successfully")
                     .accessToken(newAccessToken)
                     .refreshToken(newRefreshToken)
                     .build();
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(authResponse);
-        }else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Refresh token is invalid or expired. Please log in again.");
         }
+
+        // SERVER ERROR EXCEPTION
+        if(authResponse == null){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("something went wrong with generating the token");
+        }
+        return ResponseEntity.ok().body(authResponse);
     }
 
     @Override
     public ResponseEntity<?> deactivate() throws NotFoundException {
         User user = commonFunctions.getUser();
         if(user == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User account not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user account not found");
         }
 
         user.setIsActive(false);
         userRepository.save(user);
 
-        return ResponseEntity.ok().body("User account deactivated successfully");
+        return ResponseEntity.ok().body("user account deactivated successfully");
     }
 
     @Override
@@ -453,9 +343,9 @@ public class UserServiceImpl implements UserService{
             user.setAuthenticationToken(authenticationToken);
             userRepository.save(user);
         }else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid logout request");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid logout");
         }
 
-        return ResponseEntity.ok().body("You've been successfully logged out. See you next time!");
+        return ResponseEntity.ok().body("user logout successfully");
     }
 }

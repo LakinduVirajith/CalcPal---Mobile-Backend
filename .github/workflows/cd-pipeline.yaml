@@ -1,8 +1,8 @@
 name: Build and Deploy CalcPal Mobile Backend Application
 
 on:
-  push:
-    branches: [main, development]
+  pull_request:
+    branches: [main]
 
 jobs:
   cd-pipeline:
@@ -17,12 +17,7 @@ jobs:
           - user-service
           - verbal-diagnosis-service
           - lexical-diagnosis-service
-          - ideognostic-diagnosis-service
           - operational-diagnosis-service
-          - sequential-diagnosis-service
-          - visual-diagnosis-service
-          - practognostic-diagnosis-service
-          - graphical-diagnosis-service
 
     steps:
       - name: Checkout Repository
@@ -40,7 +35,6 @@ jobs:
           MAIL_ADDRESS: ${{ secrets.MAIL_ADDRESS }}
           MAIL_APP_PASSWORD: ${{ secrets.MAIL_APP_PASSWORD }}
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          SERVER_IP: ${{ secrets.SERVER_IP }}
         run: bash setup_env.sh
 
       - name: Run Unit Tests for ${{ matrix.service }}

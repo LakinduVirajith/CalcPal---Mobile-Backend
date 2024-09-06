@@ -19,7 +19,7 @@ public class UserDTO {
     private String email;
 
     @NotNull
-    private String birthday;
+    private String birthDay;
 
     @NotNull
     private String password;

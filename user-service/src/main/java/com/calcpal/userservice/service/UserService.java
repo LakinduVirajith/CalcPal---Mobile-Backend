@@ -7,7 +7,7 @@ import com.calcpal.userservice.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 
 public interface UserService {
-    ResponseEntity<?> userSignUp(UserDTO userDTO);
+    ResponseEntity<?> userRegister(UserDTO userDTO);
 
     ResponseEntity<?> activate(String token);
 
@@ -17,13 +17,9 @@ public interface UserService {
 
     ResponseEntity<?> updateDetails(UserUpdateDTO userUpdateDTO) throws NotFoundException;
 
-    ResponseEntity<?> updateIQScore(Integer iqScore) throws NotFoundException;
+    ResponseEntity<?> updateIQScore(String iqScore) throws NotFoundException;
 
-    ResponseEntity<?> updateDisorderTypes(String disorderType) throws NotFoundException;
-
-    ResponseEntity<?> resetPasswordOTP(String email);
-
-    ResponseEntity<?> resetPasswordValidation(String email, int otp);
+    ResponseEntity<?> updateDisorderTypes(String disorderTypes) throws NotFoundException;
 
     ResponseEntity<?> resetPassword(AuthenticationRequest request);
 
@@ -32,4 +28,5 @@ public interface UserService {
     ResponseEntity<?> deactivate() throws NotFoundException;
 
     ResponseEntity<?> logout() throws NotFoundException;
+
 }

@@ -16,5 +16,5 @@ public class UserUpdateDTO {
     private String name;
 
     @NotNull
-    private String birthday;
+    private String birthDay;
 }
