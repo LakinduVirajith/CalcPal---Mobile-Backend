@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -27,11 +30,8 @@ public class OperationalDiagnosisQues {
     private String question;
 
     @NotNull
-    private String correctAnswer;
+    private Integer correctAnswer;
 
     @NotNull
-    private String incorrectAnswer1;
-
-    @NotNull
-    private String incorrectAnswer2;
+    private List<Integer> allAnswers;
 }

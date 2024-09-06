@@ -1,5 +1,7 @@
 package com.calcpal.operationaldiagnosisservice.DTO;
 
+import java.util.List;
+
 import com.calcpal.operationaldiagnosisservice.enums.Language;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -19,11 +21,8 @@ public class QuestionDTO {
     private String question;
 
     @NotNull
-    private String correctAnswer;
+    private Integer correctAnswer;
 
     @NotNull
-    private String incorrectAnswer1;
-
-    @NotNull
-    private String incorrectAnswer2;
+    private List<Integer> allAnswers;
 }
