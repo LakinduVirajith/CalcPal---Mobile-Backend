@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/lexical/question")
 @Tag(name = "Lexical Question Controllers")
@@ -21,6 +23,12 @@ public class LexicalQuestionController {
     @Operation(summary = "Add Lexical Question", description = "Add a new lexical question to the question bank.")
     public ResponseEntity<?> add(@Valid @RequestBody LexicalQuestionDTO questionDTO) {
         return questionBankService.add(questionDTO);
+    }
+
+    @PostMapping("/all")
+    @Operation(summary = "Add Lexical Questions", description = "Add a new lexical questions to the question bank.")
+    public ResponseEntity<?> addAll(@Valid @RequestBody List<LexicalQuestionDTO> questionDTOS) {
+        return questionBankService.addAll(questionDTOS);
     }
 
     @GetMapping("/{id}")

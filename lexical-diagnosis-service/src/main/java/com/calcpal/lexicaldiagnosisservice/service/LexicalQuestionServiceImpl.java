@@ -4,7 +4,6 @@ import com.calcpal.lexicaldiagnosisservice.DTO.LexicalQuestionDTO;
 import com.calcpal.lexicaldiagnosisservice.collection.LexicalQuestion;
 import com.calcpal.lexicaldiagnosisservice.repository.LexicalQuestionRepository;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,15 +25,32 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
 
     @Override
     public ResponseEntity<?> add(LexicalQuestionDTO questionDTO) {
-        LexicalQuestion question =  LexicalQuestion.builder()
-                .questionNumber(questionDTO.getQuestionNumber())
-                .question(questionDTO.getQuestion())
-                .answers(questionDTO.getAnswers())
-                .build();
-
+        // BUILD A LEXICAL ACTIVITY OBJECT AND SAVE IT
+        LexicalQuestion question = buildLexicalQuestion(questionDTO);
         questionBankRepository.save(question);
 
+        // RETURN SUCCESS RESPONSE
         return ResponseEntity.status(HttpStatus.CREATED).body("Question has been successfully added");
+    }
+
+    @Override
+    public ResponseEntity<?> addAll(List<LexicalQuestionDTO> questionDTOS) {
+        // CHECK IF THE LIST HAS MORE THAN 10 ITEMS
+        if (questionDTOS.size() > 10) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Cannot add more than 10 questions at once.");
+        }
+
+        // BUILD LEXICAL QUESTION OBJECTS
+        List<LexicalQuestion> questions = questionDTOS.stream()
+                .map(this::buildLexicalQuestion)
+                .collect(Collectors.toList());
+
+        // SAVE ALL THE ACTIVITIES TO THE REPOSITORY
+        questionBankRepository.saveAll(questions);
+
+        // RETURN SUCCESS RESPONSE
+        return ResponseEntity.status(HttpStatus.CREATED).body("All questions have been successfully added.");
     }
 
     @Override
@@ -48,20 +66,9 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
         LexicalQuestion randomQuestion = getRandomQuestion(questions);
 
         // MAPPING QUESTION DATA
-        LexicalQuestionDTO question = LexicalQuestionDTO.builder()
-                .questionNumber(randomQuestion.getQuestionNumber())
-                .question(randomQuestion.getQuestion())
-                .answers(randomQuestion.getAnswers())
-                .build();
+        LexicalQuestionDTO questionDTO = mapToDTO(randomQuestion);
 
-        return ResponseEntity.ok().body(question);
-    }
-
-    // METHOD TO GET A RANDOM QUESTION FROM A LIST QUESTIONS
-    private LexicalQuestion getRandomQuestion(List<LexicalQuestion> questions) {
-        Random random = new Random();
-        int randomIndex = random.nextInt(questions.size());
-        return questions.get(randomIndex);
+        return ResponseEntity.ok().body(questionDTO);
     }
 
     @Override
@@ -91,6 +98,7 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
         question.setQuestionNumber(questionDTO.getQuestionNumber());
         question.setQuestion(questionDTO.getQuestion());
         question.setAnswers(questionDTO.getAnswers());
+        encodeToBase64BasedAnswers(question);
 
         questionBankRepository.save(question);
 
@@ -109,5 +117,55 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
         questionBankRepository.deleteById(id);
 
         return ResponseEntity.ok().body("Questions deleted successfully");
+    }
+
+    // BUILD A LEXICAL QUESTION OBJECT FROM DTO
+    private LexicalQuestion buildLexicalQuestion(LexicalQuestionDTO dto) {
+        LexicalQuestion question = LexicalQuestion.builder()
+                .questionNumber(dto.getQuestionNumber())
+                .question(dto.getQuestion())
+                .answers(dto.getAnswers())
+                .build();
+
+        encodeToBase64BasedAnswers(question);
+
+        return question;
+    }
+
+    // MAP VERBAL ACTIVITY TO DTO
+    private LexicalQuestionDTO mapToDTO(LexicalQuestion question) {
+        return LexicalQuestionDTO.builder()
+                .questionNumber(question.getQuestionNumber())
+                .question(question.getQuestion())
+                .answers(question.getAnswers())
+                .build();
+    }
+
+    // METHOD TO GET A RANDOM QUESTION FROM A LIST QUESTIONS
+    private LexicalQuestion getRandomQuestion(List<LexicalQuestion> questions) {
+        Random random = new Random();
+        int randomIndex = random.nextInt(questions.size());
+        return questions.get(randomIndex);
+    }
+
+    private void encodeToBase64BasedAnswers(LexicalQuestion question) {
+        if(question.getAnswers() != null && !question.getAnswers().isEmpty()){
+            List<String> answers = question.getAnswers();
+
+            // ENCODE ONLY 3ND (INDEX 2) AND 4RD (INDEX 3) ANSWERS
+            if (answers.size() > 2) {
+                answers.set(2, encodeToBase64(answers.get(2)));
+            }
+            if (answers.size() > 3) {
+                answers.set(3, encodeToBase64(answers.get(3)));
+            }
+
+            // UPDATE THE DTO WITH THE MODIFIED ANSWER LIST
+            question.setAnswers(answers);
+        }
+    }
+
+    private String encodeToBase64(String value) {
+        return Base64.getEncoder().encodeToString(value.getBytes());
     }
 }

@@ -4,8 +4,12 @@ import com.calcpal.lexicaldiagnosisservice.DTO.LexicalQuestionDTO;
 
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface LexicalQuestionService {
     ResponseEntity<?> add(LexicalQuestionDTO questionDTO);
+
+    ResponseEntity<?> addAll(List<LexicalQuestionDTO> questionDTOS);
 
     ResponseEntity<?> getRandom(Long id);
 

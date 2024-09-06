@@ -31,7 +31,7 @@ public class LexicalActivityServiceImpl implements LexicalActivityService{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + activityDTO.getLanguage());
         }
 
-        // BUILD A VERBAL ACTIVITY OBJECT AND SAVE IT
+        // BUILD A LEXICAL ACTIVITY OBJECT AND SAVE IT
         LexicalActivity activity = buildLexicalActivity(activityDTO);
         activityBankRepository.save(activity);
 
@@ -151,7 +151,7 @@ public class LexicalActivityServiceImpl implements LexicalActivityService{
         }
     }
 
-    // BUILD A VERBAL ACTIVITY OBJECT FROM DTO
+    // BUILD A LEXICAL ACTIVITY OBJECT FROM DTO
     private LexicalActivity buildLexicalActivity(LexicalActivityDTO dto) {
         LexicalActivity activity = LexicalActivity.builder()
                 .activityNumber(dto.getActivityNumber())
