@@ -22,25 +22,29 @@ spring:
           predicates:
             - Path=/api/v1/operational/**
         - id: ideognostic-diagnosis-service
-          uri: lb://ideognostic-service
+          uri: lb://ideognostic-diagnosis-service
           predicates:
             - Path=/api/v1/ideognostic/**
         - id: sequential-diagnosis-service
-          uri: lb://sequential-service
+          uri: lb://sequential-diagnosis-service
           predicates:
             - Path=/api/v1/sequential/**
         - id: visual-diagnosis-service
-          uri: lb://visual-service
+          uri: lb://visual-diagnosis-service
           predicates:
             - Path=/api/v1/visual/**
         - id: practognostic-diagnosis-service
-          uri: lb://practognostic-service
+          uri: lb://practognostic-diagnosis-service
           predicates:
             - Path=/api/v1/practognostic/**
         - id: graphical-diagnosis-service
-          uri: lb://graphical-service
+          uri: lb://graphical-diagnosis-service
           predicates:
             - Path=/api/v1/graphical/**
+        - id: iq-test-service
+          uri: lb://iq-test-service
+          predicates:
+            - Path=/api/v1/iq/**
 
 eureka:
   client:
