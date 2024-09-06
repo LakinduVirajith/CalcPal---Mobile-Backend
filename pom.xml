@@ -28,6 +28,7 @@
         <module>user-service</module>
         <module>verbal-diagnosis-service</module>
         <module>visual-diagnosis-service</module>
+        <module>iq-test-service</module>
     </modules>
 
 </project>

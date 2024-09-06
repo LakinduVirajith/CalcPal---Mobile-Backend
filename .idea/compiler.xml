@@ -6,17 +6,18 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="config-server" />
+        <module name="iq-test-service" />
         <module name="verbal-diagnosis-service" />
+        <module name="operational-diagnosis-service" />
+        <module name="user-service" />
+        <module name="graphical-diagnosis-service" />
+        <module name="config-server" />
         <module name="ideognostic-diagnosis-service" />
         <module name="api-gateway" />
         <module name="practognostic-diagnosis-service" />
         <module name="lexical-diagnosis-service" />
         <module name="sequential-diagnosis-service" />
         <module name="visual-diagnosis-service" />
-        <module name="operational-diagnosis-service" />
-        <module name="user-service" />
-        <module name="graphical-diagnosis-service" />
         <module name="service-registry" />
       </profile>
     </annotationProcessing>
@@ -30,6 +31,7 @@
       <module name="config-server" options="-parameters" />
       <module name="graphical-diagnosis-service" options="-parameters" />
       <module name="ideognostic-diagnosis-service" options="-parameters" />
+      <module name="iq-test-service" options="-parameters" />
       <module name="lexical-diagnosis-service" options="-parameters" />
       <module name="operational-diagnosis-service" options="-parameters" />
       <module name="practognostic-diagnosis-service" options="-parameters" />

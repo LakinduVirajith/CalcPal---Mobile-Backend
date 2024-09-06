@@ -1,11 +1,11 @@
-package com.calcpal.verbaldiagnosisservice.service;
+package com.calcpal.iqtestservice.service;
 
-import com.calcpal.verbaldiagnosisservice.DTO.VerbalQuestionDTO;
-import com.calcpal.verbaldiagnosisservice.collection.VerbalQuestion;
-import com.calcpal.verbaldiagnosisservice.enums.Language;
-import com.calcpal.verbaldiagnosisservice.repository.VerbalQuestionRepository;
+
+import com.calcpal.iqtestservice.DTO.IQQuestionDTO;
+import com.calcpal.iqtestservice.collection.IQQuestion;
+import com.calcpal.iqtestservice.enums.Language;
+import com.calcpal.iqtestservice.repository.IQQuestionRepository;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,18 +21,19 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class VerbalQuestionServiceImpl implements VerbalQuestionService {
+public class IQQuestionServiceImpl implements IQQuestionService{
 
-    private final VerbalQuestionRepository questionBankRepository;
+    private final IQQuestionRepository questionBankRepository;
+
     @Override
-    public ResponseEntity<?> add(VerbalQuestionDTO questionBankDTO) {
+    public ResponseEntity<?> add(IQQuestionDTO questionDTO) {
         // VALIDATE THE LANGUAGE AGAINST ENUM VALUES
-        if (!isValidLanguage(questionBankDTO.getLanguage())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + questionBankDTO.getLanguage());
+        if (!isValidLanguage(questionDTO.getLanguage())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + questionDTO.getLanguage());
         }
 
         // BUILD A LEXICAL ACTIVITY OBJECT AND SAVE IT
-        VerbalQuestion question = buildVerbalQuestion(questionBankDTO);
+        IQQuestion question = buildIQQuestion(questionDTO);
         questionBankRepository.save(question);
 
         // RETURN SUCCESS RESPONSE
@@ -40,20 +41,20 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
     }
 
     @Override
-    public ResponseEntity<?> addAll(List<VerbalQuestionDTO> questionBankDTOList) {
+    public ResponseEntity<?> addAll(List<IQQuestionDTO> questionDTOList) {
         // CHECK IF THE LIST HAS MORE THAN 10 ITEMS
-        if (questionBankDTOList.size() > 10) {
+        if (questionDTOList.size() > 10) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Cannot add more than 10 questions at once.");
         }
 
         // VALIDATE EACH QUESTION-DTO AND BUILD VERBAL QUESTION OBJECTS
-        List<VerbalQuestion> questions = questionBankDTOList.stream()
+        List<IQQuestion> questions = questionDTOList.stream()
                 .map(dto -> {
                     if (!isValidLanguage(dto.getLanguage())) {
                         throw new IllegalArgumentException("Invalid language: " + dto.getLanguage());
                     }
-                    return buildVerbalQuestion(dto);
+                    return buildIQQuestion(dto);
                 })
                 .collect(Collectors.toList());
 
@@ -72,8 +73,8 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
         }
 
         // FETCH QUESTION BY QUESTION NUMBER AND FILTER BY LANGUAGE
-        List<VerbalQuestion> questions = questionBankRepository.findByQuestionNumber(id);
-        List<VerbalQuestion> filteredQuestions = questions.stream()
+        List<IQQuestion> questions = questionBankRepository.findByQuestionNumber(id);
+        List<IQQuestion> filteredQuestions = questions.stream()
                 .filter(q -> q.getLanguage().name().equalsIgnoreCase(language))
                 .collect(Collectors.toList());
 
@@ -83,18 +84,17 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
         }
 
         // SELECT A RANDOM QUESTION FROM THE FILTERED LIST
-        VerbalQuestion randomQuestion = getRandomQuestion(filteredQuestions);
-        VerbalQuestionDTO questionDTO = mapToDTO(randomQuestion);
+        IQQuestion randomQuestion = getRandomQuestion(filteredQuestions);
+        IQQuestionDTO questionDTO = mapToDTO(randomQuestion);
 
         // RETURN SUCCESS RESPONSE WITH RANDOM QUESTION
         return ResponseEntity.ok().body(questionDTO);
     }
 
-
     @Override
     public ResponseEntity<?> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<VerbalQuestion> pagedQuestions = questionBankRepository.findAll(pageable);
+        Page<IQQuestion> pagedQuestions = questionBankRepository.findAll(pageable);
 
         // NOT FOUND EXCEPTION HANDLE
         if (pagedQuestions.isEmpty()) {
@@ -105,20 +105,20 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
     }
 
     @Override
-    public ResponseEntity<?> update(String id, VerbalQuestionDTO questionBankDTO) {
+    public ResponseEntity<?> update(String id, IQQuestionDTO questionBankDTO) {
         // VALIDATE THE LANGUAGE AGAINST ENUM VALUES
         if (!isValidLanguage(questionBankDTO.getLanguage())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + questionBankDTO.getLanguage());
         }
 
         // FETCH EXISTING QUESTION BY ID
-        Optional<VerbalQuestion> optionalVerbalQuestion = questionBankRepository.findById(id);
+        Optional<IQQuestion> optionalVerbalQuestion = questionBankRepository.findById(id);
         if (optionalVerbalQuestion.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found for the provided ID");
         }
 
         // UPDATE EXISTING QUESTION WITH NEW DATA
-        VerbalQuestion question = optionalVerbalQuestion.get();
+        IQQuestion question = optionalVerbalQuestion.get();
         updateQuestionFromDTO(question, questionBankDTO);
         questionBankRepository.save(question);
 
@@ -128,7 +128,7 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
 
     @Override
     public ResponseEntity<?> delete(String id) {
-        Optional<VerbalQuestion> question = questionBankRepository.findById(id);
+        Optional<IQQuestion> question = questionBankRepository.findById(id);
 
         // NOT FOUND EXCEPTION HANDLE
         if (question.isEmpty()) {
@@ -151,31 +151,25 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
     }
 
     // BUILD A VERBAL QUESTION OBJECT FROM DTO
-    private VerbalQuestion buildVerbalQuestion(VerbalQuestionDTO dto) {
-        VerbalQuestion question = VerbalQuestion.builder()
+    private IQQuestion buildIQQuestion(IQQuestionDTO dto) {
+        IQQuestion question = IQQuestion.builder()
                 .questionNumber(dto.getQuestionNumber())
                 .language(dto.getLanguage())
-                .answers(dto.getAnswers())
-                .correctAnswer(dto.getCorrectAnswer())
                 .build();
 
         encodeToBase64BasedOnLanguage(dto, question);
-
         return question;
     }
 
     // UPDATE EXISTING QUESTION
-    private void updateQuestionFromDTO(VerbalQuestion question, VerbalQuestionDTO dto) {
+    private void updateQuestionFromDTO(IQQuestion question, IQQuestionDTO dto) {
         question.setLanguage(dto.getLanguage());
-        question.setAnswers(dto.getAnswers());
-        question.setCorrectAnswer(dto.getCorrectAnswer());
-
         encodeToBase64BasedOnLanguage(dto, question);
     }
 
     // MAP VERBAL QUESTION TO DTO
-    private VerbalQuestionDTO mapToDTO(VerbalQuestion question) {
-        return VerbalQuestionDTO.builder()
+    private IQQuestionDTO mapToDTO(IQQuestion question) {
+        return IQQuestionDTO.builder()
                 .questionNumber(question.getQuestionNumber())
                 .language(question.getLanguage())
                 .question(question.getQuestion())
@@ -185,18 +179,28 @@ public class VerbalQuestionServiceImpl implements VerbalQuestionService {
     }
 
     // METHOD TO GET A RANDOM QUESTION FROM A LIST QUESTIONS
-    private VerbalQuestion getRandomQuestion(List<VerbalQuestion> questions) {
+    private IQQuestion getRandomQuestion(List<IQQuestion> questions) {
         Random random = new Random();
         int randomIndex = random.nextInt(questions.size());
         return questions.get(randomIndex);
     }
 
-    private void encodeToBase64BasedOnLanguage(VerbalQuestionDTO dto, VerbalQuestion question) {
+    private void encodeToBase64BasedOnLanguage(IQQuestionDTO dto, IQQuestion question) {
         if(!dto.getLanguage().name().equals(Language.English.name())){
             question.setQuestion(encodeToBase64(dto.getQuestion()));
+            question.setAnswers(encodeListToBase64(dto.getAnswers()));
+            question.setCorrectAnswer(encodeToBase64(dto.getCorrectAnswer()));
         }else{
             question.setQuestion(dto.getQuestion());
+            question.setAnswers(dto.getAnswers());
+            question.setCorrectAnswer(dto.getCorrectAnswer());
         }
+    }
+
+    private List<String> encodeListToBase64(List<String> answers) {
+        return answers.stream()
+                .map(answer -> Base64.getEncoder().encodeToString(answer.getBytes()))
+                .collect(Collectors.toList());
     }
 
     private String encodeToBase64(String value) {

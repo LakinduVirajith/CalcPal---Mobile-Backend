@@ -2,7 +2,7 @@ name: Build and Deploy CalcPal Mobile Backend Application
 
 on:
   push:
-    branches: [main, development]
+    branches: [main, release/1.0.0]
 
 jobs:
   cd-pipeline:
@@ -23,6 +23,7 @@ jobs:
           - visual-diagnosis-service
           - practognostic-diagnosis-service
           - graphical-diagnosis-service
+          - iq-test-service
 
     steps:
       - name: Checkout Repository

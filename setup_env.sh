@@ -30,3 +30,6 @@ sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/confi
 
 # REPLACE PLACEHOLDERS IN GRAPHICAL DIAGNOSIS YAML
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/graphical-diagnosis-service.yaml
+
+# REPLACE PLACEHOLDERS IN IQ TEST YAML
+sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/iq-test-service.yaml

@@ -2,7 +2,7 @@ name: Test and Build CalcPal Mobile Backend Application
 
 on:
   pull_request:
-    branches: [main, development]
+    branches: [release/1.0.0, development]
 
 jobs:
   ci-pipeline:
@@ -24,6 +24,7 @@ jobs:
           - visual-diagnosis-service
           - practognostic-diagnosis-service
           - graphical-diagnosis-service
+          - iq-test-service
 
     steps:
       - name: Checkout Repository
