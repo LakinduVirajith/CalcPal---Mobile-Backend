@@ -9,7 +9,7 @@ import java.util.List;
 public interface LexicalQuestionService {
     ResponseEntity<?> add(LexicalQuestionDTO questionDTO);
 
-    ResponseEntity<?> addAll(List<LexicalQuestionDTO> questionDTOS);
+    ResponseEntity<?> addAll(List<LexicalQuestionDTO> questionDTOList);
 
     ResponseEntity<?> getRandom(Long id);
 

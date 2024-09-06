@@ -71,7 +71,7 @@ public class LexicalActivityServiceImpl implements LexicalActivityService{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + language);
         }
 
-        // FETCH QUESTIONS BY QUESTION NUMBER AND FILTER BY LANGUAGE
+        // FETCH ACTIVITY BY QUESTION NUMBER AND FILTER BY LANGUAGE
         List<LexicalActivity> questions = activityBankRepository.findByActivityNumber(id);
         List<LexicalActivity> filteredActivities = questions.stream()
                 .filter(q -> q.getLanguage().name().equalsIgnoreCase(language))

@@ -27,8 +27,8 @@ public class LexicalQuestionController {
 
     @PostMapping("/all")
     @Operation(summary = "Add Lexical Questions", description = "Add a new lexical questions to the question bank.")
-    public ResponseEntity<?> addAll(@Valid @RequestBody List<LexicalQuestionDTO> questionDTOS) {
-        return questionBankService.addAll(questionDTOS);
+    public ResponseEntity<?> addAll(@Valid @RequestBody List<LexicalQuestionDTO> questionDTOList) {
+        return questionBankService.addAll(questionDTOList);
     }
 
     @GetMapping("/{id}")

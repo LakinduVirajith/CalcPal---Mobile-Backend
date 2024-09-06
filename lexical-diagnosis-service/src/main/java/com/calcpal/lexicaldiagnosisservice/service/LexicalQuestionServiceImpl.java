@@ -34,15 +34,15 @@ public class LexicalQuestionServiceImpl implements LexicalQuestionService{
     }
 
     @Override
-    public ResponseEntity<?> addAll(List<LexicalQuestionDTO> questionDTOS) {
+    public ResponseEntity<?> addAll(List<LexicalQuestionDTO> questionDTOList) {
         // CHECK IF THE LIST HAS MORE THAN 10 ITEMS
-        if (questionDTOS.size() > 10) {
+        if (questionDTOList.size() > 10) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Cannot add more than 10 questions at once.");
         }
 
         // BUILD LEXICAL QUESTION OBJECTS
-        List<LexicalQuestion> questions = questionDTOS.stream()
+        List<LexicalQuestion> questions = questionDTOList.stream()
                 .map(this::buildLexicalQuestion)
                 .collect(Collectors.toList());
 

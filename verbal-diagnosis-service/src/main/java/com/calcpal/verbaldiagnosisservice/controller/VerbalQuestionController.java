@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/verbal/question")
 @Tag(name = "Verbal Question Controllers")
@@ -21,6 +23,12 @@ public class VerbalQuestionController {
     @Operation(summary = "Add Verbal Question", description = "Add a new verbal question to the question bank.")
     public ResponseEntity<?> add(@Valid @RequestBody VerbalQuestionDTO questionBankDTO) {
         return questionBankService.add(questionBankDTO);
+    }
+
+    @PostMapping("/all")
+    @Operation(summary = "Add Verbal Questions", description = "Add a new verbal questions to the question bank.")
+    public ResponseEntity<?> addAll(@Valid @RequestBody List<VerbalQuestionDTO> questionBankDTOList) {
+        return questionBankService.addAll(questionBankDTOList);
     }
 
     @GetMapping("/{id}")
