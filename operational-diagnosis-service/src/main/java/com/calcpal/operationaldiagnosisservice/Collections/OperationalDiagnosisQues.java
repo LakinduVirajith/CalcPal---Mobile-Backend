@@ -27,8 +27,11 @@ public class OperationalDiagnosisQues {
     private String question;
 
     @NotNull
-    private Integer correctAnswer; 
+    private String correctAnswer;
 
     @NotNull
-    private List<Integer> allAnswers; 
+    private String incorrectAnswer1;
+
+    @NotNull
+    private String incorrectAnswer2;
 }

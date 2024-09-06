@@ -25,7 +25,8 @@ public class OperationalDiagnosisQuesServiceImpl implements OperationalDiagnosis
                 .language(questionDTO.getLanguage())
                 .question(questionDTO.getQuestion())
                 .correctAnswer(questionDTO.getCorrectAnswer())
-                .allAnswers(questionDTO.getAllAnswers())
+                .incorrectAnswer1(questionDTO.getIncorrectAnswer1())
+                .incorrectAnswer2(questionDTO.getIncorrectAnswer2())
                 .build();
 
         questionBankRepository.save(question);
@@ -48,7 +49,8 @@ public class OperationalDiagnosisQuesServiceImpl implements OperationalDiagnosis
                 .language(randomQuestion.getLanguage())
                 .question(randomQuestion.getQuestion())
                 .correctAnswer(randomQuestion.getCorrectAnswer())
-                .allAnswers(randomQuestion.getAllAnswers())
+                .incorrectAnswer1(randomQuestion.getIncorrectAnswer1())
+                .incorrectAnswer2(randomQuestion.getIncorrectAnswer2())
                 .build();
 
         return ResponseEntity.ok().body(question);
@@ -84,7 +86,8 @@ public class OperationalDiagnosisQuesServiceImpl implements OperationalDiagnosis
         question.setLanguage(questionDTO.getLanguage());
         question.setQuestion(questionDTO.getQuestion());
         question.setCorrectAnswer(questionDTO.getCorrectAnswer());
-        question.setAllAnswers(questionDTO.getAllAnswers());
+        question.setIncorrectAnswer1(questionDTO.getIncorrectAnswer1());
+        question.setIncorrectAnswer2(questionDTO.getIncorrectAnswer2());
 
         questionBankRepository.save(question);
 
