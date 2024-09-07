@@ -28,6 +28,10 @@ public class DiagnosisQuestionPractognostic {
     @NotNull
     private String question;
 
+    private String questionText;
+
+    private String imageType;
+
     @NotNull
     private String answer;
 

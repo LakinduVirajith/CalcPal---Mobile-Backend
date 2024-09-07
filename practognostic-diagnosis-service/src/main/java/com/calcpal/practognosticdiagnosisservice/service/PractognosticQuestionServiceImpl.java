@@ -26,6 +26,12 @@ public class PractognosticQuestionServiceImpl implements PractognosticQuestionSe
                     .question(questionDTO.getQuestion())
                     .answer(questionDTO.getAnswer())
                     .build();
+        if(!questionDTO.getQuestionText().isEmpty()){
+            question.setQuestionText(questionDTO.getQuestionText());
+        }
+        if(!questionDTO.getImageType().isEmpty()){
+            question.setImageType(questionDTO.getImageType());
+        }
 
         practognosticQuestionRepository.save(question);
 
@@ -51,6 +57,13 @@ public class PractognosticQuestionServiceImpl implements PractognosticQuestionSe
                 .question(randomQuestion.getQuestion())
                 .answer(randomQuestion.getAnswer())
                 .build();
+
+        if(!randomQuestion.getQuestionText().isEmpty()){
+            question.setQuestionText(randomQuestion.getQuestionText());
+        }
+        if(!randomQuestion.getImageType().isEmpty()){
+            question.setImageType(randomQuestion.getImageType());
+        }
 
         return ResponseEntity.ok().body(question);
     }
@@ -81,6 +94,12 @@ public class PractognosticQuestionServiceImpl implements PractognosticQuestionSe
         question.setQuestionNumber(questionDTO.getQuestionNumber());
         question.setLanguage(questionDTO.getLanguage());
         question.setQuestion(questionDTO.getQuestion());
+        if(!questionDTO.getQuestionText().isEmpty()){
+            question.setQuestionText(questionDTO.getQuestionText());
+        }
+        if(!questionDTO.getImageType().isEmpty()){
+            question.setImageType(questionDTO.getImageType());
+        }
         question.setAnswer(questionDTO.getAnswer());
 
         practognosticQuestionRepository.save(question);

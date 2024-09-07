@@ -1,6 +1,6 @@
 spring:
   application:
-    name: verbal-diagnosis-service
+    name: iq-test-service
   profiles:
     active: dev
   config:
