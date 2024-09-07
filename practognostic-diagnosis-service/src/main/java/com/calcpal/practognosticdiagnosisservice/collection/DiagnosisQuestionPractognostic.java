@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Document("Question_Bank")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
@@ -33,6 +35,9 @@ public class DiagnosisQuestionPractognostic {
     private String imageType;
 
     @NotNull
-    private String answer;
+    private List<String> answers;
+
+    @NotNull
+    private String correctAnswer;
 
 }
