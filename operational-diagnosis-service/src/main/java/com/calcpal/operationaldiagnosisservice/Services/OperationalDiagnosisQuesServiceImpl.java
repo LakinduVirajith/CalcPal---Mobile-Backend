@@ -2,7 +2,7 @@ package com.calcpal.operationaldiagnosisservice.Services;
 
 import com.calcpal.operationaldiagnosisservice.Collections.OperationalDiagnosisQues;
 import com.calcpal.operationaldiagnosisservice.DTO.QuestionDTO;
-import com.calcpal.operationaldiagnosisservice.Repositary.OperationalQuestionRepo;
+import com.calcpal.operationaldiagnosisservice.Repositary.OperationalDiagnosisQuesRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class OperationalDiagnosisQuesServiceImpl implements OperationalDiagnosisQuesService {
 
-    private final OperationalQuestionRepo questionBankRepository;
+    private final OperationalDiagnosisQuesRepo questionBankRepository;
 
     @Override
     public ResponseEntity<?> add(QuestionDTO questionDTO) {

@@ -1,4 +1,4 @@
-package com.calcpal.operationaldiagnosisservice.Collections;
+package com.calcpal.sequentialdiagnosisservice.collection;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
@@ -15,13 +15,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class operationalDiagnosis {
-
+public class DiagnosisResult {
     @Id
     private String userEmail;
 
     @NotNull
-    private Long quizTimeTaken;
+    private Long timeSeconds;
 
     @NotNull
     private Boolean q1;
@@ -39,8 +38,7 @@ public class operationalDiagnosis {
     private Boolean q5;
 
     @NotNull
-    private String score;
+    private String totalScore;
 
-    private Boolean diagnosis;
-
+    private Boolean label;
 }
