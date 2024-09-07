@@ -3,6 +3,8 @@ package com.calcpal.operationaldiagnosisservice.Collections;
 import com.calcpal.operationaldiagnosisservice.enums.Language;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
