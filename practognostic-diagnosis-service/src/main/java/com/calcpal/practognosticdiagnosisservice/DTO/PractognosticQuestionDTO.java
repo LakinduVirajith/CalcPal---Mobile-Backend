@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -26,7 +28,11 @@ public class PractognosticQuestionDTO {
     private String imageType;
 
     @NotNull
-    private String answer;
+    private List<String> answers;
 
-    
+    @NotNull
+    private String correctAnswer;
+
+
+
 }
