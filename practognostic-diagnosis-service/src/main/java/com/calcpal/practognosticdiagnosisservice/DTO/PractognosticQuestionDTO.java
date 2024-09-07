@@ -21,6 +21,12 @@ public class PractognosticQuestionDTO {
     @NotNull
     private String question;
 
+    private String questionText;
+
+    private int imageType;
+
     @NotNull
     private String answer;
+
+    
 }
