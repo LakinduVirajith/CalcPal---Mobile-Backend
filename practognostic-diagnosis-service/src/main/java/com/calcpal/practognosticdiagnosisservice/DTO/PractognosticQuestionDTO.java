@@ -32,7 +32,4 @@ public class PractognosticQuestionDTO {
 
     @NotNull
     private String correctAnswer;
-
-
-
 }

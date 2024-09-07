@@ -27,10 +27,10 @@ public class PractognosticQuestionServiceImpl implements PractognosticQuestionSe
                     .answers(questionDTO.getAnswers())
                     .correctAnswer(questionDTO.getCorrectAnswer())
                     .build();
-        if(!questionDTO.getQuestionText().isEmpty()){
+        if(questionDTO.getQuestionText() != null){
             question.setQuestionText(questionDTO.getQuestionText());
         }
-        if(!questionDTO.getImageType().isEmpty()){
+        if(questionDTO.getImageType() != null){
             question.setImageType(questionDTO.getImageType());
         }
 
@@ -60,10 +60,10 @@ public class PractognosticQuestionServiceImpl implements PractognosticQuestionSe
                 .correctAnswer(randomQuestion.getCorrectAnswer())
                 .build();
 
-        if(!randomQuestion.getQuestionText().isEmpty()){
+        if(randomQuestion.getQuestionText() != null){
             question.setQuestionText(randomQuestion.getQuestionText());
         }
-        if(!randomQuestion.getImageType().isEmpty()){
+        if(randomQuestion.getImageType() != null){
             question.setImageType(randomQuestion.getImageType());
         }
 
@@ -96,10 +96,11 @@ public class PractognosticQuestionServiceImpl implements PractognosticQuestionSe
         question.setQuestionNumber(questionDTO.getQuestionNumber());
         question.setLanguage(questionDTO.getLanguage());
         question.setQuestion(questionDTO.getQuestion());
-        if(!questionDTO.getQuestionText().isEmpty()){
+        
+        if(questionDTO.getQuestionText() != null){
             question.setQuestionText(questionDTO.getQuestionText());
         }
-        if(!questionDTO.getImageType().isEmpty()){
+        if(questionDTO.getImageType() != null){
             question.setImageType(questionDTO.getImageType());
         }
         question.setAnswers(questionDTO.getAnswers());
