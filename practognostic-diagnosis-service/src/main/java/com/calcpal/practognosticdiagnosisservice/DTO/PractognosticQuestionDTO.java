@@ -23,7 +23,7 @@ public class PractognosticQuestionDTO {
 
     private String questionText;
 
-    private int imageType;
+    private String imageType;
 
     @NotNull
     private String answer;
