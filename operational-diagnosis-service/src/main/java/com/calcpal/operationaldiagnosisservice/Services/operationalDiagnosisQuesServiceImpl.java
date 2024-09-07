@@ -1,8 +1,8 @@
 package com.calcpal.operationaldiagnosisservice.Services;
 
-import com.calcpal.operationaldiagnosisservice.Collections.operationalDiagnosisQues;
+import com.calcpal.operationaldiagnosisservice.Collections.OperationalDiagnosisQues;
 import com.calcpal.operationaldiagnosisservice.DTO.QuestionDTO;
-import com.calcpal.operationaldiagnosisservice.Repositary.operationalDiagnosisQuesRepo;
+import com.calcpal.operationaldiagnosisservice.Repositary.OperationalQuestionRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -14,19 +14,18 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class operationalDiagnosisQuesServiceImpl implements operationalDiagnosisQuesService{
+public class OperationalDiagnosisQuesServiceImpl implements OperationalDiagnosisQuesService {
 
-    private final operationalDiagnosisQuesRepo questionBankRepository;
+    private final OperationalQuestionRepo questionBankRepository;
 
     @Override
     public ResponseEntity<?> add(QuestionDTO questionDTO) {
-        operationalDiagnosisQues question =  operationalDiagnosisQues.builder()
+        OperationalDiagnosisQues question =  OperationalDiagnosisQues.builder()
                 .questionNumber(questionDTO.getQuestionNumber())
                 .language(questionDTO.getLanguage())
                 .question(questionDTO.getQuestion())
                 .correctAnswer(questionDTO.getCorrectAnswer())
-                .incorrectAnswer1(questionDTO.getIncorrectAnswer1())
-                .incorrectAnswer2(questionDTO.getIncorrectAnswer2())
+                .allAnswers(questionDTO.getAllAnswers())
                 .build();
 
         questionBankRepository.save(question);
@@ -36,27 +35,26 @@ public class operationalDiagnosisQuesServiceImpl implements operationalDiagnosis
 
     @Override
     public ResponseEntity<?> getRandom(Long id) {
-        List<operationalDiagnosisQues> questions = questionBankRepository.findByQuestionNumber(id);
+        List<OperationalDiagnosisQues> questions = questionBankRepository.findByQuestionNumber(id);
 
         if (questions.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the given question number");
         }
 
-        operationalDiagnosisQues randomQuestion = getRandomQuestion(questions);
+        OperationalDiagnosisQues randomQuestion = getRandomQuestion(questions);
 
         QuestionDTO question = QuestionDTO.builder()
                 .questionNumber(randomQuestion.getQuestionNumber())
                 .language(randomQuestion.getLanguage())
                 .question(randomQuestion.getQuestion())
                 .correctAnswer(randomQuestion.getCorrectAnswer())
-                .incorrectAnswer1(randomQuestion.getIncorrectAnswer1())
-                .incorrectAnswer2(randomQuestion.getIncorrectAnswer2())
+                .allAnswers(randomQuestion.getAllAnswers())
                 .build();
 
         return ResponseEntity.ok().body(question);
     }
 
-    private operationalDiagnosisQues getRandomQuestion(List<operationalDiagnosisQues> questions) {
+    private OperationalDiagnosisQues getRandomQuestion(List<OperationalDiagnosisQues> questions) {
         Random random = new Random();
         int randomIndex = random.nextInt(questions.size());
         return questions.get(randomIndex);
@@ -64,7 +62,7 @@ public class operationalDiagnosisQuesServiceImpl implements operationalDiagnosis
 
     @Override
     public ResponseEntity<?> getAll() {
-        List<operationalDiagnosisQues> questions = questionBankRepository.findAll();
+        List<OperationalDiagnosisQues> questions = questionBankRepository.findAll();
 
         if (questions.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions are currently available in the collection");
@@ -75,19 +73,18 @@ public class operationalDiagnosisQuesServiceImpl implements operationalDiagnosis
 
     @Override
     public ResponseEntity<?> update(String id, QuestionDTO questionDTO) {
-        Optional<operationalDiagnosisQues> optionalVerbalQuestion = questionBankRepository.findById(id);
+        Optional<OperationalDiagnosisQues> optionalVerbalQuestion = questionBankRepository.findById(id);
 
         if (optionalVerbalQuestion.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No operational questions found for the provided ID");
         }
-        operationalDiagnosisQues question = optionalVerbalQuestion.get();
+        OperationalDiagnosisQues question = optionalVerbalQuestion.get();
 
         question.setQuestionNumber(questionDTO.getQuestionNumber());
         question.setLanguage(questionDTO.getLanguage());
         question.setQuestion(questionDTO.getQuestion());
         question.setCorrectAnswer(questionDTO.getCorrectAnswer());
-        question.setIncorrectAnswer1(questionDTO.getIncorrectAnswer1());
-        question.setIncorrectAnswer2(questionDTO.getIncorrectAnswer2());
+        question.setAllAnswers(questionDTO.getAllAnswers());
 
         questionBankRepository.save(question);
 
@@ -96,7 +93,7 @@ public class operationalDiagnosisQuesServiceImpl implements operationalDiagnosis
 
     @Override
     public ResponseEntity<?> delete(String id) {
-        Optional<operationalDiagnosisQues> question = questionBankRepository.findById(id);
+        Optional<OperationalDiagnosisQues> question = questionBankRepository.findById(id);
 
         if (question.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No operational questions found for the provided ID");
