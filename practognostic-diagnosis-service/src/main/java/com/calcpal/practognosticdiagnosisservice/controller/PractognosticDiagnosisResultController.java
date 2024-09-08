@@ -18,25 +18,25 @@ public class PractognosticDiagnosisResultController {
     private final PractognosticDiagnosisResultService practognosticDiagnosisResultService;
 
     @PostMapping("/")
-    @Operation(summary = "Add Practognostic Diagnosis Result", description = "Add a new Practognostic diagnosis result to the database.")
+    @Operation(summary = "Add Practognostic Diagnosis Result", description = "Add a new practognostic diagnosis result to the database.")
     public ResponseEntity<?> add(@Valid @RequestBody DiagnosisResultPractognostic practognosticDiagnosis) {
         return practognosticDiagnosisResultService.add(practognosticDiagnosis);
     }
 
     @GetMapping("/")
-    @Operation(summary = "Get Lexical Diagnosis Result by Email", description = "Retrieve a lexical diagnosis result from the database by email.")
+    @Operation(summary = "Get Lexical Diagnosis Result by Email", description = "Retrieve a practognostic diagnosis result from the database by email.")
     public ResponseEntity<?> get(@RequestParam String email) {
         return practognosticDiagnosisResultService.get(email);
     }
 
     @GetMapping("/all")
-    @Operation(summary = "Get All Lexical Diagnoses Result", description = "Retrieve all lexical diagnoses result from the database.")
+    @Operation(summary = "Get All Lexical Diagnoses Result", description = "Retrieve all practognostic diagnoses result from the database.")
     public ResponseEntity<?> getAll() {
         return practognosticDiagnosisResultService.getAll();
     }
 
     @PutMapping("/")
-    @Operation(summary = "Update Lexical Diagnosis Result", description = "Update a lexical diagnosis result in the database.")
+    @Operation(summary = "Update Lexical Diagnosis Result", description = "Update a practognostic diagnosis result in the database.")
     public ResponseEntity<?> update(@Valid @RequestBody DiagnosisResultPractognostic practognosticDiagnosis) {
         return practognosticDiagnosisResultService.update(practognosticDiagnosis);
     }
