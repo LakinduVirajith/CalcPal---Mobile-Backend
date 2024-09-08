@@ -18,15 +18,33 @@ public class PractognosticDiagnosisResultServiceImpl implements PractognosticDia
     private final PractognosticDiagnosisResultRepository practognosticDiagnosisResultRepository;
     @Override
     public ResponseEntity<?> add(DiagnosisResultPractognostic practognosticDiagnosis) {
-        Optional<DiagnosisResultPractognostic> diagnosis = practognosticDiagnosisResultRepository.findById(practognosticDiagnosis.getUserEmail());
+        Optional<DiagnosisResultPractognostic> optionalDiagnosis = practognosticDiagnosisResultRepository.findById(practognosticDiagnosis.getUserEmail());
 
-        if(diagnosis.isPresent()){
-            update(diagnosis.get());
+        if(optionalDiagnosis.isPresent()){
+            DiagnosisResultPractognostic diagnosisResult = mappingDiagnosisResult(practognosticDiagnosis, optionalDiagnosis.get());
+            practognosticDiagnosisResultRepository.save(diagnosisResult);
+            return ResponseEntity.ok().body("Diagnosis data updated successfully");
         }else{
             practognosticDiagnosisResultRepository.save(practognosticDiagnosis);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Diagnosis result inserted successfully");
+        }
+    }
+
+    private static DiagnosisResultPractognostic mappingDiagnosisResult(DiagnosisResultPractognostic diagnosisResult, DiagnosisResultPractognostic existingResult) {
+        // MAPPING QUESTION DATA
+        existingResult.setTimeSeconds(diagnosisResult.getTimeSeconds());
+        existingResult.setQ1(diagnosisResult.getQ1());
+        existingResult.setQ2(diagnosisResult.getQ2());
+        existingResult.setQ3(diagnosisResult.getQ3());
+        existingResult.setQ4(diagnosisResult.getQ4());
+        existingResult.setQ5(diagnosisResult.getQ5());
+        existingResult.setTotalScore(diagnosisResult.getTotalScore());
+
+        if(existingResult.getLabel() != null){
+            existingResult.setLabel(diagnosisResult.getLabel());
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("diagnosis result inserted successfully");
+        return diagnosisResult;
     }
 
     @Override
@@ -35,7 +53,7 @@ public class PractognosticDiagnosisResultServiceImpl implements PractognosticDia
 
         // NOT FOUND EXCEPTION HANDLE
         if(optionalVerbalDiagnosis.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis found for the given user");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the given user");
         }
         DiagnosisResultPractognostic diagnosis = optionalVerbalDiagnosis.get();
 
@@ -48,25 +66,13 @@ public class PractognosticDiagnosisResultServiceImpl implements PractognosticDia
 
         // NOT FOUND EXCEPTION HANDLE
         if (optionalVerbalDiagnosis.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis found for the provided user");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the provided user");
         }
-        DiagnosisResultPractognostic diagnosis = optionalVerbalDiagnosis.get();
 
-        // MAPPING QUESTION DATA
-        diagnosis.setTimeSeconds(practognosticDiagnosis.getTimeSeconds());
-        diagnosis.setQ1(practognosticDiagnosis.getQ1());
-        diagnosis.setQ2(practognosticDiagnosis.getQ2());
-        diagnosis.setQ3(practognosticDiagnosis.getQ3());
-        diagnosis.setQ4(practognosticDiagnosis.getQ4());
-        diagnosis.setQ5(practognosticDiagnosis.getQ5());
-        diagnosis.setTotalScore(practognosticDiagnosis.getTotalScore());
+        DiagnosisResultPractognostic diagnosisResult = mappingDiagnosisResult(practognosticDiagnosis, optionalVerbalDiagnosis.get());
+        practognosticDiagnosisResultRepository.save(diagnosisResult);
 
-        if(diagnosis.getLabel() != null){
-            diagnosis.setLabel(practognosticDiagnosis.getLabel());
-        }
-        practognosticDiagnosisResultRepository.save(diagnosis);
-
-        return ResponseEntity.ok().body("diagnosis data updated successfully");
+        return ResponseEntity.ok().body("Diagnosis data updated successfully");
     }
 
     @Override
@@ -75,7 +81,7 @@ public class PractognosticDiagnosisResultServiceImpl implements PractognosticDia
 
         // NOT FOUND EXCEPTION HANDLE
         if (optionalVerbalDiagnosis.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis found for the provided user");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the provided user");
         }
         DiagnosisResultPractognostic diagnosis = optionalVerbalDiagnosis.get();
 
@@ -83,7 +89,7 @@ public class PractognosticDiagnosisResultServiceImpl implements PractognosticDia
         diagnosis.setLabel(practognosticDiagnosisLabelDTO.getLabel());
         practognosticDiagnosisResultRepository.save(diagnosis);
 
-        return ResponseEntity.ok().body("diagnosis label updated successfully");
+        return ResponseEntity.ok().body("Diagnosis label updated successfully");
     }
 
     @Override
@@ -92,7 +98,7 @@ public class PractognosticDiagnosisResultServiceImpl implements PractognosticDia
 
         // NOT FOUND EXCEPTION HANDLE
         if (diagnosisList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no diagnosis are currently available in the collection");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis are currently available in the collection");
         }
 
         return ResponseEntity.ok().body(diagnosisList);

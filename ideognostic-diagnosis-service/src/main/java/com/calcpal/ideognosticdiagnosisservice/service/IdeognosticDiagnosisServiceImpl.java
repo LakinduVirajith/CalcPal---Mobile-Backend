@@ -19,15 +19,33 @@ public class IdeognosticDiagnosisServiceImpl implements IdeognosticDiagnosisServ
 
     @Override
     public ResponseEntity<?> add(IdeognosticDiagnosis ideognosticDiagnosis) {
-        Optional<IdeognosticDiagnosis> diagnosis = diagnosisResultRepository.findById(ideognosticDiagnosis.getUserEmail());
+        Optional<IdeognosticDiagnosis> optionalDiagnosis = diagnosisResultRepository.findById(IdeognosticDiagnosis.getUserEmail());
 
-        if(diagnosis.isPresent()){
-            update(diagnosis.get());
+        if(optionalDiagnosis.isPresent()){
+            IdeognosticDiagnosis diagnosisResult = mappingDiagnosisResult(ideognosticDiagnosis, optionalDiagnosis.get());
+            diagnosisResultRepository.save(diagnosisResult);
+            return ResponseEntity.ok().body("Diagnosis data updated successfully");
         }else{
             diagnosisResultRepository.save(ideognosticDiagnosis);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Diagnosis result inserted successfully");
+        }
+    }
+
+    private static IdeognosticDiagnosis mappingDiagnosisResult(IdeognosticDiagnosis diagnosisResult, IdeognosticDiagnosis existingResult) {
+        // MAPPING QUESTION DATA
+        existingResult.setTimeSeconds(diagnosisResult.getTimeSeconds());
+        existingResult.setQ1(diagnosisResult.getQ1());
+        existingResult.setQ2(diagnosisResult.getQ2());
+        existingResult.setQ3(diagnosisResult.getQ3());
+        existingResult.setQ4(diagnosisResult.getQ4());
+        existingResult.setQ5(diagnosisResult.getQ5());
+        existingResult.setScore(diagnosisResult.getScore());
+
+        if(existingResult.getDiagnosis() != null){
+            existingResult.setDiagnosis(diagnosisResult.getDiagnosis());
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Ideognostic diagnosis result inserted successfully");
+        return diagnosisResult;
     }
 
     @Override
@@ -46,8 +64,9 @@ public class IdeognosticDiagnosisServiceImpl implements IdeognosticDiagnosisServ
     public ResponseEntity<?> getAll() {
         List<IdeognosticDiagnosis> diagnosisList = diagnosisResultRepository.findAll();
 
+        // NOT FOUND EXCEPTION HANDLE
         if (diagnosisList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Ideognostic diagnosis are currently available in the collection");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis are currently available in the collection");
         }
 
         return ResponseEntity.ok().body(diagnosisList);
@@ -57,39 +76,31 @@ public class IdeognosticDiagnosisServiceImpl implements IdeognosticDiagnosisServ
     public ResponseEntity<?> update(IdeognosticDiagnosis ideognosticDiagnosis) {
         Optional<IdeognosticDiagnosis> optionalVerbalDiagnosis = diagnosisResultRepository.findById(ideognosticDiagnosis.getUserEmail());
 
+        // NOT FOUND EXCEPTION HANDLE
         if (optionalVerbalDiagnosis.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Ideognostic diagnosis found for the provided user");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the provided user");
         }
-        IdeognosticDiagnosis diagnosis = optionalVerbalDiagnosis.get();
 
-        diagnosis.setTimeSeconds(ideognosticDiagnosis.getTimeSeconds());
-        diagnosis.setQ1(ideognosticDiagnosis.getQ1());
-        diagnosis.setQ2(ideognosticDiagnosis.getQ2());
-        diagnosis.setQ3(ideognosticDiagnosis.getQ3());
-        diagnosis.setQ4(ideognosticDiagnosis.getQ4());
-        diagnosis.setQ5(ideognosticDiagnosis.getQ5());
-        diagnosis.setScore(ideognosticDiagnosis.getScore());
+        IdeognosticDiagnosis diagnosisResult = mappingDiagnosisResult(ideognosticDiagnosis, optionalVerbalDiagnosis.get());
+        diagnosisResultRepository.save(diagnosisResult);
 
-        if(diagnosis.getDiagnosis() != null){
-            diagnosis.setDiagnosis(ideognosticDiagnosis.getDiagnosis());
-        }
-        diagnosisResultRepository.save(diagnosis);
-
-        return ResponseEntity.ok().body("Ideognostic diagnosis data updated successfully");
+        return ResponseEntity.ok().body("Diagnosis data updated successfully");
     }
 
     @Override
     public ResponseEntity<?> updateLabel(DiagnosisDTO diagnosisLabelDTO) {
-        Optional<IdeognosticDiagnosis> Diagnosis = diagnosisResultRepository.findById(diagnosisLabelDTO.getUserEmail());
+        Optional<IdeognosticDiagnosis> optionalVerbalDiagnosis = diagnosisResultRepository.findById(diagnosisLabelDTO.getUserEmail());
 
-        if (Diagnosis.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Ideognostic diagnosis found for the provided user");
+        // NOT FOUND EXCEPTION HANDLE
+        if (optionalVerbalDiagnosis.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the provided user");
         }
-        IdeognosticDiagnosis diagnosis = Diagnosis.get();
+        IdeognosticDiagnosis diagnosis = optionalVerbalDiagnosis.get();
 
+        // MAPPING QUESTION DATA AND SAVE
         diagnosis.setDiagnosis(diagnosisLabelDTO.getLabel());
         diagnosisResultRepository.save(diagnosis);
 
-        return ResponseEntity.ok().body("Ideognostic diagnosis label updated successfully");
+        return ResponseEntity.ok().body("Diagnosis label updated successfully");
     }
 }

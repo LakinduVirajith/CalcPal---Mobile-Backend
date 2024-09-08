@@ -113,10 +113,11 @@ public class UserServiceImpl implements UserService{
     public ResponseEntity<?> login(AuthenticationRequest request) {
         Optional<User> userCondition = userRepository.findByEmail(request.getEmail());
 
-        // ASSIGN USER DATA
-        User user = userCondition.orElseThrow(() -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND, "No user found with the provided email address."
-        ));
+        // VERIFY THE EMAIL
+        if(userCondition.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user found with the provided email address.");
+        }
+        User user = userCondition.get();
 
         // CHECK ACCOUNT STATUS
         if(!user.getIsActive()){
@@ -263,8 +264,8 @@ public class UserServiceImpl implements UserService{
         }
 
         // CHECK IF THE DISORDER TYPE INDICATES REMOVAL (E.G., "noVerbal")
-        if (disorderType.contains("no")) {
-            String disorder = disorderType.replaceFirst("no", "");
+        if (disorderType.contains("non")) {
+            String disorder = disorderType.replaceFirst("non", "");
         
             // REMOVE THE DISORDER TYPE IF IT EXISTS IN THE LIST
             boolean remove = user.getDisorderTypes().remove(disorder.toLowerCase());
