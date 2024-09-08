@@ -19,7 +19,7 @@ public class IdeognosticDiagnosisServiceImpl implements IdeognosticDiagnosisServ
 
     @Override
     public ResponseEntity<?> add(IdeognosticDiagnosis ideognosticDiagnosis) {
-        Optional<IdeognosticDiagnosis> optionalDiagnosis = diagnosisResultRepository.findById(IdeognosticDiagnosis.getUserEmail());
+        Optional<IdeognosticDiagnosis> optionalDiagnosis = diagnosisResultRepository.findById(ideognosticDiagnosis.getUserEmail());
 
         if(optionalDiagnosis.isPresent()){
             IdeognosticDiagnosis diagnosisResult = mappingDiagnosisResult(ideognosticDiagnosis, optionalDiagnosis.get());
