@@ -19,27 +19,44 @@ public class OperationalDiagnosisServiceImpl implements OperationalDiagnosisServ
 
     @Override
     public ResponseEntity<?> add(OperationalDiagnosis OperationalDiagnosis) {
-        Optional<com.calcpal.operationaldiagnosisservice.Collections.OperationalDiagnosis> diagnosis = diagnosisRepo.findById(OperationalDiagnosis.getUserEmail());
+        Optional<OperationalDiagnosis> optionalDiagnosis = diagnosisRepo.findById(OperationalDiagnosis.getUserEmail());
 
-        if(diagnosis.isPresent()){
-            update(diagnosis.get());
+        if(optionalDiagnosis.isPresent()){
+            OperationalDiagnosis diagnosisResult = mappingDiagnosisResult(OperationalDiagnosis, optionalDiagnosis.get());
+            diagnosisRepo.save(diagnosisResult);
+            return ResponseEntity.ok().body("Diagnosis data updated successfully");
         }else{
             diagnosisRepo.save(OperationalDiagnosis);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Diagnosis result inserted successfully");
+        }
+    }
+
+    private static OperationalDiagnosis mappingDiagnosisResult(OperationalDiagnosis diagnosisResult, OperationalDiagnosis existingResult) {
+        // MAPPING QUESTION DATA
+        existingResult.setQuizTimeTaken(diagnosisResult.getQuizTimeTaken());
+        existingResult.setQ1(diagnosisResult.getQ1());
+        existingResult.setQ2(diagnosisResult.getQ2());
+        existingResult.setQ3(diagnosisResult.getQ3());
+        existingResult.setQ4(diagnosisResult.getQ4());
+        existingResult.setQ5(diagnosisResult.getQ5());
+        existingResult.setScore(diagnosisResult.getScore());
+
+        if(existingResult.getDiagnosis() != null){
+            existingResult.setDiagnosis(diagnosisResult.getDiagnosis());
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Operational diagnosis result inserted successfully");
+        return diagnosisResult;
     }
 
     @Override
     public ResponseEntity<?> get(String email) {
-        Optional<OperationalDiagnosis> OperationalDiagnosis = diagnosisRepo.findById(email);
-        com.calcpal.operationaldiagnosisservice.Collections.OperationalDiagnosis diagnosis;
+        Optional<OperationalDiagnosis> optionalVerbalDiagnosis = diagnosisRepo.findById(email);
 
-        if(OperationalDiagnosis.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Operational diagnosis found for this student");
-        }else{
-            diagnosis = OperationalDiagnosis.get();
+        // NOT FOUND EXCEPTION HANDLE
+        if(optionalVerbalDiagnosis.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the given user");
         }
+        OperationalDiagnosis diagnosis = optionalVerbalDiagnosis.get();
 
         return ResponseEntity.ok().body(diagnosis);
     }
@@ -57,42 +74,34 @@ public class OperationalDiagnosisServiceImpl implements OperationalDiagnosisServ
 
     @Override
     public ResponseEntity<?> update(OperationalDiagnosis OperationalDiagnosis) {
-        Optional<com.calcpal.operationaldiagnosisservice.Collections.OperationalDiagnosis> OperationalDiagnosisObj = diagnosisRepo.findById(OperationalDiagnosis.getUserEmail());
+        Optional<OperationalDiagnosis> optionalVerbalDiagnosis = diagnosisRepo.findById(OperationalDiagnosis.getUserEmail());
 
-        if (OperationalDiagnosisObj.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Operational diagnosis found for this student");
+        // NOT FOUND EXCEPTION HANDLE
+        if (optionalVerbalDiagnosis.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the provided user");
         }
-        com.calcpal.operationaldiagnosisservice.Collections.OperationalDiagnosis diagnosis = OperationalDiagnosisObj.get();
 
-        diagnosis.setQuizTimeTaken(OperationalDiagnosis.getQuizTimeTaken());
-        diagnosis.setQ1(OperationalDiagnosis.getQ1());
-        diagnosis.setQ2(OperationalDiagnosis.getQ2());
-        diagnosis.setQ3(OperationalDiagnosis.getQ3());
-        diagnosis.setQ4(OperationalDiagnosis.getQ4());
-        diagnosis.setQ5(OperationalDiagnosis.getQ5());
-        diagnosis.setScore(OperationalDiagnosis.getScore());
+        OperationalDiagnosis diagnosisResult = mappingDiagnosisResult(OperationalDiagnosis, optionalVerbalDiagnosis.get());
+        diagnosisRepo.save(diagnosisResult);
 
-        if(diagnosis.getDiagnosis() != null){
-            diagnosis.setDiagnosis(OperationalDiagnosis.getDiagnosis());
-        }
-        diagnosisRepo.save(diagnosis);
-
-        return ResponseEntity.ok().body("diagnosis data updated successfully");
+        return ResponseEntity.ok().body("Diagnosis data updated successfully");
     }
 
     @Override
     public ResponseEntity<?> updateLabel(DiagnosisDTO diagnosisLabelDTO) {
-        Optional<OperationalDiagnosis> optionalOperationalDiagnosis = diagnosisRepo.findById(diagnosisLabelDTO.getUserEmail());
+        Optional<OperationalDiagnosis> optionalVerbalDiagnosis = diagnosisRepo.findById(diagnosisLabelDTO.getUserEmail());
 
-        if (optionalOperationalDiagnosis.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Operational diagnosis found for the provided user");
+        // NOT FOUND EXCEPTION HANDLE
+        if (optionalVerbalDiagnosis.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No diagnosis found for the provided user");
         }
-        OperationalDiagnosis diagnosis = optionalOperationalDiagnosis.get();
+        OperationalDiagnosis diagnosis = optionalVerbalDiagnosis.get();
 
+        // MAPPING QUESTION DATA AND SAVE
         diagnosis.setDiagnosis(diagnosisLabelDTO.getLabel());
         diagnosisRepo.save(diagnosis);
 
-        return ResponseEntity.ok().body("Operational Diagnosis updated successfully");
+        return ResponseEntity.ok().body("Diagnosis label updated successfully");
     }
 
 }
