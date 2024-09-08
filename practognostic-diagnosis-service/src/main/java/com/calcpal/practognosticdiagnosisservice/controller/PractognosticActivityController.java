@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/practognosticA/activity")
+@RequestMapping("/api/v1/practognostic/activity")
 @Tag(name = "Practognostic Activity Controllers")
 @RequiredArgsConstructor
 public class PractognosticActivityController {
