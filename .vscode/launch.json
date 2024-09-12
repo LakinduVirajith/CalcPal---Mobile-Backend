@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "SequentialDiagnosisServiceApplication",
+            "request": "launch",
+            "mainClass": "com.calcpal.sequentialdiagnosisservice.SequentialDiagnosisServiceApplication",
+            "projectName": "sequential-diagnosis-service"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceRegistryApplication<service-registry>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.calcpal.serviceregistry.ServiceRegistryApplication",
+            "projectName": "service-registry",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
