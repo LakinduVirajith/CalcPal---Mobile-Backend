@@ -1,0 +1,38 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: user-service
+            uri: lb://user-service
+            predicates:
+              - Path=/api/v1/user/**
+          - id: verbal-diagnosis-service
+            uri: lb://verbal-diagnosis-service
+            predicates:
+              - Path=/api/v1/verbal/**
+          - id: lexical-diagnosis-service
+            uri: lb://lexical-diagnosis-service
+            predicates:
+              - Path=/api/v1/lexical/**
+          - id: operational-diagnosis-service
+            uri: lb://operational-diagnosis-service
+            predicates:
+              - Path=/api/v1/operational/**
+          - id: sequential-diagnosis-service
+            uri: lb://sequential-service
+            predicates:
+              - Path=/api/v1/sequential/**
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

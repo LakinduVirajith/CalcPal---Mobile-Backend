@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: user-service
+  profiles:
+    active: dev
+  config:
+    import: "optional:configserver:http://localhost:8070"
+
+#JWT
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET}
+      expiration: 7200000 #TWO HOURS
+      refresh-token:
+        expiration: 2419200000 #ONE MONTH
+
+#JAVA MAIL
+mail:
+  username: ${MAIL_ADDRESS}
+  password: ${MAIL_APP_PASSWORD}
+  base:
+    url: http://localhost:8081
