@@ -292,7 +292,7 @@ public class UserServiceImpl implements UserService{
         }
 
         // ADD THE DISORDER TYPE TO THE LIST ONLY IF IT DOESN'T ALREADY EXIST
-        if (!user.getDisorderTypes().contains(disorderType)) {
+        if (!user.getDisorderTypes().contains(disorderType.toLowerCase())) {
             user.getDisorderTypes().add(disorderType.toLowerCase());
             userRepository.save(user);
             return ResponseEntity.ok().body("Disorder type has been added successfully.");
