@@ -1,6 +1,7 @@
 package com.calcpal.ideognosticdiagnosisservice.service;
 
-import com.calcpal.ideognosticdiagnosisservice.DTO.IdeognosticQuestionDTO;
+import com.calcpal.ideognosticdiagnosisservice.DTO.IdeognosticQuestionResponseDTO;
+import com.calcpal.ideognosticdiagnosisservice.DTO.IdeognosticQuestionUploadDTO;
 import com.calcpal.ideognosticdiagnosisservice.collection.IdeognosticQuestion;
 import com.calcpal.ideognosticdiagnosisservice.repository.IdeognosticQuestionRepository;
 import jakarta.validation.Valid;
@@ -8,8 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.Random;
 
@@ -20,17 +24,37 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
     private final IdeognosticQuestionRepository questionBankRepository;
 
     @Override
-    public ResponseEntity<?> add(@Valid IdeognosticQuestionDTO questionDTO) {
-        IdeognosticQuestion question =  IdeognosticQuestion.builder()
+    public ResponseEntity<?> add(@Valid IdeognosticQuestionUploadDTO questionDTO) {
+
+        byte[] imageBytes = null;
+
+        if (questionDTO.getImage() != null && !questionDTO.getImage().isEmpty()) {
+            try {
+                imageBytes = questionDTO.getImage().getBytes();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to process image");
+            }
+        }
+
+        IdeognosticQuestion question = IdeognosticQuestion.builder()
                 .questionNumber(questionDTO.getQuestionNumber())
                 .language(questionDTO.getLanguage())
                 .question(questionDTO.getQuestion())
                 .correctAnswer(questionDTO.getCorrectAnswer())
+                .allAnswers(questionDTO.getAllAnswers())
+                .image(imageBytes)  // Store image as byte array
                 .build();
 
+        // Save to the repository
         questionBankRepository.save(question);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Ideognostic question inserted successfully");
+    }
+
+    // Helper method to convert MultipartFile to Base64 String
+    private String encodeImageToBase64(MultipartFile image) throws IOException {
+        return Base64.getEncoder().encodeToString(image.getBytes());
     }
 
     @Override
@@ -45,12 +69,16 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
         // RANDOMLY SELECT ONE QUESTION FORM THE FETCHED LIST
         IdeognosticQuestion randomQuestion = getRandomQuestion(questions);
 
-        // MAPPING QUESTION DATA
-        IdeognosticQuestionDTO question = IdeognosticQuestionDTO.builder()
+        // Convert byte array to Base64 string
+        String base64Image = randomQuestion.getImage() != null ? Base64.getEncoder().encodeToString(randomQuestion.getImage()) : null;
+
+        IdeognosticQuestionResponseDTO question = IdeognosticQuestionResponseDTO.builder()
                 .questionNumber(randomQuestion.getQuestionNumber())
                 .language(randomQuestion.getLanguage())
                 .question(randomQuestion.getQuestion())
                 .correctAnswer(randomQuestion.getCorrectAnswer())
+                .allAnswers(randomQuestion.getAllAnswers())
+                .image(base64Image)  // Include Base64 image string in response
                 .build();
 
         return ResponseEntity.ok().body(question);
@@ -76,7 +104,7 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
     }
 
     @Override
-    public ResponseEntity<?> update(String id, @Valid IdeognosticQuestionDTO questionDTO) {
+    public ResponseEntity<?> update(String id, @Valid IdeognosticQuestionUploadDTO questionDTO) {
         Optional<IdeognosticQuestion> optionalVerbalQuestion = questionBankRepository.findById(id);
 
         if (optionalVerbalQuestion.isEmpty()) {
@@ -88,6 +116,7 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
         question.setLanguage(questionDTO.getLanguage());
         question.setQuestion(questionDTO.getQuestion());
         question.setCorrectAnswer(questionDTO.getCorrectAnswer());
+        question.setAllAnswers(questionDTO.getAllAnswers());
 
         questionBankRepository.save(question);
 
