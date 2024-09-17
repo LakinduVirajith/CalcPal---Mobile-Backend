@@ -1,6 +1,6 @@
 package com.calcpal.ideognosticdiagnosisservice.controller;
 
-import com.calcpal.ideognosticdiagnosisservice.DTO.IdeognosticQuestionDTO;
+import com.calcpal.ideognosticdiagnosisservice.DTO.IdeognosticQuestionUploadDTO;
 import com.calcpal.ideognosticdiagnosisservice.service.IdeognosticQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,7 +19,7 @@ public class IdeognosticQuestionController {
 
     @PostMapping("/")
     @Operation(summary = "Add Ideognostic diagnosis Question", description = "Add a new Ideognostic question to the question bank.")
-    public ResponseEntity<?> add(@Valid @RequestBody IdeognosticQuestionDTO questionDTO) {
+    public ResponseEntity<?> add(@Valid @RequestBody IdeognosticQuestionUploadDTO questionDTO) {
         return questionBankService.add(questionDTO);
     }
 
@@ -37,7 +37,7 @@ public class IdeognosticQuestionController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update Ideognostic Question", description = "Update a Ideognostic question in the question bank.")
-    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody IdeognosticQuestionDTO questionDTO) {
+    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody IdeognosticQuestionUploadDTO questionDTO) {
         return questionBankService.update(id, questionDTO);
     }
 

@@ -1,17 +1,17 @@
 package com.calcpal.ideognosticdiagnosisservice.service;
 
-import com.calcpal.ideognosticdiagnosisservice.DTO.IdeognosticQuestionDTO;
+import com.calcpal.ideognosticdiagnosisservice.DTO.IdeognosticQuestionUploadDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 
 public interface IdeognosticQuestionService {
-    ResponseEntity<?> add(@Valid IdeognosticQuestionDTO questionDTO);
+    ResponseEntity<?> add(@Valid IdeognosticQuestionUploadDTO questionDTO);
 
     ResponseEntity<?> getRandom(Long id);
 
     ResponseEntity<?> getAll();
 
-    ResponseEntity<?> update(String id, @Valid IdeognosticQuestionDTO questionDTO);
+    ResponseEntity<?> update(String id, @Valid IdeognosticQuestionUploadDTO questionDTO);
 
     ResponseEntity<?> delete(String id);
 }

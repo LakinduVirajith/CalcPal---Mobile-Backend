@@ -1,19 +1,20 @@
 package com.calcpal.ideognosticdiagnosisservice.DTO;
 
-import com.calcpal.ideognosticdiagnosisservice.enums.Language;
 import jakarta.validation.constraints.NotNull;
+import com.calcpal.ideognosticdiagnosisservice.enums.Language;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
-@Builder
+import java.util.List;
+
+
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class IdeognosticQuestionDTO {
-
+public class IdeognosticQuestionResponseDTO {
     @NotNull
     private Long questionNumber;
 
@@ -26,5 +27,7 @@ public class IdeognosticQuestionDTO {
     @NotNull
     private String correctAnswer;
 
-    private MultipartFile image;
+    private List<String> allAnswers;
+
+    private String image;  // Base64 encoded image string for response
 }

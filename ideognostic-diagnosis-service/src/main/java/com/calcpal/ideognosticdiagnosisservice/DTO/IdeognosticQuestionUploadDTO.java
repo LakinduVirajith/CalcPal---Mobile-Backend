@@ -1,27 +1,20 @@
-package com.calcpal.ideognosticdiagnosisservice.collection;
+package com.calcpal.ideognosticdiagnosisservice.DTO;
 
 import com.calcpal.ideognosticdiagnosisservice.enums.Language;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Document("Question-Bank")
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class IdeognosticQuestion {
-
-    @Id
-    private String id;
+public class IdeognosticQuestionUploadDTO {
 
     @NotNull
     private Long questionNumber;
@@ -37,6 +30,5 @@ public class IdeognosticQuestion {
 
     private List<String> allAnswers;
 
-    private byte[] image;  // Store image as byte array
-
+    private MultipartFile image;  // For handling file uploads
 }
