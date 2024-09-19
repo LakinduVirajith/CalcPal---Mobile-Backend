@@ -17,9 +17,9 @@ public class IdeognosticQuestionController {
 
     private final IdeognosticQuestionService questionBankService;
 
-    @PostMapping("/")
+    @PostMapping("/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Add Ideognostic diagnosis Question", description = "Add a new Ideognostic question to the question bank.")
-    public ResponseEntity<?> add(@Valid @RequestBody IdeognosticQuestionUploadDTO questionDTO) {
+    public ResponseEntity<?> add(@Valid @ModelAttribute IdeognosticQuestionUploadDTO questionDTO) {
         return questionBankService.add(questionDTO);
     }
 
