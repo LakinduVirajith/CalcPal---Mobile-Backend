@@ -19,7 +19,7 @@ public class IdeognosticQuestionController {
 
     @PostMapping("/")
     @Operation(summary = "Add Ideognostic diagnosis Question", description = "Add a new Ideognostic question to the question bank.")
-    public ResponseEntity<?> add(@Valid @RequestBody IdeognosticQuestionUploadDTO questionDTO) {
+    public ResponseEntity<?> add(@Valid IdeognosticQuestionUploadDTO questionDTO) {
         return questionBankService.add(questionDTO);
     }
 
@@ -37,7 +37,8 @@ public class IdeognosticQuestionController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update Ideognostic Question", description = "Update a Ideognostic question in the question bank.")
-    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody IdeognosticQuestionUploadDTO questionDTO) {
+    public ResponseEntity<?> update(@PathVariable String id,
+            @Valid @RequestBody IdeognosticQuestionUploadDTO questionDTO) {
         return questionBankService.update(id, questionDTO);
     }
 

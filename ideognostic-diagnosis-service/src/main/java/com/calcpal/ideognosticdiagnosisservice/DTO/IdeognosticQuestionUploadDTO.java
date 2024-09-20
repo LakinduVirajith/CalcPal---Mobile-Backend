@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -30,5 +29,6 @@ public class IdeognosticQuestionUploadDTO {
 
     private List<String> allAnswers;
 
-    private MultipartFile image;  // For handling file uploads
+    private String base64image; // Store image as byte array
+
 }
