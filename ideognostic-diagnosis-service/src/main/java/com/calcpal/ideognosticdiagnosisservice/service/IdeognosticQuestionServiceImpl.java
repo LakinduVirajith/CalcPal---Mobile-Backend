@@ -1,19 +1,14 @@
 package com.calcpal.ideognosticdiagnosisservice.service;
 
-import com.calcpal.ideognosticdiagnosisservice.DTO.IdeognosticQuestionResponseDTO;
 import com.calcpal.ideognosticdiagnosisservice.DTO.IdeognosticQuestionUploadDTO;
 import com.calcpal.ideognosticdiagnosisservice.collection.IdeognosticQuestion;
 import com.calcpal.ideognosticdiagnosisservice.repository.IdeognosticQuestionRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Base64;
 import java.util.Optional;
 import java.util.Random;
 
@@ -24,18 +19,7 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
     private final IdeognosticQuestionRepository questionBankRepository;
 
     @Override
-    public ResponseEntity<?> add(MultipartFile image, IdeognosticQuestionUploadDTO questionDTO) {
-
-        byte[] imageBytes = null;
-
-        if (image != null) {
-            try {
-                imageBytes = image.getBytes();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to process image");
-            }
-        }
+    public ResponseEntity<?> add(IdeognosticQuestionUploadDTO questionDTO) {
 
         IdeognosticQuestion question = IdeognosticQuestion.builder()
                 .questionNumber(questionDTO.getQuestionNumber())
@@ -43,7 +27,7 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
                 .question(questionDTO.getQuestion())
                 .correctAnswer(questionDTO.getCorrectAnswer())
                 .allAnswers(questionDTO.getAllAnswers())
-                .image(imageBytes)  // Store image as byte array
+                .base64image(questionDTO.getBase64image()) // Store image as base64
                 .build();
 
         // Save to the repository
@@ -53,9 +37,9 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
     }
 
     // Helper method to convert MultipartFile to Base64 String
-    //private String encodeImageToBase64(MultipartFile image) throws IOException {
-      //  return Base64.getEncoder().encodeToString(image.getBytes());
-    //}
+    // private String encodeImageToBase64(MultipartFile image) throws IOException {
+    // return Base64.getEncoder().encodeToString(image.getBytes());
+    // }
 
     @Override
     public ResponseEntity<?> getRandom(Long id) {
@@ -63,22 +47,24 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
 
         // NOT FOUND EXCEPTION HANDLE
         if (questions.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Ideognostic Questions found for the given question number");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No Ideognostic Questions found for the given question number");
         }
 
         // RANDOMLY SELECT ONE QUESTION FORM THE FETCHED LIST
         IdeognosticQuestion randomQuestion = getRandomQuestion(questions);
 
         // Convert byte array to Base64 string
-      //  String base64Image = randomQuestion.getImage() != null ? Base64.getEncoder().encodeToString(randomQuestion.getImage()) : null;
+        // String base64Image = randomQuestion.getImage() != null ?
+        // Base64.getEncoder().encodeToString(randomQuestion.getImage()) : null;
 
-        IdeognosticQuestionResponseDTO question = IdeognosticQuestionResponseDTO.builder()
+        IdeognosticQuestionUploadDTO question = IdeognosticQuestionUploadDTO.builder()
                 .questionNumber(randomQuestion.getQuestionNumber())
                 .language(randomQuestion.getLanguage())
                 .question(randomQuestion.getQuestion())
                 .correctAnswer(randomQuestion.getCorrectAnswer())
                 .allAnswers(randomQuestion.getAllAnswers())
-                .image(randomQuestion.getImage())
+                .base64image(randomQuestion.getBase64image())
                 .build();
 
         return ResponseEntity.ok().body(question);
@@ -97,7 +83,8 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
 
         // NOT FOUND EXCEPTION HANDLE
         if (questions.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Ideognostic Questions are currently available in the collection");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No Ideognostic Questions are currently available in the collection");
         }
 
         return ResponseEntity.ok().body(questions);
@@ -108,7 +95,8 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
         Optional<IdeognosticQuestion> optionalVerbalQuestion = questionBankRepository.findById(id);
 
         if (optionalVerbalQuestion.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Ideognostic Questions found for the provided ID");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No Ideognostic Questions found for the provided ID");
         }
         IdeognosticQuestion question = optionalVerbalQuestion.get();
 
@@ -117,6 +105,10 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
         question.setQuestion(questionDTO.getQuestion());
         question.setCorrectAnswer(questionDTO.getCorrectAnswer());
         question.setAllAnswers(questionDTO.getAllAnswers());
+
+        if (!questionDTO.getBase64image().isEmpty() && questionDTO.getBase64image() != null) {
+            question.setBase64image(questionDTO.getBase64image());
+        }
 
         questionBankRepository.save(question);
 
@@ -129,7 +121,8 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
 
         // NOT FOUND EXCEPTION HANDLE
         if (question.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Ideognostic Questions found for the provided ID");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No Ideognostic Questions found for the provided ID");
         }
 
         questionBankRepository.deleteById(id);

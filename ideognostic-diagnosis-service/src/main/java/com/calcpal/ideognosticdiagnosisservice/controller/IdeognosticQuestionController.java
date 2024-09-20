@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/ideognostic/question")
@@ -20,8 +19,8 @@ public class IdeognosticQuestionController {
 
     @PostMapping("/")
     @Operation(summary = "Add Ideognostic diagnosis Question", description = "Add a new Ideognostic question to the question bank.")
-    public ResponseEntity<?> add(@RequestParam("file") MultipartFile image, @Valid  IdeognosticQuestionUploadDTO questionDTO) {
-        return questionBankService.add(image, questionDTO);
+    public ResponseEntity<?> add(@Valid IdeognosticQuestionUploadDTO questionDTO) {
+        return questionBankService.add(questionDTO);
     }
 
     @GetMapping("/{id}")
@@ -38,7 +37,8 @@ public class IdeognosticQuestionController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update Ideognostic Question", description = "Update a Ideognostic question in the question bank.")
-    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody IdeognosticQuestionUploadDTO questionDTO) {
+    public ResponseEntity<?> update(@PathVariable String id,
+            @Valid @RequestBody IdeognosticQuestionUploadDTO questionDTO) {
         return questionBankService.update(id, questionDTO);
     }
 

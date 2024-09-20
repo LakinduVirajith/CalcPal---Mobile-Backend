@@ -37,6 +37,6 @@ public class IdeognosticQuestion {
 
     private List<String> allAnswers;
 
-    private byte[] image;  // Store image as byte array
+    private String base64image; // Store image as byte array
 
 }
