@@ -30,5 +30,4 @@ public class IdeognosticQuestionUploadDTO {
 
     private List<String> allAnswers;
 
-    private MultipartFile image;  // For handling file uploads
 }

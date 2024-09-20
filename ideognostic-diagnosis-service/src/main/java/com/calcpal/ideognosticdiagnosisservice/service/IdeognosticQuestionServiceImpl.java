@@ -24,13 +24,13 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
     private final IdeognosticQuestionRepository questionBankRepository;
 
     @Override
-    public ResponseEntity<?> add(@Valid IdeognosticQuestionUploadDTO questionDTO) {
+    public ResponseEntity<?> add(MultipartFile image, IdeognosticQuestionUploadDTO questionDTO) {
 
         byte[] imageBytes = null;
 
-        if (questionDTO.getImage() != null && !questionDTO.getImage().isEmpty()) {
+        if (image != null) {
             try {
-                imageBytes = questionDTO.getImage().getBytes();
+                imageBytes = image.getBytes();
             } catch (IOException e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to process image");
@@ -53,9 +53,9 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
     }
 
     // Helper method to convert MultipartFile to Base64 String
-    private String encodeImageToBase64(MultipartFile image) throws IOException {
-        return Base64.getEncoder().encodeToString(image.getBytes());
-    }
+    //private String encodeImageToBase64(MultipartFile image) throws IOException {
+      //  return Base64.getEncoder().encodeToString(image.getBytes());
+    //}
 
     @Override
     public ResponseEntity<?> getRandom(Long id) {
@@ -70,7 +70,7 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
         IdeognosticQuestion randomQuestion = getRandomQuestion(questions);
 
         // Convert byte array to Base64 string
-        String base64Image = randomQuestion.getImage() != null ? Base64.getEncoder().encodeToString(randomQuestion.getImage()) : null;
+      //  String base64Image = randomQuestion.getImage() != null ? Base64.getEncoder().encodeToString(randomQuestion.getImage()) : null;
 
         IdeognosticQuestionResponseDTO question = IdeognosticQuestionResponseDTO.builder()
                 .questionNumber(randomQuestion.getQuestionNumber())
@@ -78,7 +78,7 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
                 .question(randomQuestion.getQuestion())
                 .correctAnswer(randomQuestion.getCorrectAnswer())
                 .allAnswers(randomQuestion.getAllAnswers())
-                .image(base64Image)  // Include Base64 image string in response
+                .image(randomQuestion.getImage())
                 .build();
 
         return ResponseEntity.ok().body(question);
@@ -104,7 +104,7 @@ public class IdeognosticQuestionServiceImpl implements IdeognosticQuestionServic
     }
 
     @Override
-    public ResponseEntity<?> update(String id, @Valid IdeognosticQuestionUploadDTO questionDTO) {
+    public ResponseEntity<?> update(String id, IdeognosticQuestionUploadDTO questionDTO) {
         Optional<IdeognosticQuestion> optionalVerbalQuestion = questionBankRepository.findById(id);
 
         if (optionalVerbalQuestion.isEmpty()) {

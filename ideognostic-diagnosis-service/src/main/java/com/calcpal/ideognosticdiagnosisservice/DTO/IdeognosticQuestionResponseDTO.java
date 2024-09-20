@@ -29,5 +29,5 @@ public class IdeognosticQuestionResponseDTO {
 
     private List<String> allAnswers;
 
-    private String image;  // Base64 encoded image string for response
+    private byte[] image;
 }
