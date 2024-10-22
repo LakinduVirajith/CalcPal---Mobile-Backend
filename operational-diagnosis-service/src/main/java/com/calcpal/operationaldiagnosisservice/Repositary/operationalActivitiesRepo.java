@@ -10,5 +10,5 @@ import java.util.List;
 public interface operationalActivitiesRepo extends MongoRepository<operationalActivities, String> {
     List<operationalActivities> findByUserEmail(String userEmail);
 
-    List<operationalActivities> findByUserEmailAndLevel(String userEmail, int level);
+    List<operationalActivities> findByUserEmailAndActivityName(String userEmail, String activityName);
 }

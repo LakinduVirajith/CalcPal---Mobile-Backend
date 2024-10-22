@@ -11,6 +11,5 @@ import java.util.List;
 public interface IdeognosticActivitiesRepo extends MongoRepository<IdeognosticActivities, String>{
     List<IdeognosticActivities> findByUserEmail(String userEmail);
 
-    @Query("{ 'userEmail': ?0, '$or': [ {'numberLine.name': ?1}, {'fraction.name': ?1}, {'numberCreation.name': ?1} ] }")
-    List<IdeognosticActivities> findByUserEmailAndActivityName(String email, String activityName);
+    List<IdeognosticActivities> findByUserEmailAndActivityName(String userEmail, String activityName);
 }

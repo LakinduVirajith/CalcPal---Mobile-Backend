@@ -10,9 +10,7 @@ public interface operationalActivitiesService {
 
     ResponseEntity<?> getByEmail(String email);
 
-    ResponseEntity<?> getByEmailAndLevel(String email, int level);
-
-    ResponseEntity<?> update(String id, ActivityDTO activityDTO);
+    ResponseEntity<?> getByEmailAndLevel(String email, String activityname);
 
     ResponseEntity<?> delete(String id);
 

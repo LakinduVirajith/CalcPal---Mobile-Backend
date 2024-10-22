@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
@@ -14,31 +15,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActivityDTO {
-    @NotNull
+
     private String userEmail;
 
-    @NotNull
-    private Integer level;
     private String date;
 
-    private IdeognosticActivities.Activity numberLine;
-    private IdeognosticActivities.Activity fraction;
-    private IdeognosticActivities.Activity numberCreation;
+    private String activityName;
 
+    private Long timeTaken;
 
-    @Data
-    @Builder
-    public static class Activity {
-        private String name;
-        private List<IdeognosticActivities.Exercise> exercises;
-        private Long timeTaken;
-    }
+    private Long totalScore;
 
-    @Data
-    @Builder
-    public static class Exercise {
-        private Integer exerciseNo;
-        private Boolean isCorrect;
-        private Integer retries;
-    }
+    private Long retries;
 }

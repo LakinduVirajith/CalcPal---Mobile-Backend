@@ -34,12 +34,6 @@ public class IdeognosticActivitiesController {
         return activitiesService.getByEmailAndLevel(email, activityName);
     }
 
-    @PutMapping("/")
-    @Operation(summary = "Update an Activity Result", description = "Update an existing activity result in the database.")
-    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody ActivityDTO activityDTO) {
-        return activitiesService.update(id, activityDTO);
-    }
-
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an activity data", description = "Delete an Ideognostic Activity data from the database by its ID.")
     public ResponseEntity<?> delete(@PathVariable String id) {

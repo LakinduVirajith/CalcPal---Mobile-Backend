@@ -22,12 +22,11 @@ public class operationalActivitiesServiceImpl implements  operationalActivitiesS
         // Build the operationalActivities object from the ActivityDTO
         operationalActivities Activity = operationalActivities.builder()
                 .userEmail(activityDTO.getUserEmail())
-                .level(activityDTO.getLevel())
                 .date(activityDTO.getDate())
-                .addition(activityDTO.getAddition())
-                .subtraction(activityDTO.getSubtraction())
-                .multiplication(activityDTO.getMultiplication())
-                .division(activityDTO.getDivision())
+                .activityName(activityDTO.getActivityName())
+                .timeTaken(activityDTO.getTimeTaken())
+                .totalScore(activityDTO.getTotalScore())
+                .retries(activityDTO.getRetries())
                 .build();
 
         // Save the activity to the repository
@@ -53,9 +52,9 @@ public class operationalActivitiesServiceImpl implements  operationalActivitiesS
     }
 
     @Override
-    public ResponseEntity<?> getByEmailAndLevel(String email, int level) {
+    public ResponseEntity<?> getByEmailAndLevel(String email, String activityname) {
         // Retrieve all operational activities associated with the given email and level
-        List<operationalActivities> activities = OperationalActivitiesRepo.findByUserEmailAndLevel(email, level);
+        List<operationalActivities> activities = OperationalActivitiesRepo.findByUserEmailAndActivityName(email, activityname);
 
         // Check if activities were found
         if (activities.isEmpty()) {
@@ -64,41 +63,6 @@ public class operationalActivitiesServiceImpl implements  operationalActivitiesS
 
         // Return the list of activities with an OK (200) status
         return ResponseEntity.ok(activities);
-    }
-
-    @Override
-    public ResponseEntity<?> update(String id, ActivityDTO activityDTO) {
-        Optional<operationalActivities> optionalActivity = OperationalActivitiesRepo.findById(id);
-
-        if (optionalActivity.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No activity found for the provided id");
-        }
-
-        operationalActivities activity = optionalActivity.get();
-
-        // Updating the addition activity, if present
-        if (activityDTO.getAddition() != null) {
-            activity.setAddition(activityDTO.getAddition());
-        }
-
-        // Updating the subtraction activity, if present
-        if (activityDTO.getSubtraction() != null) {
-            activity.setSubtraction(activityDTO.getSubtraction());
-        }
-
-        // Updating the multiplication activity, if present
-        if (activityDTO.getMultiplication() != null) {
-            activity.setMultiplication(activityDTO.getMultiplication());
-        }
-
-        // Updating the division activity, if present
-        if (activityDTO.getDivision() != null) {
-            activity.setDivision(activityDTO.getDivision());
-        }
-
-        OperationalActivitiesRepo.save(activity);
-
-        return ResponseEntity.ok().body("Operational Activity updated successfully!");
     }
 
     @Override
