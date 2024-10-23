@@ -20,33 +20,18 @@ import java.util.List;
 public class operationalActivities {
 
     @Id
+    private String id;
+
     private String userEmail;
 
-    @NotNull
-    private Integer level;
     private String date;
-    private Activity addition;
-    private Activity subtraction;
-    private Activity multiplication;
-    private Activity division;
 
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Activity {
-        private List<Exercise> exercises;
-        private Long timeTaken;
-    }
+    private String activityName;
 
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Exercise {
-        private Integer exerciseNo;
-        private Boolean isCorrect;
-        private Integer retries;
-    }
+    private Long timeTaken;
+
+    private Long totalScore;
+
+    private Long retries;
 }
 

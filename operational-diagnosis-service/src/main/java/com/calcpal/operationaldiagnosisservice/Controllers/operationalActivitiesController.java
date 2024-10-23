@@ -31,14 +31,8 @@ public class operationalActivitiesController {
 
     @GetMapping("/level")
     @Operation(summary = "Get all Activity Results by User Email and Level", description = "Retrieve all activity results for a specific user by email and activity level.")
-    public ResponseEntity<?> getByEmailAndLevel(@RequestParam String email, @RequestParam int level) {
-        return activitiesService.getByEmailAndLevel(email, level);
-    }
-
-    @PutMapping("/")
-    @Operation(summary = "Update an Activity Result", description = "Update an existing activity result in the database.")
-    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody ActivityDTO activityDTO) {
-        return activitiesService.update(id, activityDTO);
+    public ResponseEntity<?> getByEmailAndLevel(@RequestParam String email, @RequestParam String activityname) {
+        return activitiesService.getByEmailAndLevel(email, activityname);
     }
 
     @DeleteMapping("/{id}")

@@ -10,7 +10,5 @@ public interface IdeognosticActivitiesService {
 
     ResponseEntity<?> getByEmailAndLevel(String email, String activityName);
 
-    ResponseEntity<?> update(String id, ActivityDTO activityDTO);
-
     ResponseEntity<?> delete(String id);
 }

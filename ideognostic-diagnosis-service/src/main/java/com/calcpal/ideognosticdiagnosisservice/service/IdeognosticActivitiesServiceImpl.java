@@ -22,11 +22,11 @@ public class IdeognosticActivitiesServiceImpl implements IdeognosticActivitiesSe
         // Build the operationalActivities object from the ActivityDTO
         IdeognosticActivities Activity = IdeognosticActivities.builder()
                 .userEmail(activityDTO.getUserEmail())
-                .level(activityDTO.getLevel())
                 .date(activityDTO.getDate())
-                .numberLine(activityDTO.getNumberLine())
-                .fraction(activityDTO.getFraction())
-                .numberCreation(activityDTO.getNumberCreation())
+                .activityName(activityDTO.getActivityName())
+                .timeTaken(activityDTO.getTimeTaken())
+                .totalScore(activityDTO.getTotalScore())
+                .retries(activityDTO.getRetries())
                 .build();
 
         // Save the activity to the repository
@@ -64,36 +64,6 @@ public class IdeognosticActivitiesServiceImpl implements IdeognosticActivitiesSe
 
         // Return the list of activities with an OK (200) status
         return ResponseEntity.ok(activities);
-    }
-
-    @Override
-    public ResponseEntity<?> update(String id, ActivityDTO activityDTO) {
-        Optional<IdeognosticActivities> optionalActivity = ideognosticActivitiesRepo.findById(id);
-
-        if (optionalActivity.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No activity found for the provided id");
-        }
-
-        IdeognosticActivities activity = optionalActivity.get();
-
-        // Updating the addition activity, if present
-        if (activityDTO.getNumberLine() != null) {
-            activity.setNumberLine(activityDTO.getNumberLine());
-        }
-
-        // Updating the subtraction activity, if present
-        if (activityDTO.getFraction() != null) {
-            activity.setFraction(activityDTO.getFraction());
-        }
-
-        // Updating the multiplication activity, if present
-        if (activityDTO.getNumberCreation() != null) {
-            activity.setNumberCreation(activityDTO.getNumberCreation());
-        }
-
-        ideognosticActivitiesRepo.save(activity);
-
-        return ResponseEntity.ok().body("Ideognostic Activity updated successfully!");
     }
 
     @Override

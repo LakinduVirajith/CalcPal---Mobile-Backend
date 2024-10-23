@@ -12,30 +12,15 @@ import java.util.List;
 @Builder
 @Data
 public class ActivityDTO {
-    @NotNull
     private String userEmail;
 
-    @NotNull
-    private Integer level;
     private String date;
 
-    private operationalActivities.Activity addition;
-    private operationalActivities.Activity subtraction;
-    private operationalActivities.Activity multiplication;
-    private operationalActivities.Activity division;
+    private String activityName;
 
-    @Data
-    @Builder
-    public static class Activity {
-        private List<operationalActivities.Exercise> exercises;
-        private Long timeTaken;
-    }
+    private Long timeTaken;
 
-    @Data
-    @Builder
-    public static class Exercise {
-        private Integer exerciseNo;
-        private Boolean isCorrect;
-        private Integer retries;
-    }
+    private Long totalScore;
+
+    private Long retries;
 }

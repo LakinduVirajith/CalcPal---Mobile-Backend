@@ -18,31 +18,18 @@ import java.util.List;
 @NoArgsConstructor
 public class IdeognosticActivities {
     @Id
+    private String id;
+
     private String userEmail;
 
-    private Integer level;
     private String date;
-    private Activity numberLine;
-    private Activity fraction;
-    private Activity numberCreation;
 
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Activity {
-        private String name;
-        private List<Exercise> exercises;
-        private Long timeTaken;
-    }
+    private String activityName;
 
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Exercise {
-        private Integer exerciseNo;
-        private Boolean isCorrect;
-        private Integer retries;
-    }
+    private Long timeTaken;
+
+    private Long totalScore;
+
+    private Long retries;
+
 }
