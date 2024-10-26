@@ -16,6 +16,9 @@ import java.util.Optional;
 public class PractognosticDiagnosisResultServiceImpl implements PractognosticDiagnosisResultService {
 
     private final PractognosticDiagnosisResultRepository practognosticDiagnosisResultRepository;
+
+    private final EmailService emailService;
+
     @Override
     public ResponseEntity<?> add(DiagnosisResultPractognostic practognosticDiagnosis) {
         Optional<DiagnosisResultPractognostic> optionalDiagnosis = practognosticDiagnosisResultRepository.findById(practognosticDiagnosis.getUserEmail());
@@ -23,9 +26,13 @@ public class PractognosticDiagnosisResultServiceImpl implements PractognosticDia
         if(optionalDiagnosis.isPresent()){
             DiagnosisResultPractognostic diagnosisResult = mappingDiagnosisResult(practognosticDiagnosis, optionalDiagnosis.get());
             practognosticDiagnosisResultRepository.save(diagnosisResult);
+
+            emailService.sendDiagnosisResultMail(diagnosisResult);
             return ResponseEntity.ok().body("Diagnosis data updated successfully");
         }else{
             practognosticDiagnosisResultRepository.save(practognosticDiagnosis);
+
+            emailService.sendDiagnosisResultMail(practognosticDiagnosis);
             return ResponseEntity.status(HttpStatus.CREATED).body("Diagnosis result inserted successfully");
         }
     }
