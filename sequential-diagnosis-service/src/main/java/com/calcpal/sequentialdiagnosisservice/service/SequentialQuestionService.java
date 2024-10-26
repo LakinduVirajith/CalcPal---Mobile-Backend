@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 public interface SequentialQuestionService {
     ResponseEntity<?> add(SequentialQuestionDTO questionDTO);
 
-    ResponseEntity<?> getRandom(Long id);
+    ResponseEntity<?> getRandom(Long id, String language);
 
     ResponseEntity<?> getAll();
 

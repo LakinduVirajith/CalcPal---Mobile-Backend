@@ -25,8 +25,8 @@ public class PractognosticQuestionController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get Practognostic Question By ID",description = "Retrieve a lexical question from the question bank by its ID.")
-    public ResponseEntity<?> getRandom(@PathVariable Long id) {
-        return practognosticQuestionService.getRandom(id);
+    public ResponseEntity<?> getRandom(@PathVariable Long id, @RequestParam String language) {
+        return practognosticQuestionService.getRandom(id, language);
     }
 
     @GetMapping("/all")

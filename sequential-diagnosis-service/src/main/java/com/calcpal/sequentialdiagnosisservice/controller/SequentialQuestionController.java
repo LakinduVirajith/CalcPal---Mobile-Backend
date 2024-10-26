@@ -25,9 +25,9 @@ public class SequentialQuestionController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get Sequential Question by ID", description = "Retrieve a Sequential question from the question bank by its ID.")
-    public ResponseEntity<?> getRandom(@PathVariable Long id) {
+    public ResponseEntity<?> getRandom(@PathVariable Long id, @RequestParam String language) {
 
-        return questionBankService.getRandom(id);
+        return questionBankService.getRandom(id, language);
     }
 
     @GetMapping("/all")

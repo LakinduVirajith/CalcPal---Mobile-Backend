@@ -2,6 +2,7 @@ package com.calcpal.graphicaldiagnosisservice.service;
 
 import com.calcpal.graphicaldiagnosisservice.DTO.GraphicalQuestionDTO;
 import com.calcpal.graphicaldiagnosisservice.collection.GraphicalQuestion;
+import com.calcpal.graphicaldiagnosisservice.enums.Language;
 import com.calcpal.graphicaldiagnosisservice.repository.GraphicalQuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,12 @@ public class GraphicalQuestionServiceImpl implements GraphicalQuestionService {
 
     @Override
     public ResponseEntity<?> add(GraphicalQuestionDTO questionDTO) {
+        // VALIDATE THE LANGUAGE AGAINST ENUM VALUES
+        if (!isValidLanguage(questionDTO.getLanguage())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + questionDTO.getLanguage());
+        }
+
+
         GraphicalQuestion question =  GraphicalQuestion.builder()
                 .questionNumber(questionDTO.getQuestionNumber())
                 .language(questionDTO.getLanguage())
@@ -33,16 +40,24 @@ public class GraphicalQuestionServiceImpl implements GraphicalQuestionService {
     }
 
     @Override
-    public ResponseEntity<?> getRandom(Long id) {
+    public ResponseEntity<?> getRandom(Long id, String language) {
+        // VALIDATE THE LANGUAGE AGAINST ENUM VALUES
+        if (!isValidLanguage(language)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + language);
+        }
+
         List<GraphicalQuestion> questions = questionBankRepository.findByQuestionNumber(id);
+        List<GraphicalQuestion> filteredQuestions = questions.stream()
+                .filter(q -> q.getLanguage().name().equalsIgnoreCase(language))
+                .toList();
 
         // NOT FOUND EXCEPTION HANDLE
-        if (questions.isEmpty()) {
+        if (filteredQuestions.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the given question number");
         }
 
         // RANDOMLY SELECT ONE QUESTION FORM THE FETCHED LIST
-        GraphicalQuestion randomQuestion = getRandomQuestion(questions);
+        GraphicalQuestion randomQuestion = getRandomQuestion(filteredQuestions);
 
         // MAPPING QUESTION DATA
         GraphicalQuestionDTO question = GraphicalQuestionDTO.builder()
@@ -107,5 +122,15 @@ public class GraphicalQuestionServiceImpl implements GraphicalQuestionService {
         questionBankRepository.deleteById(id);
 
         return ResponseEntity.ok().body("questions deleted successfully");
+    }
+
+    // VALIDATE LANGUAGE AGAINST ENUM VALUES
+    private boolean isValidLanguage(Object language) {
+        try {
+            Language.valueOf(language.toString());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 }

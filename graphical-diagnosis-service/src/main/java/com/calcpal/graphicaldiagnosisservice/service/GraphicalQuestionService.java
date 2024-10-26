@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 public interface GraphicalQuestionService {
     ResponseEntity<?> add(GraphicalQuestionDTO questionDTO);
 
-    ResponseEntity<?> getRandom(Long id);
+    ResponseEntity<?> getRandom(Long id, String language);
 
     ResponseEntity<?> getAll();
 

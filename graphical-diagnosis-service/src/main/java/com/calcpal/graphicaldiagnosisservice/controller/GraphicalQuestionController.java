@@ -25,8 +25,8 @@ public class GraphicalQuestionController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get Graphical Question by ID", description = "Retrieve a Graphical question from the question bank by its ID.")
-    public ResponseEntity<?> getRandom(@PathVariable Long id) {
-        return questionBankService.getRandom(id);
+    public ResponseEntity<?> getRandom(@PathVariable Long id, @RequestParam String language) {
+        return questionBankService.getRandom(id, language);
     }
 
     @GetMapping("/all")

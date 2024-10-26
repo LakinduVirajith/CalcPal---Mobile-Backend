@@ -2,6 +2,7 @@ package com.calcpal.practognosticdiagnosisservice.service;
 
 import com.calcpal.practognosticdiagnosisservice.DTO.PractognosticQuestionDTO;
 import com.calcpal.practognosticdiagnosisservice.collection.DiagnosisQuestionPractognostic;
+import com.calcpal.practognosticdiagnosisservice.enums.Languages;
 import com.calcpal.practognosticdiagnosisservice.repository.PractognosticQuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,11 @@ public class PractognosticQuestionServiceImpl implements PractognosticQuestionSe
 
     @Override
     public ResponseEntity<?> add(PractognosticQuestionDTO questionDTO) {
+        // VALIDATE THE LANGUAGE AGAINST ENUM VALUES
+        if (!isValidLanguage(questionDTO.getLanguage())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + questionDTO.getLanguage());
+        }
+
         DiagnosisQuestionPractognostic question = DiagnosisQuestionPractognostic.builder()
                     .questionNumber(questionDTO.getQuestionNumber())
                     .language(questionDTO.getLanguage())
@@ -40,16 +46,25 @@ public class PractognosticQuestionServiceImpl implements PractognosticQuestionSe
     }
 
     @Override
-    public ResponseEntity<?> getRandom(Long id) {
+    public ResponseEntity<?> getRandom(Long id, String language) {
+        // VALIDATE THE LANGUAGE AGAINST ENUM VALUES
+        if (!isValidLanguage(language)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + language);
+        }
+
+        // FETCH QUESTION BY QUESTION NUMBER AND FILTER BY LANGUAGE
         List<DiagnosisQuestionPractognostic> questions = practognosticQuestionRepository.findByQuestionNumber(id);
+        List<DiagnosisQuestionPractognostic> filteredQuestions = questions.stream()
+                .filter(q -> q.getLanguage().name().equalsIgnoreCase(language))
+                .toList();
 
         //Not found exception handle
-        if (questions.isEmpty()) {
+        if (filteredQuestions.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the given question number");
         }
 
         //Randomly select one question form the fetched list
-        DiagnosisQuestionPractognostic randomQuestion = getRandomQuestion(questions);
+        DiagnosisQuestionPractognostic randomQuestion = getRandomQuestion(filteredQuestions);
 
         //Mapping question data
         PractognosticQuestionDTO question = PractognosticQuestionDTO.builder()
@@ -129,5 +144,15 @@ public class PractognosticQuestionServiceImpl implements PractognosticQuestionSe
         Random random = new Random();
         int randomIndex = random.nextInt(questions.size());
         return questions.get(randomIndex);
+    }
+
+    // VALIDATE LANGUAGE AGAINST ENUM VALUES
+    private boolean isValidLanguage(Object language) {
+        try {
+            Languages.valueOf(language.toString());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 }

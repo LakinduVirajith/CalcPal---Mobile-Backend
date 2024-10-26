@@ -2,6 +2,7 @@ package com.calcpal.sequentialdiagnosisservice.service;
 
 import com.calcpal.sequentialdiagnosisservice.DTO.SequentialQuestionDTO;
 import com.calcpal.sequentialdiagnosisservice.collection.SequentialQuestion;
+import com.calcpal.sequentialdiagnosisservice.enums.Language;
 import com.calcpal.sequentialdiagnosisservice.repository.SequentialQuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,11 @@ public class SequentialQuestionServiceImpl implements SequentialQuestionService{
 
     @Override
     public ResponseEntity<?> add(SequentialQuestionDTO questionDTO) {
+        // VALIDATE THE LANGUAGE AGAINST ENUM VALUES
+        if (!isValidLanguage(questionDTO.getLanguage())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + questionDTO.getLanguage());
+        }
+
         SequentialQuestion question = SequentialQuestion.builder()
                 .questionNumber(questionDTO.getQuestionNumber())
                 .language(questionDTO.getLanguage())
@@ -34,14 +40,22 @@ public class SequentialQuestionServiceImpl implements SequentialQuestionService{
     }
 
     @Override
-    public ResponseEntity<?> getRandom(Long id) {
-        List<SequentialQuestion> questions = quectionBankRepository.findByQuestionNumber(id);
+    public ResponseEntity<?> getRandom(Long id, String language) {
+        // VALIDATE THE LANGUAGE AGAINST ENUM VALUES
+        if (!isValidLanguage(language)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + language);
+        }
 
-        if (questions.isEmpty()) {
+        List<SequentialQuestion> questions = quectionBankRepository.findByQuestionNumber(id);
+        List<SequentialQuestion> filteredQuestions = questions.stream()
+                .filter(q -> q.getLanguage().name().equalsIgnoreCase(language))
+                .toList();
+
+        if (filteredQuestions.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question not found");
         }
 
-        SequentialQuestion randomQuestion = getRandomQuestion(questions);
+        SequentialQuestion randomQuestion = getRandomQuestion(filteredQuestions);
 
         SequentialQuestionDTO question = SequentialQuestionDTO.builder()
                 .questionNumber(randomQuestion.getQuestionNumber())
@@ -100,5 +114,15 @@ public class SequentialQuestionServiceImpl implements SequentialQuestionService{
         quectionBankRepository.deleteById(id);
 
         return ResponseEntity.ok().body("Question deleted successfully");
+    }
+
+    // VALIDATE LANGUAGE AGAINST ENUM VALUES
+    private boolean isValidLanguage(Object language) {
+        try {
+            Language.valueOf(language.toString());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 }
