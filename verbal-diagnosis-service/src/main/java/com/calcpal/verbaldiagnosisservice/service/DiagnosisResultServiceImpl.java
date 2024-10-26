@@ -27,7 +27,7 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService {
             DiagnosisResult diagnosisResult = mappingDiagnosisResult(verbalDiagnosis, optionalDiagnosis.get());
             diagnosisResultRepository.save(diagnosisResult);
 
-            emailService.sendDiagnosisResultMail(verbalDiagnosis);
+            emailService.sendDiagnosisResultMail(diagnosisResult);
             return ResponseEntity.ok().body("Diagnosis data updated successfully");
         }else{
             diagnosisResultRepository.save(verbalDiagnosis);
