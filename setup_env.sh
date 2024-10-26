@@ -9,6 +9,8 @@ sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/confi
 
 # REPLACE PLACEHOLDERS IN VERBAL DIAGNOSIS YAML
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/verbal-diagnosis-service.yaml
+sed -i "s|\${MAIL_ADDRESS}|$MAIL_ADDRESS|g" verbal-diagnosis-service/src/main/resources/application.yaml
+sed -i "s|\${MAIL_APP_PASSWORD}|$MAIL_APP_PASSWORD|g" verbal-diagnosis-service/src/main/resources/application.yaml
 
 # REPLACE PLACEHOLDERS IN LEXICAL DIAGNOSIS YAML
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/lexical-diagnosis-service.yaml
