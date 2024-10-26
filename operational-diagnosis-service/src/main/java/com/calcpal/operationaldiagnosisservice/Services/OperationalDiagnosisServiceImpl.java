@@ -17,6 +17,8 @@ public class OperationalDiagnosisServiceImpl implements OperationalDiagnosisServ
 
     private final OperationalDiagnosisRepo diagnosisRepo;
 
+    private final EmailService emailService;
+
     @Override
     public ResponseEntity<?> add(OperationalDiagnosis OperationalDiagnosis) {
         Optional<OperationalDiagnosis> optionalDiagnosis = diagnosisRepo.findById(OperationalDiagnosis.getUserEmail());
@@ -24,9 +26,13 @@ public class OperationalDiagnosisServiceImpl implements OperationalDiagnosisServ
         if(optionalDiagnosis.isPresent()){
             OperationalDiagnosis diagnosisResult = mappingDiagnosisResult(OperationalDiagnosis, optionalDiagnosis.get());
             diagnosisRepo.save(diagnosisResult);
+
+            emailService.sendDiagnosisResultMail(diagnosisResult);
             return ResponseEntity.ok().body("Diagnosis data updated successfully");
         }else{
             diagnosisRepo.save(OperationalDiagnosis);
+
+            emailService.sendDiagnosisResultMail(OperationalDiagnosis);
             return ResponseEntity.status(HttpStatus.CREATED).body("Diagnosis result inserted successfully");
         }
     }
