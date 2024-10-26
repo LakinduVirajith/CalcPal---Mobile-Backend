@@ -12,3 +12,7 @@ servlet:
     max-file-size: 10MB # Maximum file size allowed
     max-request-size: 10MB # Maximum request size (multiple files)
 
+#JAVA MAIL
+mail:
+  username: ${MAIL_ADDRESS}
+  password: ${MAIL_APP_PASSWORD}
