@@ -17,6 +17,8 @@ public class IdeognosticDiagnosisServiceImpl implements IdeognosticDiagnosisServ
 
     private final IdeognosticDiagnosesRepo diagnosisResultRepository;
 
+    private final EmailService emailService;
+
     @Override
     public ResponseEntity<?> add(IdeognosticDiagnosis ideognosticDiagnosis) {
         Optional<IdeognosticDiagnosis> optionalDiagnosis = diagnosisResultRepository.findById(ideognosticDiagnosis.getUserEmail());
@@ -24,9 +26,13 @@ public class IdeognosticDiagnosisServiceImpl implements IdeognosticDiagnosisServ
         if(optionalDiagnosis.isPresent()){
             IdeognosticDiagnosis diagnosisResult = mappingDiagnosisResult(ideognosticDiagnosis, optionalDiagnosis.get());
             diagnosisResultRepository.save(diagnosisResult);
+
+            emailService.sendDiagnosisResultMail(diagnosisResult);
             return ResponseEntity.ok().body("Diagnosis data updated successfully");
         }else{
             diagnosisResultRepository.save(ideognosticDiagnosis);
+
+            emailService.sendDiagnosisResultMail(ideognosticDiagnosis);
             return ResponseEntity.status(HttpStatus.CREATED).body("Diagnosis result inserted successfully");
         }
     }
