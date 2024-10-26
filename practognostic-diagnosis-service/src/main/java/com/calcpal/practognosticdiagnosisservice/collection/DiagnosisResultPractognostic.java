@@ -24,19 +24,19 @@ public class DiagnosisResultPractognostic {
     private Long timeSeconds;
 
     @NotNull
-    private String q1;
+    private Boolean q1;
 
     @NotNull
-    private String q2;
+    private Boolean q2;
 
     @NotNull
-    private String q3;
+    private Boolean q3;
 
     @NotNull
-    private String q4;
+    private Boolean q4;
 
     @NotNull
-    private String q5;
+    private Boolean q5;
 
     @NotNull
     private String totalScore;

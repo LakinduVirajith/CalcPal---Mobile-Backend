@@ -9,27 +9,43 @@ sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/confi
 
 # REPLACE PLACEHOLDERS IN VERBAL DIAGNOSIS YAML
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/verbal-diagnosis-service.yaml
+sed -i "s|\${MAIL_ADDRESS}|$MAIL_ADDRESS|g" verbal-diagnosis-service/src/main/resources/application.yaml
+sed -i "s|\${MAIL_APP_PASSWORD}|$MAIL_APP_PASSWORD|g" verbal-diagnosis-service/src/main/resources/application.yaml
 
 # REPLACE PLACEHOLDERS IN LEXICAL DIAGNOSIS YAML
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/lexical-diagnosis-service.yaml
+sed -i "s|\${MAIL_ADDRESS}|$MAIL_ADDRESS|g" lexical-diagnosis-service/src/main/resources/application.yaml
+sed -i "s|\${MAIL_APP_PASSWORD}|$MAIL_APP_PASSWORD|g" lexical-diagnosis-service/src/main/resources/application.yaml
 
 # REPLACE PLACEHOLDERS IN OPERATIONAL DIAGNOSIS YAML
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/operational-diagnosis-service.yaml
+sed -i "s|\${MAIL_ADDRESS}|$MAIL_ADDRESS|g" operational-diagnosis-service/src/main/resources/application.yaml
+sed -i "s|\${MAIL_APP_PASSWORD}|$MAIL_APP_PASSWORD|g" operational-diagnosis-service/src/main/resources/application.yaml
 
 # REPLACE PLACEHOLDERS IN IDEOGNOSTIC DIAGNOSIS YAML
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/ideognostic-diagnosis-service.yaml
+sed -i "s|\${MAIL_ADDRESS}|$MAIL_ADDRESS|g" ideognostic-diagnosis-service/src/main/resources/application.yaml
+sed -i "s|\${MAIL_APP_PASSWORD}|$MAIL_APP_PASSWORD|g" ideognostic-diagnosis-service/src/main/resources/application.yaml
 
 # REPLACE PLACEHOLDERS IN SEQUENTIAL DIAGNOSIS YAML
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/sequential-diagnosis-service.yaml
+sed -i "s|\${MAIL_ADDRESS}|$MAIL_ADDRESS|g" sequential-diagnosis-service/src/main/resources/application.yaml
+sed -i "s|\${MAIL_APP_PASSWORD}|$MAIL_APP_PASSWORD|g" sequential-diagnosis-service/src/main/resources/application.yaml
 
 # REPLACE PLACEHOLDERS IN VISUAL DIAGNOSIS YAML
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/visual-diagnosis-service.yaml
+sed -i "s|\${MAIL_ADDRESS}|$MAIL_ADDRESS|g" visual-diagnosis-service/src/main/resources/application.yaml
+sed -i "s|\${MAIL_APP_PASSWORD}|$MAIL_APP_PASSWORD|g" visual-diagnosis-service/src/main/resources/application.yaml
 
 # REPLACE PLACEHOLDERS IN PRACTOGNOSTIC DIAGNOSIS YAML
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/practognostic-diagnosis-service.yaml
+sed -i "s|\${MAIL_ADDRESS}|$MAIL_ADDRESS|g" practognostic-diagnosis-service/src/main/resources/application.yaml
+sed -i "s|\${MAIL_APP_PASSWORD}|$MAIL_APP_PASSWORD|g" practognostic-diagnosis-service/src/main/resources/application.yaml
 
 # REPLACE PLACEHOLDERS IN GRAPHICAL DIAGNOSIS YAML
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/graphical-diagnosis-service.yaml
+sed -i "s|\${MAIL_ADDRESS}|$MAIL_ADDRESS|g" graphical-diagnosis-service/src/main/resources/application.yaml
+sed -i "s|\${MAIL_APP_PASSWORD}|$MAIL_APP_PASSWORD|g" graphical-diagnosis-service/src/main/resources/application.yaml
 
 # REPLACE PLACEHOLDERS IN IQ TEST YAML
 sed -i "s|\${MONGODB_URI}|$MONGODB_URI|g" config-server/src/main/resources/config/iq-test-service.yaml

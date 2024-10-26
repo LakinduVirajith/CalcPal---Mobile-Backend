@@ -17,6 +17,8 @@ public class GraphicalDiagnosisResultServiceImpl implements GraphicalDiagnosisRe
 
     private final GraphicalDiagnosisResultRepository diagnosisResultRepository;
 
+    private final EmailService emailService;
+
     @Override
     public ResponseEntity<?> add(DiagnosisResultGraphical graphicalDiagnosis) {
         Optional<DiagnosisResultGraphical> optionalDiagnosis = diagnosisResultRepository.findById(graphicalDiagnosis.getUserEmail());
@@ -24,9 +26,13 @@ public class GraphicalDiagnosisResultServiceImpl implements GraphicalDiagnosisRe
         if(optionalDiagnosis.isPresent()){
             DiagnosisResultGraphical diagnosisResult = mappingDiagnosisResult(graphicalDiagnosis, optionalDiagnosis.get());
             diagnosisResultRepository.save(diagnosisResult);
+
+            emailService.sendDiagnosisResultMail(diagnosisResult);
             return ResponseEntity.ok().body("Diagnosis data updated successfully");
         }else{
             diagnosisResultRepository.save(graphicalDiagnosis);
+
+            emailService.sendDiagnosisResultMail(graphicalDiagnosis);
             return ResponseEntity.status(HttpStatus.CREATED).body("Diagnosis result inserted successfully");
         }
     }

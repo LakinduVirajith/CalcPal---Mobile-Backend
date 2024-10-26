@@ -17,6 +17,8 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService{
 
     private final DiagnosisResultRepository diagnosisResultRepository;
 
+    private final EmailService emailService;
+
     @Override
     public ResponseEntity<?> add(DiagnosisResult sequentialDiagnosis){
         Optional<DiagnosisResult> optionalDiagnosis = diagnosisResultRepository.findById(sequentialDiagnosis.getUserEmail());
@@ -24,9 +26,13 @@ public class DiagnosisResultServiceImpl implements DiagnosisResultService{
         if(optionalDiagnosis.isPresent()){
             DiagnosisResult diagnosisResult = mappingDiagnosisResult(sequentialDiagnosis, optionalDiagnosis.get());
             diagnosisResultRepository.save(diagnosisResult);
+
+            emailService.sendDiagnosisResultMail(diagnosisResult);
             return ResponseEntity.ok().body("Diagnosis data updated successfully");
         }else{
             diagnosisResultRepository.save(sequentialDiagnosis);
+
+            emailService.sendDiagnosisResultMail(sequentialDiagnosis);
             return ResponseEntity.status(HttpStatus.CREATED).body("Diagnosis result inserted successfully");
         }
     }

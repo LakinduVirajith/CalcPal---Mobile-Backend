@@ -5,3 +5,8 @@ spring:
     active: dev
   config:
     import: "optional:configserver:http://localhost:8070"
+
+#JAVA MAIL
+mail:
+  username: ${MAIL_ADDRESS}
+  password: ${MAIL_APP_PASSWORD}
