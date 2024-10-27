@@ -2,6 +2,7 @@ package com.calcpal.visualdiagnosisservice.service;
 
 import com.calcpal.visualdiagnosisservice.DTO.VisualQuestionDTO;
 import com.calcpal.visualdiagnosisservice.collection.VisualQuestion;
+import com.calcpal.visualdiagnosisservice.enums.Language;
 import com.calcpal.visualdiagnosisservice.repository.VisualQuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,11 @@ public class VisualQuestionServiceImpl implements VisualQuestionService {
 
     @Override
     public ResponseEntity<?> add(VisualQuestionDTO questionDTO) {
+        // VALIDATE THE LANGUAGE AGAINST ENUM VALUES
+        if (!isValidLanguage(questionDTO.getLanguage())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + questionDTO.getLanguage());
+        }
+
         VisualQuestion question =  VisualQuestion.builder()
                 .questionNumber(questionDTO.getQuestionNumber())
                 .language(questionDTO.getLanguage())
@@ -34,16 +40,24 @@ public class VisualQuestionServiceImpl implements VisualQuestionService {
     }
 
     @Override
-    public ResponseEntity<?> getRandom(Long id) {
+    public ResponseEntity<?> getRandom(Long id, String language) {
+        // VALIDATE THE LANGUAGE AGAINST ENUM VALUES
+        if (!isValidLanguage(language)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid language: " + language);
+        }
+
         List<VisualQuestion> questions = questionBankRepository.findByQuestionNumber(id);
+        List<VisualQuestion> filteredQuestions = questions.stream()
+                .filter(q -> q.getLanguage().name().equalsIgnoreCase(language))
+                .toList();
 
         // NOT FOUND EXCEPTION HANDLE
-        if (questions.isEmpty()) {
+        if (filteredQuestions.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no questions found for the given question number");
         }
 
         // RANDOMLY SELECT ONE QUESTION FORM THE FETCHED LIST
-        VisualQuestion randomQuestion = getRandomQuestion(questions);
+        VisualQuestion randomQuestion = getRandomQuestion(filteredQuestions);
 
         // MAPPING QUESTION DATA
         VisualQuestionDTO question = VisualQuestionDTO.builder()
@@ -110,5 +124,15 @@ public class VisualQuestionServiceImpl implements VisualQuestionService {
         questionBankRepository.deleteById(id);
 
         return ResponseEntity.ok().body("questions deleted successfully");
+    }
+
+    // VALIDATE LANGUAGE AGAINST ENUM VALUES
+    private boolean isValidLanguage(Object language) {
+        try {
+            Language.valueOf(language.toString());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 }

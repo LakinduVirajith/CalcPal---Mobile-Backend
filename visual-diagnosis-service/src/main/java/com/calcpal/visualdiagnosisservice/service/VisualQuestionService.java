@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 public interface VisualQuestionService {
     ResponseEntity<?> add(VisualQuestionDTO questionDTO);
 
-    ResponseEntity<?> getRandom(Long id);
+    ResponseEntity<?> getRandom(Long id, String language);
 
     ResponseEntity<?> getAll();
 
